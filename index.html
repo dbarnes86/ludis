@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>[ludis] — Strategy, Operations & Advisory | London</title>
+<meta name="description" content="Ludis is a London-based consultancy offering strategy, operations and advisory for founders and growing businesses.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:     #f5f2ec;
+    --bg2:    #edeae2;
+    --bg3:    #e4e0d6;
+    --line:   #d4cfc4;
+    --olive:  #4a5240;
+    --olive2: #5c6650;
+    --olive3: #6b7a5d;
+    --text:   #1e1f1b;
+    --muted:  #5a5c52;
+    --dim:    #8a8c80;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    font-size: 16px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 28px 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(to bottom, rgba(245,242,236,0.97) 0%, rgba(245,242,236,0) 100%);
+  }
+
+  .nav-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    font-weight: 400;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--olive);
+    text-decoration: none;
+  }
+
+  .nav-bracket { color: var(--olive3); font-weight: 300; }
+
+  .nav-links { display: flex; gap: 40px; list-style: none; }
+
+  .nav-links a {
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--dim);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--olive); }
+
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 120px 60px 100px;
+    position: relative;
+    overflow: hidden;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+    pointer-events: none;
+    opacity: 0.6;
+    z-index: 0;
+  }
+
+  .hero > * { position: relative; z-index: 1; }
+
+  .hero-eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--olive3);
+    margin-bottom: 32px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.2s forwards;
+  }
+
+  .hero-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(64px, 7vw, 96px);
+    font-weight: 300;
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    margin-bottom: 40px;
+    max-width: 760px;
+    color: var(--olive);
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.4s forwards;
+  }
+
+  .hero-name em { font-style: italic; color: var(--olive3); }
+
+  .hero-desc {
+    font-size: 15px;
+    color: var(--muted);
+    max-width: 480px;
+    line-height: 1.8;
+    margin-bottom: 56px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.6s forwards;
+  }
+
+  .hero-rule {
+    border: none;
+    border-top: 1px solid var(--line);
+    max-width: 560px;
+    margin-bottom: 40px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.7s forwards;
+  }
+
+  .hero-tagline {
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--dim);
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.85s forwards;
+  }
+
+  .hero-tagline span { color: var(--olive3); margin: 0 12px; }
+
+  section {
+    padding: 120px 60px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    gap: 24px;
+    margin-bottom: 72px;
+  }
+
+  .section-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 13px;
+    color: var(--olive3);
+    letter-spacing: 0.1em;
+  }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(36px, 4vw, 52px);
+    font-weight: 300;
+    letter-spacing: -0.01em;
+    line-height: 1.1;
+    color: var(--olive);
+  }
+
+  .section-line {
+    flex: 1;
+    height: 1px;
+    background: var(--line);
+    margin-left: 24px;
+  }
+
+  .practices-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+  }
+
+  .practice-block {
+    background: var(--bg);
+    padding: 64px 56px;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.3s;
+  }
+
+  .practice-block::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 2px; height: 0;
+    background: var(--olive);
+    transition: height 0.4s ease;
+  }
+
+  .practice-block:hover::before { height: 100%; }
+  .practice-block:hover { background: var(--bg2); }
+
+  .practice-label {
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--olive3);
+    margin-bottom: 24px;
+  }
+
+  .practice-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 32px;
+    font-weight: 300;
+    line-height: 1.15;
+    margin-bottom: 28px;
+    color: var(--olive);
+  }
+
+  .practice-body { font-size: 14px; color: var(--muted); line-height: 1.85; }
+  .practice-body + .practice-body { margin-top: 20px; }
+
+  .how-section {
+    background: var(--bg2);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    padding: 120px 60px;
+  }
+
+  .how-inner { max-width: 1200px; margin: 0 auto; }
+
+  .how-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: start;
+  }
+
+  .how-text p { font-size: 16px; color: var(--muted); line-height: 1.9; margin-bottom: 24px; }
+
+  .how-text p:first-child {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 300;
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  .aside-block { border-top: 1px solid var(--line); padding: 28px 0; }
+  .aside-block:last-child { border-bottom: 1px solid var(--line); }
+
+  .aside-label {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--olive3);
+    margin-bottom: 12px;
+  }
+
+  .aside-content { font-size: 14px; color: var(--muted); line-height: 1.7; }
+
+  .contact-section { background: var(--olive); border-top: 1px solid var(--olive2); }
+
+  .contact-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 120px 60px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 100px;
+    align-items: center;
+  }
+
+  .contact-headline {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(42px, 5vw, 68px);
+    font-weight: 300;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--bg);
+  }
+
+  .contact-headline em { font-style: italic; color: rgba(245,242,236,0.55); }
+
+  .contact-details { display: flex; flex-direction: column; gap: 32px; }
+  .contact-item { display: flex; flex-direction: column; gap: 4px; }
+
+  .contact-label {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(245,242,236,0.4);
+  }
+
+  .contact-value {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 300;
+    color: var(--bg);
+    text-decoration: none;
+    transition: opacity 0.2s;
+  }
+
+  .contact-value:hover { opacity: 0.65; }
+
+  footer {
+    background: var(--olive2);
+    padding: 40px 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-copy { font-size: 12px; color: rgba(245,242,236,0.38); letter-spacing: 0.05em; }
+  .footer-links { display: flex; gap: 32px; }
+
+  .footer-links a {
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(245,242,236,0.38);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .footer-links a:hover { color: var(--bg); }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--line); }
+
+  @media (max-width: 900px) {
+    nav { padding: 24px 32px; }
+    .nav-links { gap: 20px; }
+    .hero { padding: 140px 32px 80px; min-height: auto; }
+    section { padding: 80px 32px; }
+    .practices-grid { grid-template-columns: 1fr; }
+    .practice-block { padding: 48px 32px; }
+    .how-section { padding: 80px 32px; }
+    .how-grid { grid-template-columns: 1fr; gap: 48px; }
+    .contact-inner { grid-template-columns: 1fr; gap: 56px; padding: 80px 32px; }
+    footer { padding: 32px; flex-direction: column; gap: 16px; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="nav-name"><span class="nav-bracket">[</span>ludis<span class="nav-bracket">]</span></a>
+  <ul class="nav-links">
+    <li><a href="#practices">Practices</a></li>
+    <li><a href="#how">How we work</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<div class="hero">
+  <p class="hero-eyebrow">London &nbsp;·&nbsp; Consultancy &amp; Advisory</p>
+  <h1 class="hero-name">Strategy and<br>operations for<br><em>founders</em>.</h1>
+  <p class="hero-desc">Ludis is a London-based consultancy. We work with founders and executive teams who need experienced, hands-on support rather than generic advice.</p>
+  <hr class="hero-rule">
+  <p class="hero-tagline">Technology &amp; Business Strategy <span>·</span> Interior Design &amp; Consultancy</p>
+</div>
+
+<section id="practices">
+  <div class="section-header reveal">
+    <span class="section-num">01</span>
+    <h2 class="section-title">Our practices</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="practices-grid reveal">
+    <div class="practice-block">
+      <div class="practice-label">Practice one</div>
+      <h3 class="practice-title">Technology &amp;<br>Business Strategy</h3>
+      <p class="practice-body">Working with founders and leadership teams across gaming, interactive media, and consumer technology. Engagements typically involve operational leadership, growth strategy, fundraising preparation, or go-to-market execution.</p>
+      <p class="practice-body">This is not consulting at arm's length. We embed with your team and act like an operator, not a hands-off adviser. Every recommendation comes from firsthand experience running businesses from zero to scale.</p>
+      <p class="practice-body">Engagements range from a focused diagnostic sprint to an ongoing fractional leadership role. Flat fees. No upsells.</p>
+    </div>
+    <div class="practice-block">
+      <div class="practice-label">Practice two</div>
+      <h3 class="practice-title">Interior Design<br>&amp; Consultancy</h3>
+      <p class="practice-body">Residential and commercial interior design consultancy, working with private clients and developers across the UK and Europe.</p>
+      <p class="practice-body">From initial concept through to project completion. Clearly defined brief, honest timelines, no surprises on budget.</p>
+      <p class="practice-body">To discuss an interior design project, get in touch directly.</p>
+    </div>
+  </div>
+</section>
+
+<div class="how-section" id="how">
+  <div class="how-inner">
+    <div class="section-header reveal">
+      <span class="section-num">02</span>
+      <h2 class="section-title">How we work</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="how-grid">
+      <div class="how-text reveal">
+        <p>Most engagements begin with a conversation about the specific problem you are trying to solve. We do not lead with a services menu. We start by understanding whether we are actually the right fit.</p>
+        <p>From there, we agree a scope that matches the moment. That might be a focused two-session diagnostic sprint that leaves you with a clear plan of action. It might be an ongoing monthly retainer where we are embedded in the team and available for the decisions that matter. Or it might be something in between.</p>
+        <p>We do not do retainers for the sake of retainers. If the problem is solved, we will tell you.</p>
+      </div>
+      <div class="how-aside reveal">
+        <div class="aside-block">
+          <div class="aside-label">What we are not</div>
+          <div class="aside-content">We are not a large firm with recycled frameworks and junior staff doing the work. Everything comes from the principals, directly.</div>
+        </div>
+        <div class="aside-block">
+          <div class="aside-label">Pricing</div>
+          <div class="aside-content">Flat fees for scoped engagements. Monthly rates for fractional work. No hourly billing, no ambiguity.</div>
+        </div>
+        <div class="aside-block">
+          <div class="aside-label">Where we work</div>
+          <div class="aside-content">London, UK. We work with clients remotely and in person across the UK, Europe, and North America.</div>
+        </div>
+        <div class="aside-block">
+          <div class="aside-label">Company</div>
+          <div class="aside-content">Ludis Management Ltd. Registered in England and Wales.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="contact-section" id="contact">
+  <div class="contact-inner">
+    <h2 class="contact-headline reveal">Start a<br><em>conversation.</em></h2>
+    <div class="contact-details reveal">
+      <div class="contact-item">
+        <span class="contact-label">Email</span>
+        <a href="mailto:dan@lud.is" class="contact-value">dan@lud.is</a>
+      </div>
+      <div class="contact-item">
+        <span class="contact-label">Location</span>
+        <span class="contact-value" style="cursor:default;">London, UK</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <span class="footer-copy">© 2026 Ludis Management Ltd &nbsp;·&nbsp; Registered in England and Wales</span>
+  <div class="footer-links">
+    <a href="privacy.html">Privacy Policy</a>
+    <a href="terms.html">Terms of Use</a>
+    <a href="mailto:dan@lud.is">Contact</a>
+  </div>
+</footer>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
