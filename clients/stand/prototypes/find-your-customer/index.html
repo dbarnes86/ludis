@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stand — Find Your Customer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --cream:#FAF3D6;--card:#FFFFFF;--ink:#232120;--red:#D81F26;--mustard:#FFC408;--green:#006238;
+  --ink-08:rgba(35,33,32,0.08);--ink-12:rgba(35,33,32,0.12);--ink-25:rgba(35,33,32,0.25);--ink-45:rgba(35,33,32,0.45);
+  --serif:'Playfair Display',Georgia,serif;--sans:'DM Sans','Helvetica Neue',sans-serif;
+}
+html,body{height:100%;background:#1a1a18}
+.sw{font-family:var(--sans);color:var(--ink);background:var(--cream);max-width:480px;margin:0 auto;min-height:100vh}
+.screen{display:none;flex-direction:column;min-height:100vh}
+.screen.active{display:flex}
+.s-inner{padding:24px 24px 36px;display:flex;flex-direction:column;flex:1}
+.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.stand-logo-svg{height:22px;width:auto;display:block}
+.ceo-badge{background:var(--red);color:#fff;font-size:10px;font-weight:700;font-family:var(--sans);letter-spacing:0.08em;border-radius:20px;padding:3px 11px;text-transform:uppercase}
+.prog-track{display:flex;gap:4px;margin-bottom:28px}
+.seg{height:5px;flex:1;border-radius:3px;background:var(--ink-12)}
+.seg.filled{background:var(--ink)}
+.seg.active{position:relative;overflow:hidden;background:var(--ink-12)}
+.seg.active::after{content:'';position:absolute;inset:0;background:var(--ink);transform:scaleX(0);transform-origin:left;animation:sf 0.55s cubic-bezier(0.16,1,0.3,1) forwards}
+@keyframes sf{to{transform:scaleX(1)}}
+.overline{font-size:10px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:var(--ink-45);font-family:var(--sans);margin-bottom:8px}
+.display{font-family:var(--serif);font-weight:900;line-height:1.05;letter-spacing:-0.5px;color:var(--ink)}
+.body-copy{font-size:14px;line-height:1.65;color:var(--ink-45);font-family:var(--sans)}
+.recap-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:20px 0 18px}
+.rtile{border-radius:14px;padding:16px 15px;opacity:0;transform:translateY(14px);transition:opacity 0.4s ease,transform 0.4s cubic-bezier(0.16,1,0.3,1)}
+.rtile.in{opacity:1;transform:translateY(0)}
+.rt-a{background:var(--ink)}.rt-b{background:#3A3836}.rt-c{background:#5A5754}
+.rt-d{background:transparent;border:1.5px solid var(--ink-25)}
+.rt-label{font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;font-family:var(--sans);margin-bottom:5px}
+.rt-ll{color:rgba(250,243,214,0.5)}.rt-ld{color:var(--ink-45)}
+.rt-val{font-family:var(--serif);font-size:14px;font-weight:700;line-height:1.25}
+.rt-vl{color:var(--cream)}.rt-vd{color:var(--ink)}
+.rt-tick{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-top:10px;opacity:0;transform:scale(0);transition:all 0.3s cubic-bezier(0.34,1.56,0.64,1)}
+.rt-tick.pop{opacity:1;transform:scale(1)}
+.tick-l{background:rgba(250,243,214,0.15)}.tick-d{background:var(--ink-08)}
+.unlock-strip{border:1.5px solid var(--ink);border-radius:12px;padding:14px 16px;margin-bottom:28px;opacity:0;transform:translateY(8px);transition:all 0.4s ease}
+.unlock-strip.in{opacity:1;transform:translateY(0)}
+.unlock-label{font-size:10px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--red);font-family:var(--sans);margin-bottom:4px}
+.unlock-text{font-family:var(--serif);font-size:15px;font-weight:700;color:var(--ink);line-height:1.3}
+.cta-zone{margin-top:auto;padding-top:16px}
+.big-cta{display:block;border:none;border-radius:100px;padding:18px 32px;font-family:var(--sans);font-size:16px;font-weight:700;cursor:pointer;width:100%;letter-spacing:0.01em;transition:transform 0.12s,opacity 0.12s;text-align:center}
+.big-cta:hover{opacity:0.87;transform:scale(0.988)}.big-cta:active{transform:scale(0.972)}
+.cta-ink{background:var(--ink);color:var(--cream)}
+.cta-red{background:var(--red);color:var(--cream)}
+.cta-pulse{animation:ctap 2.4s ease-in-out 1.4s infinite}
+@keyframes ctap{0%,100%{box-shadow:0 0 0 0 rgba(35,33,32,0)}50%{box-shadow:0 0 0 8px rgba(35,33,32,0.08)}}
+.option-list{display:flex;flex-direction:column;gap:8px;flex:1;margin-bottom:20px}
+.opt{background:var(--card);border:1.5px solid var(--ink-12);border-radius:12px;padding:16px;cursor:pointer;display:flex;align-items:center;gap:12px;transition:border-color 0.15s,background 0.15s}
+.opt:hover{border-color:var(--ink-25)}.opt.sel{border-color:var(--ink);background:var(--ink)}
+.opt-radio{width:20px;height:20px;border-radius:50%;border:2px solid var(--ink-25);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all 0.15s}
+.opt.sel .opt-radio{background:var(--red);border-color:var(--red)}
+.chk{opacity:0;transition:opacity 0.12s}.opt.sel .chk{opacity:1}
+.opt-text{font-family:var(--sans);font-size:14px;font-weight:500;color:var(--ink)}.opt.sel .opt-text{color:var(--cream)}
+.tl-field{background:var(--card);border:1.5px solid var(--ink-12);border-radius:12px;padding:14px 16px;margin-bottom:10px;transition:border-color 0.2s}
+.tl-field:focus-within{border-color:var(--ink)}
+.tl-num{font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink-45);margin-bottom:5px;font-family:var(--sans)}
+.tl-in{width:100%;background:transparent;border:none;font-family:var(--serif);font-size:19px;font-weight:700;color:var(--ink);outline:none;line-height:1.3}
+.tl-in::placeholder{color:var(--ink-25);font-style:italic;font-weight:400;font-size:16px}
+.ctx-strip{background:var(--card);border:1.5px solid var(--ink-12);border-radius:12px;padding:14px 16px;margin-bottom:16px;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.cs-lbl{font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink-45);font-family:var(--sans);margin-bottom:3px}
+.cs-val{font-family:var(--serif);font-size:14px;font-weight:700;color:var(--ink);line-height:1.25}
+.loading-dots{display:flex;gap:6px;justify-content:center;padding:28px 0;align-items:center}
+.loading-dots span{width:8px;height:8px;border-radius:50%;background:var(--ink);opacity:0.2;animation:ld 1.1s ease-in-out infinite}
+.loading-dots span:nth-child(2){animation-delay:0.15s}.loading-dots span:nth-child(3){animation-delay:0.3s}
+@keyframes ld{0%,80%,100%{opacity:0.2;transform:scale(0.85)}40%{opacity:0.8;transform:scale(1.1)}}
+.result-card{border-radius:12px;padding:18px;margin-bottom:10px;opacity:0;transform:translateY(16px);transition:opacity 0.35s ease,transform 0.35s cubic-bezier(0.16,1,0.3,1)}
+.result-card.shown{opacity:1;transform:translateY(0)}
+.grade-A{background:var(--green)}.grade-B{background:#9A6200}.grade-C{background:var(--red)}
+.grade-pill{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.18);font-family:var(--serif);font-size:19px;font-weight:900;color:#fff;margin-bottom:8px}
+.r-tl{font-family:var(--serif);font-style:italic;font-size:16px;font-weight:700;color:#fff;margin-bottom:5px;line-height:1.3}
+.r-fb{font-size:13px;color:rgba(255,255,255,0.82);line-height:1.55;font-family:var(--sans)}
+.r-rw{font-size:12px;color:rgba(255,255,255,0.58);margin-top:6px;font-family:var(--sans);font-style:italic}
+.verdict-card{background:var(--card);border:1.5px solid var(--ink-12);border-radius:12px;padding:16px;margin-bottom:10px;opacity:0;transition:opacity 0.4s ease}
+.verdict-card.shown{opacity:1}
+.verdict-text{font-family:var(--serif);font-style:italic;font-size:16px;color:var(--ink);line-height:1.5}
+.badge-moment{background:var(--ink);border-radius:16px;padding:28px 20px;text-align:center;margin-top:4px;opacity:0;transform:scale(0.9);transition:all 0.45s cubic-bezier(0.16,1,0.3,1)}
+.badge-moment.shown{opacity:1;transform:scale(1)}
+.badge-star{font-size:44px;display:block;margin-bottom:10px}
+.badge-name{font-family:var(--serif);font-size:22px;font-weight:900;color:var(--mustard);margin-bottom:4px}
+.badge-desc{font-size:13px;color:rgba(250,243,214,0.55);font-family:var(--sans)}
+.two-btns{display:flex;gap:8px;margin-top:12px}
+.cta-outline{background:transparent;border:1.5px solid var(--ink);color:var(--ink);border-radius:100px;padding:14px 20px;font-family:var(--sans);font-size:14px;font-weight:700;cursor:pointer;flex:1;transition:all 0.12s}
+.cta-outline:hover{background:var(--ink);color:var(--cream)}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <symbol id="stand-wm" viewBox="130 405 1660 310">
+      <g fill="currentColor">
+        <path d="M445.36,431.57l-3.85,90.49c-.27,6.33-6.88,10.28-12.64,7.63-16.33-7.49-40.24-12.14-66.77-12.14-.31,0-.61,0-.91,0-11.02.03-11.98,16.22-1.04,17.55,64.35,7.81,96.1,36.71,96.1,88.14,0,78.78-43.72,105.68-168.62,105.68-36.48,0-78.6-3.46-127.16-10.8-4.45-.67-7.69-4.59-7.51-9.09l3.9-95.55c.25-6.24,6.73-10.23,12.43-7.66,19.27,8.69,48,14.06,77.99,14.06,3.22,0,6.25-.04,9.09-.14,11.02-.36,11.46-16.61.48-17.57-71.07-6.26-106.13-33.94-106.13-84.62,0-78.78,43.72-105.69,168.62-105.69,38.42,0,78.13,3.4,118.7,10.61,4.37.78,7.5,4.66,7.32,9.09Z"/>
+        <path d="M610.59,415.83l41.24-4.49c4.84-.53,9.19,2.97,9.72,7.81l10.68,98.05c.53,4.84-2.97,9.19-7.81,9.72l-41.22,4.49c-4.84.53-8.34,4.88-7.81,9.72l2.27,20.85c1.51,13.85,7.81,18.48,25.96,16.5,7.65-.83,15.43-2.62,23.47-5.7,5.42-2.08,11.35,1.47,11.97,7.24l13.01,119.51c.45,4.09-2.01,7.95-5.9,9.3-25.43,8.77-42.22,12.65-67.76,15.43-104.11,11.34-146.49-18.36-156.26-108.14l-25.77-235.61c-.53-4.84,2.97-9.19,7.81-9.72l142-15.46c4.83-.53,9.18,2.96,9.71,7.79l4.98,44.93c.54,4.83,4.88,8.32,9.71,7.79Z"/>
+        <path d="M1022.58,561.28v92.24c0,23.86.99,39.82,3.23,55.78.75,5.3-3.37,10.03-8.72,10.03h-134.04c-4.1,0-7.66-2.83-8.59-6.82l-4.66-20.08h-.96c-19.22,24.02-50.92,36.51-92.71,36.51-61.97,0-92.24-27.38-92.24-83.59s32.19-85.51,98.48-85.51c30.26,0,59.57,5.76,78.31,15.37h.96v-.96c0-24.5-21.61-35.55-69.66-35.55-31.93,0-62.53,4.97-83.54,13.54-5.64,2.3-11.84-1.78-12.06-7.87l-4.05-112.84c-.16-4.41,2.95-8.26,7.3-9.01,39.66-6.84,85.64-10.65,130.78-10.65,143.16,0,192.16,37.95,192.16,149.41ZM829.46,637.66c0,18.73,4.81,24.5,18.25,24.5,2.66,0,5.01-.2,7.14-.71,3.98-.93,6.79-4.51,6.79-8.6v-30.39c0-4.09-2.81-7.67-6.79-8.6-2.14-.5-4.49-.7-7.14-.7-13.45,0-18.25,5.76-18.25,24.5Z"/>
+        <path d="M1390.32,531.97v178.54c0,4.87-3.95,8.81-8.81,8.81h-142.82c-4.87,0-8.81-3.95-8.81-8.81v-154.04c0-19.22-4.33-25.94-16.81-25.94-3.08,0-6.17.49-9.06,1.47-3.53,1.2-5.83,4.62-5.83,8.35v170.16c0,4.87-3.95,8.81-8.81,8.81h-142.83c-4.87,0-8.81-3.95-8.81-8.81v-280.22c0-4.87,3.95-8.81,8.81-8.81h136.34c4.58,0,8.39,3.5,8.78,8.06l2.68,31.33h.96c21.14-34.11,51.4-49,98.48-49,70.14,0,96.56,33.15,96.56,120.1Z"/>
+        <path d="M1764.83,653.51c0,23.86.99,39.82,3.23,55.78.75,5.3-3.37,10.03-8.72,10.03h-139.67c-4.58,0-8.39-3.5-8.78-8.06l-2.68-31.33h-.96c-19.7,33.15-49.96,49-91.27,49-75.9,0-113.86-53.32-113.86-156.13s41.79-160.94,126.35-160.94c31.23,0,55.72,7.21,74.94,22.1h.96v-70.92s0-4.77,0-9.42c0-4.86,3.94-8.81,8.81-8.81h142.83c4.86,0,8.81,3.94,8.81,8.81,0,4.66,0,9.42,0,9.42v290.46ZM1569.79,570.4c0,29.3,5.29,39.87,20.18,39.87,3.06,0,5.84-.4,8.35-1.21,3.63-1.17,6.06-4.59,6.06-8.4v-60.52c0-3.81-2.43-7.23-6.06-8.4-2.51-.81-5.3-1.21-8.35-1.21-14.89,0-20.18,10.57-20.18,39.87Z"/>
+      </g>
+    </symbol>
+  </defs>
+</svg>
+
+<div class="sw">
+
+<div class="screen active" id="s0">
+<div class="s-inner">
+  <div class="topbar">
+    <svg class="stand-logo-svg" aria-label="Stand"><use href="#stand-wm"/></svg>
+    <span class="ceo-badge">CEO · Alice</span>
+  </div>
+  <div class="prog-track">
+    <div class="seg active"></div>
+    <div class="seg"></div><div class="seg"></div><div class="seg"></div><div class="seg"></div><div class="seg"></div>
+  </div>
+  <div class="overline">your journey so far</div>
+  <div class="display" style="font-size:34px;margin-bottom:6px">Look what you've built.</div>
+  <div class="body-copy" style="margin-bottom:0">Before we find your customers, let's celebrate how far you've come.</div>
+  <div class="recap-grid">
+    <div class="rtile rt-a" id="t0"><div class="rt-label rt-ll">Business</div><div class="rt-val rt-vl">Alice's Sweet Sensations</div><div class="rt-tick tick-l" id="tk0"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4L4 7L9 1" stroke="rgba(250,243,214,0.8)" stroke-width="2" stroke-linecap="round" fill="none"/></svg></div></div>
+    <div class="rtile rt-b" id="t1"><div class="rt-label rt-ll">Selling</div><div class="rt-val rt-vl">Delightful baked goods</div><div class="rt-tick tick-l" id="tk1"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4L4 7L9 1" stroke="rgba(250,243,214,0.8)" stroke-width="2" stroke-linecap="round" fill="none"/></svg></div></div>
+    <div class="rtile rt-c" id="t2"><div class="rt-label rt-ll">Brand</div><div class="rt-val rt-vl">Logo done</div><div class="rt-tick tick-l" id="tk2"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4L4 7L9 1" stroke="rgba(250,243,214,0.8)" stroke-width="2" stroke-linecap="round" fill="none"/></svg></div></div>
+    <div class="rtile rt-d" id="t3"><div class="rt-label rt-ld">Products</div><div class="rt-val rt-vd">3 designed</div><div class="rt-tick tick-d" id="tk3"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4L4 7L9 1" stroke="var(--ink)" stroke-width="2" stroke-linecap="round" fill="none"/></svg></div></div>
+  </div>
+  <div class="unlock-strip" id="unlock">
+    <div class="unlock-label">one thing left</div>
+    <div class="unlock-text">Find your customer and how to reach them — then you're live.</div>
+  </div>
+  <div class="cta-zone">
+    <button class="big-cta cta-ink cta-pulse" onclick="go('s1')">Let's find my customer →</button>
+  </div>
+</div>
+</div>
+
+<div class="screen" id="s1">
+<div class="s-inner">
+  <div class="topbar"><svg class="stand-logo-svg" aria-label="Stand"><use href="#stand-wm"/></svg><span class="ceo-badge">CEO · Alice</span></div>
+  <div class="prog-track"><div class="seg filled"></div><div class="seg active"></div><div class="seg"></div><div class="seg"></div><div class="seg"></div><div class="seg"></div></div>
+  <div class="overline">who wants this?</div>
+  <div class="display" style="font-size:30px;margin-bottom:6px">Who would stop you on the street to buy this?</div>
+  <div class="body-copy" style="margin-bottom:22px">Think of one real person — not "everyone".</div>
+  <div class="option-list">
+    <div class="opt" onclick="sel(this,'who','kids at school')"><div class="opt-radio"><svg class="chk" width="10" height="8" viewBox="0 0 10 8"><path d="M1 4L4 7L9 1" stroke="#fff" stroke-width="2.5" stroke-linecap="round" fill="none"/></svg></div><span class="opt-text">Kids at school</span></div>
+    <div class="opt" onclick="sel(this,'who','parents and families')"><div class="opt-radio"><svg class="chk" width="10" height="8" viewBox="0 0 10 8"><path d="M1 4L4 7L9 1" stroke="#fff" stroke-width="2.5" stroke-linecap="round" fill="none"/></svg></div><span class="opt-text">Parents and families</span></div>
+    <div class="opt" onclick="sel(this,'who','neighbours and locals')"><div class="opt-radio"><svg class="chk" width="10" height="8" viewBox="0 0 10 8"><path d="M1 4L4 7L9 1" stroke="#fff" stroke-width="2.5" stroke-linecap="round" fill="none"/></svg></div><span class="opt-text">Neighbours and locals</span></div>
+    <div class="opt" onclick="sel(this,'who','anyone who loves sweet things')"><div class="opt-radio"><svg class="chk" width="10" height="8" viewBox="0 0 10 8"><path d="M1 4L4 7L9 1" stroke="#fff" stroke-width="2.5" stroke-linecap="round" fill="none"/></svg></div><span class="opt-text">Anyone who loves sweet things</span></div>
+  </div>
+  <div class="cta-zone"><button class="big-cta cta-ink" onclick="next('s1','s2')">That's my customer →</button></div>
+</div>
+</div>
+
+<div class="screen" id="s2">
+<div class="s-inner">
+  <div class="topbar"><svg class="stand-logo-svg" aria-label="Stand"><use href="#stand-wm"/></svg><span class="ceo-badge">CEO · Alice</span></div>
+  <div class="prog-track"><div class="seg filled"></div><div class="seg filled"></div><div class="seg active"></div><div class="seg"></div><div class="seg"></div><div class="seg"></div></div>
+  <div class="overline">why would they buy it?</div>
+  <div class="display" style="font-size:30px;margin-bottom:6px">When someone gets yours, they feel…</div>
+  <div class="body-copy" style="margin-bottom:22px">Pick the one that fits best.</div>
+  <div class="option-list">
+    <div class="opt" onclick="sel(this,'feeling','special — like it was made just for them')"><div class="opt-radio"><svg class="chk" width="10" height="8" viewBox="0 0 10 8"><path d="M1 4L4 7L9 1" stroke="#fff" stroke-width="2.5" stroke-linecap="round" fill="none"/></svg></div><span class="opt-text">Special — like it was made just for them</span></div>
+    <div class="opt" onclick="sel(this,'feeling','proud to support a kid entrepreneur')"><div class="opt-radio"><svg class="chk" width="10" height="8" viewBox="0 0 10 8"><path d="M1 4L4 7L9 1" stroke="#fff" stroke-width="2.5" stroke-linecap="round" fill="none"/></svg></div><span class="opt-text">Proud to support a kid entrepreneur</span></div>
+    <div class="opt" onclick="sel(this,'feeling','excited — it looks and tastes amazing')"><div class="opt-radio"><svg class="chk" width="10" height="8" viewBox="0 0 10 8"><path d="M1 4L4 7L9 1" stroke="#fff" stroke-width="2.5" stroke-linecap="round" fill="none"/></svg></div><span class="opt-text">Excited — it looks and tastes amazing</span></div>
+    <div class="opt" onclick="sel(this,'feeling','like they discovered something cool')"><div class="opt-radio"><svg class="chk" width="10" height="8" viewBox="0 0 10 8"><path d="M1 4L4 7L9 1" stroke="#fff" stroke-width="2.5" stroke-linecap="round" fill="none"/></svg></div><span class="opt-text">Like they discovered something cool</span></div>
+  </div>
+  <div class="cta-zone"><button class="big-cta cta-ink" onclick="next('s2','s3')">That's the feeling →</button></div>
+</div>
+</div>
+
+<div class="screen" id="s3">
+<div class="s-inner">
+  <div class="topbar"><svg class="stand-logo-svg" aria-label="Stand"><use href="#stand-wm"/></svg><span class="ceo-badge">CEO · Alice</span></div>
+  <div class="prog-track"><div class="seg filled"></div><div class="seg filled"></div><div class="seg filled"></div><div class="seg active"></div><div class="seg"></div><div class="seg"></div></div>
+  <div class="overline">how do I reach them?</div>
+  <div class="display" style="font-size:30px;margin-bottom:6px">Where will you find your first customer?</div>
+  <div class="body-copy" style="margin-bottom:22px">Pick your best shot.</div>
+  <div class="option-list">
+    <div class="opt" onclick="sel(this,'reach','at school — friends, gates, events')"><div class="opt-radio"><svg class="chk" width="10" height="8" viewBox="0 0 10 8"><path d="M1 4L4 7L9 1" stroke="#fff" stroke-width="2.5" stroke-linecap="round" fill="none"/></svg></div><span class="opt-text">At school — friends, gates, events</span></div>
+    <div class="opt" onclick="sel(this,'reach','door to door in my neighbourhood')"><div class="opt-radio"><svg class="chk" width="10" height="8" viewBox="0 0 10 8"><path d="M1 4L4 7L9 1" stroke="#fff" stroke-width="2.5" stroke-linecap="round" fill="none"/></svg></div><span class="opt-text">Door to door in my neighbourhood</span></div>
+    <div class="opt" onclick="sel(this,'reach','at a market, fair or local event')"><div class="opt-radio"><svg class="chk" width="10" height="8" viewBox="0 0 10 8"><path d="M1 4L4 7L9 1" stroke="#fff" stroke-width="2.5" stroke-linecap="round" fill="none"/></svg></div><span class="opt-text">At a market, fair or local event</span></div>
+    <div class="opt" onclick="sel(this,'reach','family and friends — word of mouth')"><div class="opt-radio"><svg class="chk" width="10" height="8" viewBox="0 0 10 8"><path d="M1 4L4 7L9 1" stroke="#fff" stroke-width="2.5" stroke-linecap="round" fill="none"/></svg></div><span class="opt-text">Family and friends — word of mouth</span></div>
+  </div>
+  <div class="cta-zone"><button class="big-cta cta-ink" onclick="next('s3','s4')">That's where I'll go →</button></div>
+</div>
+</div>
+
+<div class="screen" id="s4">
+<div class="s-inner">
+  <div class="topbar"><svg class="stand-logo-svg" aria-label="Stand"><use href="#stand-wm"/></svg><span class="ceo-badge">CEO · Alice</span></div>
+  <div class="prog-track"><div class="seg filled"></div><div class="seg filled"></div><div class="seg filled"></div><div class="seg filled"></div><div class="seg active"></div><div class="seg"></div></div>
+  <div class="overline">tagline challenge</div>
+  <div class="display" style="font-size:30px;margin-bottom:6px">Write 3 taglines.</div>
+  <div class="body-copy" style="margin-bottom:12px">Short and punchy — speaks directly to your customer. Stand's live judge scores each one.</div>
+  <div class="ctx-strip" id="ctx-strip"></div>
+  <div style="display:flex;flex-direction:column;gap:8px;flex:1;margin-bottom:18px">
+    <div class="tl-field"><div class="tl-num">Tagline 1</div><input class="tl-in" id="tl1" placeholder="Write something short and punchy…"></div>
+    <div class="tl-field"><div class="tl-num">Tagline 2</div><input class="tl-in" id="tl2" placeholder="Try a totally different angle…"></div>
+    <div class="tl-field"><div class="tl-num">Tagline 3</div><input class="tl-in" id="tl3" placeholder="Go bold on this one…"></div>
+  </div>
+  <div class="cta-zone">
+    <button class="big-cta cta-red" id="judge-btn" onclick="runJudge()">Send to the judge ⚡</button>
+    <div id="loading-state" style="display:none;padding-top:16px">
+      <div class="loading-dots"><span></span><span></span><span></span></div>
+      <div style="text-align:center;font-size:13px;color:var(--ink-45);font-family:var(--sans);margin-top:-4px">Reading your taglines…</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="screen" id="s5">
+<div class="s-inner" style="padding-top:22px">
+  <div class="topbar" style="margin-bottom:12px"><svg class="stand-logo-svg" aria-label="Stand"><use href="#stand-wm"/></svg><span class="ceo-badge">CEO · Alice</span></div>
+  <div class="prog-track"><div class="seg filled"></div><div class="seg filled"></div><div class="seg filled"></div><div class="seg filled"></div><div class="seg filled"></div><div class="seg active"></div></div>
+  <div style="height:8px"></div>
+  <div class="overline">the verdict</div>
+  <div class="display" style="font-size:26px;margin-bottom:14px">Here's what the judge said.</div>
+  <div id="verdict-card" class="verdict-card"></div>
+  <div id="result-wrap"></div>
+  <div id="badge-wrap"></div>
+  <div class="two-btns">
+    <button class="cta-outline" onclick="retry()">Try new taglines</button>
+    <button class="big-cta cta-ink" style="flex:1;margin-top:0" onclick="location.reload()">Start over</button>
+  </div>
+</div>
+</div>
+
+</div>
+
+<script>
+const S={biz:"Alice's Sweet Sensations",product:'delightful baked goods',who:'',feeling:'',reach:''};
+function go(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
+function sel(el,key,val){el.closest('.option-list').querySelectorAll('.opt').forEach(o=>o.classList.remove('sel'));el.classList.add('sel');S[key]=val}
+function next(from,to){
+  if(from==='s3'){
+    document.getElementById('ctx-strip').innerHTML=
+      `<div><div class="cs-lbl">Customer</div><div class="cs-val">${S.who||'—'}</div></div>
+       <div><div class="cs-lbl">They feel</div><div class="cs-val">${S.feeling||'—'}</div></div>
+       <div style="grid-column:span 2"><div class="cs-lbl">You'll find them</div><div class="cs-val">${S.reach||'—'}</div></div>`;
+  }
+  go(to);
+}
+function retry(){['tl1','tl2','tl3'].forEach(id=>document.getElementById(id).value='');document.getElementById('judge-btn').style.display='';document.getElementById('judge-btn').disabled=false;document.getElementById('loading-state').style.display='none';go('s4')}
+
+setTimeout(()=>{
+  [0,1,2,3].forEach(i=>{
+    setTimeout(()=>{
+      document.getElementById('t'+i).classList.add('in');
+      setTimeout(()=>document.getElementById('tk'+i).classList.add('pop'),220);
+    },i*130);
+  });
+  setTimeout(()=>document.getElementById('unlock').classList.add('in'),560);
+},80);
+
+async function runJudge(){
+  const t1=document.getElementById('tl1').value.trim(),t2=document.getElementById('tl2').value.trim(),t3=document.getElementById('tl3').value.trim();
+  if(!t1&&!t2&&!t3){document.getElementById('tl1').focus();return}
+  document.getElementById('judge-btn').style.display='none';
+  document.getElementById('loading-state').style.display='block';
+  const prompt=`You are the Stand judge — a warm encouraging coach for kids aged 8–14.\nBusiness: "${S.biz}" selling "${S.product}".\nCustomer: ${S.who||'general'}. They feel ${S.feeling||'good'} when they buy.\nReach: ${S.reach||'locally'}.\n\nTaglines:\n1."${t1||'(blank)'}"\n2."${t2||'(blank)'}"\n3."${t3||'(blank)'}"\n\nGrade A=speaks directly to customer, B=good but vague, C=needs work.\nOne sentence warm specific feedback per tagline.\nRewrite (2-6 words) for B/C only.\nOne sentence verdict.\nbadge=true if any A.\nJSON only:\n{"results":[{"tagline":"","grade":"A","feedback":"","rewrite":""},{"tagline":"","grade":"B","feedback":"","rewrite":""},{"tagline":"","grade":"C","feedback":"","rewrite":""}],"verdict":"","badge":false}`;
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:900,messages:[{role:'user',content:prompt}]})});
+    const data=await res.json();
+    let parsed;
+    try{parsed=JSON.parse(data.content[0].text)}catch(e){const m=data.content[0].text.match(/\{[\s\S]*\}/);parsed=m?JSON.parse(m[0]):null}
+    if(!parsed)throw new Error();
+    document.getElementById('loading-state').style.display='none';
+    showResults(parsed,[t1,t2,t3]);
+  }catch(e){
+    document.getElementById('loading-state').style.display='none';
+    document.getElementById('judge-btn').style.display='';
+    document.getElementById('judge-btn').disabled=false;
+    document.getElementById('result-wrap').innerHTML=`<div style="background:var(--card);border:1.5px solid var(--ink-12);border-radius:12px;padding:16px;margin-bottom:10px"><div style="font-size:14px;color:var(--red);font-family:var(--sans)">Couldn't reach the judge — check your connection and try again.</div></div>`;
+    go('s5');
+  }
+}
+function showResults(data,taglines){
+  go('s5');
+  const rw=document.getElementById('result-wrap');rw.innerHTML='';
+  const gc={A:'grade-A',B:'grade-B',C:'grade-C'};
+  (data.results||[]).forEach((r,i)=>{
+    if(!taglines[i])return;
+    const g=(r.grade||'B').toUpperCase();
+    const card=document.createElement('div');
+    card.className=`result-card ${gc[g]||'grade-B'}`;
+    card.innerHTML=`<div class="grade-pill">${g}</div><div class="r-tl">"${r.tagline||taglines[i]}"</div><div class="r-fb">${r.feedback||''}</div>${r.rewrite?`<div class="r-rw">Try: ${r.rewrite}</div>`:''}`;
+    rw.appendChild(card);
+    setTimeout(()=>card.classList.add('shown'),i*380+80);
+  });
+  if(data.verdict){const vc=document.getElementById('verdict-card');vc.innerHTML=`<div class="verdict-text">"${data.verdict}"</div>`;setTimeout(()=>vc.classList.add('shown'),(data.results||[]).length*380+280)}
+  if(data.badge){
+    setTimeout(()=>{
+      const bw=document.getElementById('badge-wrap');
+      const el=document.createElement('div');el.className='badge-moment';
+      el.innerHTML=`<span class="badge-star">★</span><div class="badge-name">Don Draper badge</div><div class="badge-desc">You know how to talk to your customer. That's rare.</div>`;
+      bw.appendChild(el);setTimeout(()=>el.classList.add('shown'),50);
+    },(data.results||[]).length*380+680);
+  }
+}
+</script>
+</body>
+</html>
