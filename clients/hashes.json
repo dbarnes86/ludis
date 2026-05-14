@@ -1,0 +1,12 @@
+{
+  "_comment": "Per-client password hashes. Salt is the email (lowercased). Algorithm is PBKDF2-SHA256.",
+  "_iterations": 200000,
+  "clients": {
+    "lauren@standkids.com": {
+      "slug": "stand",
+      "name": "Lauren",
+      "org": "Stand",
+      "hash": "2d3019181d4f0cc79e44ddd2b7d9d6621b5840d6f30b02c67971e881876978bd"
+    }
+  }
+}
