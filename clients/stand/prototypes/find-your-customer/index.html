@@ -33,7 +33,7 @@ html,body{height:100%;background:#1a1a18}
 .recap-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:20px 0 18px}
 .rtile{border-radius:14px;padding:16px 15px;opacity:0;transform:translateY(14px);transition:opacity 0.4s ease,transform 0.4s cubic-bezier(0.16,1,0.3,1)}
 .rtile.in{opacity:1;transform:translateY(0)}
-.rt-a{background:var(--ink)}.rt-b{background:#3A3836}.rt-c{background:#5A5754}
+.rt-a{background:var(--ink)}.rt-b{background:var(--red)}.rt-c{background:#B85A00}
 .rt-d{background:transparent;border:1.5px solid var(--ink-25)}
 .rt-label{font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;font-family:var(--sans);margin-bottom:5px}
 .rt-ll{color:rgba(250,243,214,0.5)}.rt-ld{color:var(--ink-45)}
@@ -46,6 +46,9 @@ html,body{height:100%;background:#1a1a18}
 .unlock-strip.in{opacity:1;transform:translateY(0)}
 .unlock-label{font-size:10px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--red);font-family:var(--sans);margin-bottom:4px}
 .unlock-text{font-family:var(--serif);font-size:15px;font-weight:700;color:var(--ink);line-height:1.3}
+.back-btn{background:transparent;border:none;font-family:var(--sans);font-size:13px;font-weight:600;color:var(--ink-45);cursor:pointer;display:flex;align-items:center;gap:4px;padding:0;letter-spacing:0.02em;transition:color 0.12s;margin-bottom:4px}
+.back-btn:hover{color:var(--ink)}
+.nav-row{display:flex;align-items:center;margin-bottom:20px}.nav-row .prog-track{margin-bottom:0!important}
 .cta-zone{margin-top:auto;padding-top:16px}
 .big-cta{display:block;border:none;border-radius:100px;padding:18px 32px;font-family:var(--sans);font-size:16px;font-weight:700;cursor:pointer;width:100%;letter-spacing:0.01em;transition:transform 0.12s,opacity 0.12s;text-align:center}
 .big-cta:hover{opacity:0.87;transform:scale(0.988)}.big-cta:active{transform:scale(0.972)}
@@ -90,13 +93,32 @@ html,body{height:100%;background:#1a1a18}
 .two-btns{display:flex;gap:8px;margin-top:12px}
 .cta-outline{background:transparent;border:1.5px solid var(--ink);color:var(--ink);border-radius:100px;padding:14px 20px;font-family:var(--sans);font-size:14px;font-weight:700;cursor:pointer;flex:1;transition:all 0.12s}
 .cta-outline:hover{background:var(--ink);color:var(--cream)}
+
+.complete-screen{background:var(--ink);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 28px;text-align:center}
+.complete-badge-ring{width:120px;height:120px;border-radius:50%;background:var(--mustard);display:flex;align-items:center;justify-content:center;margin:0 auto 24px;opacity:0;transform:scale(0.4);transition:all 0.55s cubic-bezier(0.34,1.56,0.64,1)}
+.complete-badge-ring.pop{opacity:1;transform:scale(1)}
+.complete-badge-inner{font-size:48px;line-height:1}
+.complete-title{font-family:var(--serif);font-size:32px;font-weight:900;color:var(--cream);line-height:1.05;margin-bottom:10px;opacity:0;transform:translateY(12px);transition:all 0.4s ease 0.3s}
+.complete-title.in{opacity:1;transform:translateY(0)}
+.complete-sub{font-size:15px;color:rgba(250,243,214,0.6);font-family:var(--sans);line-height:1.6;margin-bottom:32px;opacity:0;transform:translateY(8px);transition:all 0.4s ease 0.5s}
+.complete-sub.in{opacity:1;transform:translateY(0)}
+.complete-badge-label{display:inline-block;background:rgba(255,196,8,0.15);border:1.5px solid var(--mustard);color:var(--mustard);font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;border-radius:20px;padding:5px 14px;margin-bottom:32px;opacity:0;transition:opacity 0.4s ease 0.65s}
+.complete-badge-label.in{opacity:1}
+.complete-pills{display:flex;flex-direction:column;gap:10px;width:100%;margin-bottom:32px;opacity:0;transition:opacity 0.4s ease 0.75s}
+.complete-pills.in{opacity:1}
+.cpill{background:rgba(250,243,214,0.07);border:1.5px solid rgba(250,243,214,0.12);border-radius:12px;padding:13px 16px;display:flex;align-items:center;gap:12px}
+.cpill-tick{width:22px;height:22px;border-radius:50%;background:var(--green);flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.cpill-text{font-family:var(--sans);font-size:14px;font-weight:500;color:rgba(250,243,214,0.85);text-align:left}
+@keyframes rings{0%{transform:scale(1);opacity:0.6}100%{transform:scale(2.2);opacity:0}}
+.ring-anim{position:absolute;width:120px;height:120px;border-radius:50%;border:2px solid var(--mustard);animation:rings 1.2s ease-out forwards}
+.badge-wrap-pos{position:relative;width:120px;height:120px;margin:0 auto 24px}
 </style>
 </head>
 <body>
 
 <svg width="0" height="0" style="position:absolute">
   <defs>
-    <symbol id="stand-wm" viewBox="130 405 1660 310">
+    <symbol id="stand-wm" viewBox="80 380 1760 360">
       <g fill="currentColor">
         <path d="M445.36,431.57l-3.85,90.49c-.27,6.33-6.88,10.28-12.64,7.63-16.33-7.49-40.24-12.14-66.77-12.14-.31,0-.61,0-.91,0-11.02.03-11.98,16.22-1.04,17.55,64.35,7.81,96.1,36.71,96.1,88.14,0,78.78-43.72,105.68-168.62,105.68-36.48,0-78.6-3.46-127.16-10.8-4.45-.67-7.69-4.59-7.51-9.09l3.9-95.55c.25-6.24,6.73-10.23,12.43-7.66,19.27,8.69,48,14.06,77.99,14.06,3.22,0,6.25-.04,9.09-.14,11.02-.36,11.46-16.61.48-17.57-71.07-6.26-106.13-33.94-106.13-84.62,0-78.78,43.72-105.69,168.62-105.69,38.42,0,78.13,3.4,118.7,10.61,4.37.78,7.5,4.66,7.32,9.09Z"/>
         <path d="M610.59,415.83l41.24-4.49c4.84-.53,9.19,2.97,9.72,7.81l10.68,98.05c.53,4.84-2.97,9.19-7.81,9.72l-41.22,4.49c-4.84.53-8.34,4.88-7.81,9.72l2.27,20.85c1.51,13.85,7.81,18.48,25.96,16.5,7.65-.83,15.43-2.62,23.47-5.7,5.42-2.08,11.35,1.47,11.97,7.24l13.01,119.51c.45,4.09-2.01,7.95-5.9,9.3-25.43,8.77-42.22,12.65-67.76,15.43-104.11,11.34-146.49-18.36-156.26-108.14l-25.77-235.61c-.53-4.84,2.97-9.19,7.81-9.72l142-15.46c4.83-.53,9.18,2.96,9.71,7.79l4.98,44.93c.54,4.83,4.88,8.32,9.71,7.79Z"/>
@@ -120,13 +142,14 @@ html,body{height:100%;background:#1a1a18}
     <div class="seg active"></div>
     <div class="seg"></div><div class="seg"></div><div class="seg"></div><div class="seg"></div><div class="seg"></div>
   </div>
+  <div style="height:4px"></div>
   <div class="overline">your journey so far</div>
   <div class="display" style="font-size:34px;margin-bottom:6px">Look what you've built.</div>
   <div class="body-copy" style="margin-bottom:0">Before we find your customers, let's celebrate how far you've come.</div>
   <div class="recap-grid">
     <div class="rtile rt-a" id="t0"><div class="rt-label rt-ll">Business</div><div class="rt-val rt-vl">Alice's Sweet Sensations</div><div class="rt-tick tick-l" id="tk0"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4L4 7L9 1" stroke="rgba(250,243,214,0.8)" stroke-width="2" stroke-linecap="round" fill="none"/></svg></div></div>
-    <div class="rtile rt-b" id="t1"><div class="rt-label rt-ll">Selling</div><div class="rt-val rt-vl">Delightful baked goods</div><div class="rt-tick tick-l" id="tk1"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4L4 7L9 1" stroke="rgba(250,243,214,0.8)" stroke-width="2" stroke-linecap="round" fill="none"/></svg></div></div>
-    <div class="rtile rt-c" id="t2"><div class="rt-label rt-ll">Brand</div><div class="rt-val rt-vl">Logo done</div><div class="rt-tick tick-l" id="tk2"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4L4 7L9 1" stroke="rgba(250,243,214,0.8)" stroke-width="2" stroke-linecap="round" fill="none"/></svg></div></div>
+    <div class="rtile rt-b" id="t1"><div class="rt-label rt-ll">Selling</div><div class="rt-val rt-vl">Delightful baked goods</div><div class="rt-tick tick-l" id="tk1"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4L4 7L9 1" stroke="white" stroke-width="2" stroke-linecap="round" fill="none"/></svg></div></div>
+    <div class="rtile rt-c" id="t2"><div class="rt-label rt-ll" style="color:rgba(255,255,255,0.55)">Brand</div><div class="rt-val rt-vl" style="color:white">Logo done</div><div class="rt-tick tick-l" id="tk2"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4L4 7L9 1" stroke="white" stroke-width="2" stroke-linecap="round" fill="none"/></svg></div></div>
     <div class="rtile rt-d" id="t3"><div class="rt-label rt-ld">Products</div><div class="rt-val rt-vd">3 designed</div><div class="rt-tick tick-d" id="tk3"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4L4 7L9 1" stroke="var(--ink)" stroke-width="2" stroke-linecap="round" fill="none"/></svg></div></div>
   </div>
   <div class="unlock-strip" id="unlock">
@@ -142,7 +165,10 @@ html,body{height:100%;background:#1a1a18}
 <div class="screen" id="s1">
 <div class="s-inner">
   <div class="topbar"><svg class="stand-logo-svg" aria-label="Stand"><use href="#stand-wm"/></svg><span class="ceo-badge">CEO · Alice</span></div>
-  <div class="prog-track"><div class="seg filled"></div><div class="seg active"></div><div class="seg"></div><div class="seg"></div><div class="seg"></div><div class="seg"></div></div>
+  <div class="nav-row">
+    <button class="back-btn" onclick="go('s0')">← Back</button>
+    <div class="prog-track" style="flex:1;margin-left:12px;margin-bottom:0"><div class="seg filled"></div><div class="seg active"></div><div class="seg"></div><div class="seg"></div><div class="seg"></div><div class="seg"></div></div>
+  </div>
   <div class="overline">who wants this?</div>
   <div class="display" style="font-size:30px;margin-bottom:6px">Who would stop you on the street to buy this?</div>
   <div class="body-copy" style="margin-bottom:22px">Think of one real person — not "everyone".</div>
@@ -159,7 +185,10 @@ html,body{height:100%;background:#1a1a18}
 <div class="screen" id="s2">
 <div class="s-inner">
   <div class="topbar"><svg class="stand-logo-svg" aria-label="Stand"><use href="#stand-wm"/></svg><span class="ceo-badge">CEO · Alice</span></div>
-  <div class="prog-track"><div class="seg filled"></div><div class="seg filled"></div><div class="seg active"></div><div class="seg"></div><div class="seg"></div><div class="seg"></div></div>
+  <div class="nav-row">
+    <button class="back-btn" onclick="go('s1')">← Back</button>
+    <div class="prog-track" style="flex:1;margin-left:12px;margin-bottom:0"><div class="seg filled"></div><div class="seg filled"></div><div class="seg active"></div><div class="seg"></div><div class="seg"></div><div class="seg"></div></div>
+  </div>
   <div class="overline">why would they buy it?</div>
   <div class="display" style="font-size:30px;margin-bottom:6px">When someone gets yours, they feel…</div>
   <div class="body-copy" style="margin-bottom:22px">Pick the one that fits best.</div>
@@ -176,7 +205,10 @@ html,body{height:100%;background:#1a1a18}
 <div class="screen" id="s3">
 <div class="s-inner">
   <div class="topbar"><svg class="stand-logo-svg" aria-label="Stand"><use href="#stand-wm"/></svg><span class="ceo-badge">CEO · Alice</span></div>
-  <div class="prog-track"><div class="seg filled"></div><div class="seg filled"></div><div class="seg filled"></div><div class="seg active"></div><div class="seg"></div><div class="seg"></div></div>
+  <div class="nav-row">
+    <button class="back-btn" onclick="go('s2')">← Back</button>
+    <div class="prog-track" style="flex:1;margin-left:12px;margin-bottom:0"><div class="seg filled"></div><div class="seg filled"></div><div class="seg filled"></div><div class="seg active"></div><div class="seg"></div><div class="seg"></div></div>
+  </div>
   <div class="overline">how do I reach them?</div>
   <div class="display" style="font-size:30px;margin-bottom:6px">Where will you find your first customer?</div>
   <div class="body-copy" style="margin-bottom:22px">Pick your best shot.</div>
@@ -193,7 +225,10 @@ html,body{height:100%;background:#1a1a18}
 <div class="screen" id="s4">
 <div class="s-inner">
   <div class="topbar"><svg class="stand-logo-svg" aria-label="Stand"><use href="#stand-wm"/></svg><span class="ceo-badge">CEO · Alice</span></div>
-  <div class="prog-track"><div class="seg filled"></div><div class="seg filled"></div><div class="seg filled"></div><div class="seg filled"></div><div class="seg active"></div><div class="seg"></div></div>
+  <div class="nav-row">
+    <button class="back-btn" onclick="go('s3')">← Back</button>
+    <div class="prog-track" style="flex:1;margin-left:12px;margin-bottom:0"><div class="seg filled"></div><div class="seg filled"></div><div class="seg filled"></div><div class="seg filled"></div><div class="seg active"></div><div class="seg"></div></div>
+  </div>
   <div class="overline">tagline challenge</div>
   <div class="display" style="font-size:30px;margin-bottom:6px">Write 3 taglines.</div>
   <div class="body-copy" style="margin-bottom:12px">Short and punchy — speaks directly to your customer. Stand's live judge scores each one.</div>
@@ -216,17 +251,39 @@ html,body{height:100%;background:#1a1a18}
 <div class="screen" id="s5">
 <div class="s-inner" style="padding-top:22px">
   <div class="topbar" style="margin-bottom:12px"><svg class="stand-logo-svg" aria-label="Stand"><use href="#stand-wm"/></svg><span class="ceo-badge">CEO · Alice</span></div>
-  <div class="prog-track"><div class="seg filled"></div><div class="seg filled"></div><div class="seg filled"></div><div class="seg filled"></div><div class="seg filled"></div><div class="seg active"></div></div>
+  <div class="nav-row">
+    <button class="back-btn" onclick="go('s4')">← Back</button>
+    <div class="prog-track" style="flex:1;margin-left:12px;margin-bottom:0"><div class="seg filled"></div><div class="seg filled"></div><div class="seg filled"></div><div class="seg filled"></div><div class="seg filled"></div><div class="seg active"></div></div>
+  </div>
   <div style="height:8px"></div>
   <div class="overline">the verdict</div>
   <div class="display" style="font-size:26px;margin-bottom:14px">Here's what the judge said.</div>
   <div id="verdict-card" class="verdict-card"></div>
   <div id="result-wrap"></div>
-  <div id="badge-wrap"></div>
-  <div class="two-btns">
+  <div class="two-btns" style="margin-top:16px">
     <button class="cta-outline" onclick="retry()">Try new taglines</button>
-    <button class="big-cta cta-ink" style="flex:1;margin-top:0" onclick="location.reload()">Start over</button>
+    <button class="big-cta cta-ink" style="flex:1;margin-top:0" id="complete-btn" onclick="showComplete()">See my badge →</button>
   </div>
+</div>
+</div>
+
+<div class="screen" id="s6">
+<div class="complete-screen">
+  <div class="badge-wrap-pos">
+    <div class="complete-badge-ring" id="cbadge">
+      <div class="complete-badge-inner">★</div>
+    </div>
+  </div>
+  <div class="complete-title" id="ctitle">You know your customer.</div>
+  <div class="complete-sub" id="csub">You figured out who wants what you make, why they'd buy it, and where to find them. That's what real CEOs do — and you just did it.</div>
+  <div class="complete-badge-label" id="clabel">Customer Expert badge</div>
+  <div class="complete-pills" id="cpills">
+    <div class="cpill"><div class="cpill-tick"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4L4 7L9 1" stroke="white" stroke-width="2.5" stroke-linecap="round" fill="none"/></svg></div><span class="cpill-text">Found out who your customer really is</span></div>
+    <div class="cpill"><div class="cpill-tick"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4L4 7L9 1" stroke="white" stroke-width="2.5" stroke-linecap="round" fill="none"/></svg></div><span class="cpill-text">Figured out why they'd choose you</span></div>
+    <div class="cpill"><div class="cpill-tick"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4L4 7L9 1" stroke="white" stroke-width="2.5" stroke-linecap="round" fill="none"/></svg></div><span class="cpill-text">Wrote taglines that speak to them</span></div>
+    <div class="cpill"><div class="cpill-tick"><svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4L4 7L9 1" stroke="white" stroke-width="2.5" stroke-linecap="round" fill="none"/></svg></div><span class="cpill-text">Mapped out where to find them</span></div>
+  </div>
+  <button class="big-cta" style="background:var(--mustard);color:var(--ink);max-width:340px;width:100%" onclick="location.reload()">Start my next lesson →</button>
 </div>
 </div>
 
@@ -257,34 +314,61 @@ setTimeout(()=>{
   setTimeout(()=>document.getElementById('unlock').classList.add('in'),560);
 },80);
 
+const PROXY='https://corsproxy.io/?url=https://api.anthropic.com/v1/messages';
+
 async function runJudge(){
   const t1=document.getElementById('tl1').value.trim(),t2=document.getElementById('tl2').value.trim(),t3=document.getElementById('tl3').value.trim();
   if(!t1&&!t2&&!t3){document.getElementById('tl1').focus();return}
   document.getElementById('judge-btn').style.display='none';
   document.getElementById('loading-state').style.display='block';
-  const prompt=`You are the Stand judge — a warm encouraging coach for kids aged 8–14.\nBusiness: "${S.biz}" selling "${S.product}".\nCustomer: ${S.who||'general'}. They feel ${S.feeling||'good'} when they buy.\nReach: ${S.reach||'locally'}.\n\nTaglines:\n1."${t1||'(blank)'}"\n2."${t2||'(blank)'}"\n3."${t3||'(blank)'}"\n\nGrade A=speaks directly to customer, B=good but vague, C=needs work.\nOne sentence warm specific feedback per tagline.\nRewrite (2-6 words) for B/C only.\nOne sentence verdict.\nbadge=true if any A.\nJSON only:\n{"results":[{"tagline":"","grade":"A","feedback":"","rewrite":""},{"tagline":"","grade":"B","feedback":"","rewrite":""},{"tagline":"","grade":"C","feedback":"","rewrite":""}],"verdict":"","badge":false}`;
+  const taglines=[t1,t2,t3].filter(Boolean);
+  const prompt=`You are the Stand judge — a warm encouraging coach for kids aged 8–14.
+Business: "${S.biz}" selling "${S.product}".
+Customer: ${S.who||'general'}. They feel ${S.feeling||'good'} when they buy.
+They reach customers: ${S.reach||'locally'}.
+Taglines to judge:
+${taglines.map((t,i)=>`${i+1}. "${t}"`).join('\n')}
+Grade A=speaks directly to customer and makes them feel seen, B=good but vague, C=needs work.
+One sentence warm specific coaching feedback per tagline — encouraging, for a kid.
+Rewrite suggestion (2–6 words) for B or C only.
+One sentence overall verdict.
+badge=true if any tagline earns A.
+Respond ONLY with valid JSON, no markdown fences, no extra text:
+{"results":[{"tagline":"","grade":"A","feedback":"","rewrite":""},{"tagline":"","grade":"B","feedback":"","rewrite":""},{"tagline":"","grade":"C","feedback":"","rewrite":""}],"verdict":"","badge":false}`;
+
   try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:900,messages:[{role:'user',content:prompt}]})});
+    const res=await fetch(PROXY,{
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-anthropic-version':'2023-06-01'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:900,messages:[{role:'user',content:prompt}]})
+    });
+    if(!res.ok)throw new Error('HTTP '+res.status);
     const data=await res.json();
+    const raw=data.content&&data.content[0]&&data.content[0].text;
+    if(!raw)throw new Error('no content');
     let parsed;
-    try{parsed=JSON.parse(data.content[0].text)}catch(e){const m=data.content[0].text.match(/\{[\s\S]*\}/);parsed=m?JSON.parse(m[0]):null}
-    if(!parsed)throw new Error();
+    try{parsed=JSON.parse(raw)}catch(e){const m=raw.match(/\{[\s\S]*\}/);parsed=m?JSON.parse(m[0]):null}
+    if(!parsed)throw new Error('parse fail');
     document.getElementById('loading-state').style.display='none';
-    showResults(parsed,[t1,t2,t3]);
+    showResults(parsed,taglines);
   }catch(e){
     document.getElementById('loading-state').style.display='none';
     document.getElementById('judge-btn').style.display='';
     document.getElementById('judge-btn').disabled=false;
-    document.getElementById('result-wrap').innerHTML=`<div style="background:var(--card);border:1.5px solid var(--ink-12);border-radius:12px;padding:16px;margin-bottom:10px"><div style="font-size:14px;color:var(--red);font-family:var(--sans)">Couldn't reach the judge — check your connection and try again.</div></div>`;
+    const rw=document.getElementById('result-wrap');
+    rw.innerHTML=`<div style="background:var(--card);border:1.5px solid rgba(216,31,38,0.3);border-radius:12px;padding:18px;margin-bottom:12px">
+      <div style="font-size:13px;font-weight:700;color:var(--red);font-family:var(--sans);margin-bottom:6px">Couldn't reach the judge right now.</div>
+      <div style="font-size:13px;color:var(--ink-45);font-family:var(--sans);line-height:1.5">If you're running this locally, you'll need a CORS proxy or a small backend endpoint. Drop a note to Andy to wire up the API route.</div>
+    </div>`;
     go('s5');
   }
 }
+
 function showResults(data,taglines){
   go('s5');
   const rw=document.getElementById('result-wrap');rw.innerHTML='';
   const gc={A:'grade-A',B:'grade-B',C:'grade-C'};
-  (data.results||[]).forEach((r,i)=>{
-    if(!taglines[i])return;
+  (data.results||[]).filter((_,i)=>taglines[i]).forEach((r,i)=>{
     const g=(r.grade||'B').toUpperCase();
     const card=document.createElement('div');
     card.className=`result-card ${gc[g]||'grade-B'}`;
@@ -292,15 +376,27 @@ function showResults(data,taglines){
     rw.appendChild(card);
     setTimeout(()=>card.classList.add('shown'),i*380+80);
   });
-  if(data.verdict){const vc=document.getElementById('verdict-card');vc.innerHTML=`<div class="verdict-text">"${data.verdict}"</div>`;setTimeout(()=>vc.classList.add('shown'),(data.results||[]).length*380+280)}
-  if(data.badge){
-    setTimeout(()=>{
-      const bw=document.getElementById('badge-wrap');
-      const el=document.createElement('div');el.className='badge-moment';
-      el.innerHTML=`<span class="badge-star">★</span><div class="badge-name">Don Draper badge</div><div class="badge-desc">You know how to talk to your customer. That's rare.</div>`;
-      bw.appendChild(el);setTimeout(()=>el.classList.add('shown'),50);
-    },(data.results||[]).length*380+680);
+  if(data.verdict){
+    const vc=document.getElementById('verdict-card');
+    vc.innerHTML=`<div class="verdict-text">"${data.verdict}"</div>`;
+    setTimeout(()=>vc.classList.add('shown'),(data.results||[]).length*380+280);
   }
+}
+
+function showComplete(){
+  go('s6');
+  setTimeout(()=>{
+    const b=document.getElementById('cbadge');
+    b.classList.add('pop');
+    const ring=document.createElement('div');
+    ring.className='ring-anim';
+    b.parentNode.appendChild(ring);
+    setTimeout(()=>ring.remove(),1300);
+  },100);
+  setTimeout(()=>document.getElementById('ctitle').classList.add('in'),400);
+  setTimeout(()=>document.getElementById('csub').classList.add('in'),580);
+  setTimeout(()=>document.getElementById('clabel').classList.add('in'),720);
+  setTimeout(()=>document.getElementById('cpills').classList.add('in'),860);
 }
 </script>
 </body>
