@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stand — Module 05: Marketing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --cream:#FAF3D6;--card:#FFFFFF;--ink:#232120;--red:#D81F26;--mustard:#FFC408;--green:#006238;--blue:#014794;
+  --ink-08:rgba(35,33,32,0.08);--ink-12:rgba(35,33,32,0.12);--ink-20:rgba(35,33,32,0.20);--ink-45:rgba(35,33,32,0.45);
+  --serif:'Playfair Display',Georgia,serif;--sans:'DM Sans','Helvetica Neue',sans-serif;
+  /* Alice's brand colours from her Brand Studio session */
+  --biz-primary:#FFC408;--biz-2:#006238;--biz-3:#014794;
+}
+html,body{height:100%;background:#111}
+.sw{font-family:var(--sans);color:var(--ink);background:var(--cream);max-width:430px;margin:0 auto;min-height:100vh;position:relative}
+
+/* ── SCREENS ── */
+.screen{display:none;flex-direction:column;min-height:100vh}
+.screen.active{display:flex}
+
+/* ── TOPBAR ── */
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:16px 20px 0}
+.stand-logo{height:20px;width:auto;display:block}
+.module-badge{background:var(--blue);color:#fff;font-size:9px;font-weight:700;font-family:var(--sans);letter-spacing:0.1em;border-radius:20px;padding:3px 10px;text-transform:uppercase}
+.ceo-badge{background:var(--red);color:#fff;font-size:9px;font-weight:700;font-family:var(--sans);letter-spacing:0.06em;border-radius:20px;padding:4px 10px;text-transform:uppercase;line-height:1.2;white-space:nowrap}
+
+/* ── NAV ROW ── */
+.nav-row{display:flex;align-items:center;gap:10px;padding:14px 20px 0}
+.back-btn{background:transparent;border:none;font-family:var(--sans);font-size:12px;font-weight:600;color:var(--ink-45);cursor:pointer;display:flex;align-items:center;gap:3px;padding:0;flex-shrink:0;transition:color 0.12s}
+.back-btn:hover{color:var(--ink)}
+.prog-track{display:flex;gap:3px;flex:1}
+.seg{height:4px;flex:1;border-radius:2px;background:var(--ink-12)}
+.seg.filled{background:var(--ink)}
+.seg.active{position:relative;overflow:hidden;background:var(--ink-12)}
+.seg.active::after{content:'';position:absolute;inset:0;background:var(--ink);transform:scaleX(0);transform-origin:left;animation:sf 0.5s cubic-bezier(0.16,1,0.3,1) forwards}
+@keyframes sf{to{transform:scaleX(1)}}
+
+/* ── TYPE ── */
+.overline{font-size:10px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--ink-45);font-family:var(--sans);margin-bottom:6px}
+.display{font-family:var(--serif);font-weight:900;line-height:1.05;letter-spacing:-0.5px;color:var(--ink)}
+.body{font-size:14px;line-height:1.65;color:var(--ink-45);font-family:var(--sans)}
+
+/* ── INNER ── */
+.s-inner{padding:20px 20px 32px;display:flex;flex-direction:column;flex:1}
+.cta-zone{margin-top:auto;padding-top:16px}
+
+/* ── CTAs ── */
+.big-cta{display:block;border:none;border-radius:100px;padding:17px 28px;font-family:var(--sans);font-size:15px;font-weight:700;cursor:pointer;width:100%;letter-spacing:0.01em;transition:transform 0.1s,opacity 0.1s;text-align:center}
+.big-cta:hover{opacity:0.88;transform:scale(0.988)}.big-cta:active{transform:scale(0.972)}
+.cta-ink{background:var(--ink);color:var(--cream)}
+.cta-red{background:var(--red);color:var(--cream)}
+.cta-outline{background:transparent;border:1.5px solid var(--ink);color:var(--ink);border-radius:100px;padding:14px 20px;font-family:var(--sans);font-size:14px;font-weight:700;cursor:pointer;width:100%;transition:all 0.12s;margin-top:10px;display:block;text-align:center}
+.cta-outline:hover{background:var(--ink);color:var(--cream)}
+.cta-pulse{animation:ctap 2.4s ease-in-out 1.4s infinite}
+@keyframes ctap{0%,100%{box-shadow:0 0 0 0 rgba(35,33,32,0)}50%{box-shadow:0 0 0 7px rgba(35,33,32,0.08)}}
+
+/* ── RECAP TILES ── */
+.recap-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:16px 0 14px}
+.rtile{border-radius:12px;padding:14px 13px;opacity:0;transform:translateY(12px);transition:opacity 0.4s ease,transform 0.4s cubic-bezier(0.16,1,0.3,1)}
+.rtile.in{opacity:1;transform:translateY(0)}
+.rt-ink{background:var(--ink)}.rt-red{background:var(--red)}.rt-amber{background:#B85A00}.rt-outline{background:transparent;border:1.5px solid var(--ink-20)}
+.rt-label{font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;font-family:var(--sans);margin-bottom:4px}
+.rt-ll{color:rgba(250,243,214,0.5)}.rt-ld{color:var(--ink-45)}
+.rt-val{font-family:var(--serif);font-size:13px;font-weight:700;line-height:1.2}
+.rt-vl{color:var(--cream)}.rt-vd{color:var(--ink)}
+.rt-tick{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-top:8px;opacity:0;transform:scale(0);transition:all 0.3s cubic-bezier(0.34,1.56,0.64,1)}
+.rt-tick.pop{opacity:1;transform:scale(1)}
+.tick-l{background:rgba(250,243,214,0.18)}.tick-d{background:var(--ink-08)}
+.unlock-strip{border:1.5px solid var(--ink);border-radius:10px;padding:13px 14px;margin-bottom:20px;opacity:0;transform:translateY(6px);transition:all 0.4s ease}
+.unlock-strip.in{opacity:1;transform:translateY(0)}
+.ul-label{font-size:9px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--red);font-family:var(--sans);margin-bottom:3px}
+.ul-text{font-family:var(--serif);font-size:14px;font-weight:700;color:var(--ink);line-height:1.3}
+
+/* ── Q2: free text + chips ── */
+.who-textarea{width:100%;border:1.5px solid var(--ink-12);border-radius:10px;background:var(--card);font-family:var(--serif);font-size:17px;font-weight:700;color:var(--ink);padding:13px 14px;outline:none;resize:none;transition:border-color 0.2s;line-height:1.4;min-height:72px}
+.who-textarea:focus{border-color:var(--ink)}
+.who-textarea::placeholder{color:var(--ink-20);font-style:italic;font-weight:400;font-size:15px}
+.chips-label{font-size:9px;font-weight:700;letter-spacing:0.13em;text-transform:uppercase;color:var(--ink-45);font-family:var(--sans);margin:12px 0 8px}
+.chips{display:flex;flex-direction:column;gap:6px}
+.chip{background:var(--card);border:1.5px solid var(--ink-12);border-radius:8px;padding:10px 13px;font-family:var(--sans);font-size:13px;font-weight:500;color:var(--ink);cursor:pointer;transition:all 0.12s;text-align:left}
+.chip:hover{border-color:var(--ink-20);background:#f7f2e0}
+.chip.tapped{border-color:var(--ink-25);background:#f0ebe0}
+
+/* ── AI response card ── */
+.response-card{background:var(--ink);border-radius:12px;padding:16px;margin-bottom:12px;opacity:0;transform:translateY(10px);transition:all 0.35s cubic-bezier(0.16,1,0.3,1)}
+.response-card.show{opacity:1;transform:translateY(0)}
+.response-you-said{font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(250,243,214,0.45);font-family:var(--sans);margin-bottom:5px}
+.response-quote{font-family:var(--serif);font-style:italic;font-size:16px;color:var(--cream);line-height:1.35;margin-bottom:10px}
+.response-divider{border:none;border-top:1px solid rgba(250,243,214,0.1);margin-bottom:10px}
+.response-text{font-size:13px;color:rgba(250,243,214,0.75);font-family:var(--sans);line-height:1.6}
+.response-loading{display:flex;gap:5px;align-items:center;padding:4px 0}
+.response-loading span{width:7px;height:7px;border-radius:50%;background:rgba(250,243,214,0.4);animation:ld 1.1s ease-in-out infinite}
+.response-loading span:nth-child(2){animation-delay:0.15s}
+.response-loading span:nth-child(3){animation-delay:0.3s}
+@keyframes ld{0%,80%,100%{opacity:0.4;transform:scale(0.8)}40%{opacity:1;transform:scale(1.1)}}
+
+/* ── Q3 options ── */
+.opt-list{display:flex;flex-direction:column;gap:7px;margin-bottom:14px}
+.opt{background:var(--card);border:1.5px solid var(--ink-12);border-radius:10px;padding:14px;cursor:pointer;display:flex;align-items:center;gap:11px;transition:all 0.14s}
+.opt:hover{border-color:var(--ink-20)}.opt.sel{border-color:var(--ink);background:var(--ink)}
+.opt-radio{width:18px;height:18px;border-radius:50%;border:2px solid var(--ink-20);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all 0.14s}
+.opt.sel .opt-radio{background:var(--red);border-color:var(--red)}
+.chk{opacity:0;transition:opacity 0.12s}.opt.sel .chk{opacity:1}
+.opt-text{font-family:var(--sans);font-size:13px;font-weight:500;color:var(--ink);line-height:1.4}.opt.sel .opt-text{color:var(--cream)}
+
+/* positioning reveal */
+.pos-reveal{background:var(--ink);border-radius:10px;padding:14px;margin-top:10px;opacity:0;transform:translateY(8px);transition:all 0.32s cubic-bezier(0.16,1,0.3,1)}
+.pos-reveal.show{opacity:1;transform:translateY(0)}
+.pos-label{font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(250,243,214,0.45);font-family:var(--sans);margin-bottom:5px}
+.pos-text{font-family:var(--serif);font-style:italic;font-size:15px;color:var(--cream);line-height:1.4}
+
+/* ── context strip ── */
+.ctx-strip{background:var(--card);border:1.5px solid var(--ink-12);border-radius:10px;padding:12px 14px;margin-bottom:13px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.cs-lbl{font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink-45);font-family:var(--sans);margin-bottom:2px}
+.cs-val{font-family:var(--serif);font-size:13px;font-weight:700;color:var(--ink);line-height:1.2}
+
+/* ── tagline fields ── */
+.tl-field{background:var(--card);border:1.5px solid var(--ink-12);border-radius:10px;padding:12px 14px;margin-bottom:8px;transition:border-color 0.2s}
+.tl-field:focus-within{border-color:var(--ink)}
+.tl-num{font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink-45);margin-bottom:4px;font-family:var(--sans)}
+.tl-in{width:100%;background:transparent;border:none;font-family:var(--serif);font-size:17px;font-weight:700;color:var(--ink);outline:none;line-height:1.3}
+.tl-in::placeholder{color:var(--ink-20);font-style:italic;font-weight:400;font-size:14px}
+
+/* loading dots (dark bg) */
+.ldots{display:flex;gap:5px;justify-content:center;padding:20px 0;align-items:center}
+.ldots span{width:7px;height:7px;border-radius:50%;background:var(--ink);opacity:0.2;animation:ld 1.1s ease-in-out infinite}
+.ldots span:nth-child(2){animation-delay:0.15s}.ldots span:nth-child(3){animation-delay:0.3s}
+
+/* ── results ── */
+.result-card{border-radius:10px;padding:16px;margin-bottom:8px;opacity:0;transform:translateY(14px);transition:opacity 0.32s ease,transform 0.32s cubic-bezier(0.16,1,0.3,1)}
+.result-card.shown{opacity:1;transform:translateY(0)}
+.grade-A{background:var(--green)}.grade-B{background:#9A6200}.grade-C{background:var(--red)}
+.grade-pill{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,0.18);font-family:var(--serif);font-size:17px;font-weight:900;color:#fff;margin-bottom:7px}
+.r-tl{font-family:var(--serif);font-style:italic;font-size:15px;font-weight:700;color:#fff;margin-bottom:4px;line-height:1.3}
+.r-fb{font-size:12px;color:rgba(255,255,255,0.82);line-height:1.55;font-family:var(--sans)}
+.r-rw{font-size:11px;color:rgba(255,255,255,0.55);margin-top:5px;font-family:var(--sans);font-style:italic}
+.verdict-card{background:var(--card);border:1.5px solid var(--ink-12);border-radius:10px;padding:14px;margin-bottom:8px;opacity:0;transition:opacity 0.4s ease}
+.verdict-card.shown{opacity:1}
+.verdict-text{font-family:var(--serif);font-style:italic;font-size:15px;color:var(--ink);line-height:1.5}
+.two-btns{display:flex;gap:8px;margin-top:10px}
+.cta-sm-outline{background:transparent;border:1.5px solid var(--ink);color:var(--ink);border-radius:100px;padding:13px 16px;font-family:var(--sans);font-size:13px;font-weight:700;cursor:pointer;flex:1;transition:all 0.12s;text-align:center}
+.cta-sm-outline:hover{background:var(--ink);color:var(--cream)}
+
+/* ── complete screen ── */
+.complete-bg{background:var(--ink);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:36px 20px 40px;overflow-y:auto}
+.badge-pos{position:relative;width:88px;height:88px;margin:0 auto 18px;flex-shrink:0}
+.badge-ring{width:88px;height:88px;border-radius:50%;background:var(--mustard);display:flex;align-items:center;justify-content:center;opacity:0;transform:scale(0.4);transition:all 0.52s cubic-bezier(0.34,1.56,0.64,1)}
+.badge-ring.pop{opacity:1;transform:scale(1)}
+.badge-inner{font-size:36px;line-height:1}
+@keyframes rings{0%{transform:scale(1);opacity:0.55}100%{transform:scale(2.4);opacity:0}}
+.ring-anim{position:absolute;inset:0;border-radius:50%;border:2px solid var(--mustard);animation:rings 1.2s ease-out forwards}
+.c-title{font-family:var(--serif);font-size:26px;font-weight:900;color:var(--cream);line-height:1.05;margin-bottom:6px;opacity:0;transform:translateY(10px);transition:all 0.38s ease;text-align:center;width:100%}
+.c-title.in{opacity:1;transform:translateY(0)}
+.c-sub{font-size:13px;color:rgba(250,243,214,0.6);font-family:var(--sans);line-height:1.6;margin-bottom:16px;opacity:0;transform:translateY(6px);transition:all 0.38s ease;text-align:center;width:100%}
+.c-sub.in{opacity:1;transform:translateY(0)}
+.c-badge-chip{display:inline-block;background:rgba(255,196,8,0.15);border:1.5px solid var(--mustard);color:var(--mustard);font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;border-radius:20px;padding:4px 12px;margin-bottom:18px;opacity:0;transition:opacity 0.38s ease;align-self:center}
+.c-badge-chip.in{opacity:1}
+
+/* assets */
+.assets-wrap{width:100%;opacity:0;transition:opacity 0.4s ease}
+.assets-wrap.in{opacity:1}
+.a-label{font-size:9px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:rgba(250,243,214,0.4);font-family:var(--sans);margin-bottom:10px;text-align:left}
+
+/* ad card */
+.ad-card{border-radius:14px;overflow:hidden;margin-bottom:12px;border:1.5px solid rgba(250,243,214,0.1);opacity:0;transform:translateY(14px);transition:all 0.42s cubic-bezier(0.16,1,0.3,1)}
+.ad-card.shown{opacity:1;transform:translateY(0)}
+.ad-header{padding:16px;display:flex;align-items:center;gap:12px}
+.ad-logo{width:40px;height:40px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:17px;font-weight:900;color:white;flex-shrink:0}
+.ad-biz-name{font-family:var(--serif);font-size:16px;font-weight:900;color:white;line-height:1.1}
+.ad-biz-sub{font-size:10px;color:rgba(255,255,255,0.55);font-family:var(--sans);margin-top:2px}
+.ad-body{background:var(--card);padding:16px}
+.ad-tagline{font-family:var(--serif);font-size:20px;font-weight:900;color:var(--ink);line-height:1.15;margin-bottom:8px}
+.ad-pos{font-size:12px;color:var(--ink-45);font-family:var(--sans);line-height:1.55;margin-bottom:12px}
+.ad-chips-row{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:13px}
+.ad-chip{background:var(--cream);border:1px solid var(--ink-12);border-radius:20px;padding:3px 9px;font-size:10px;font-weight:600;color:var(--ink-45);font-family:var(--sans)}
+.ad-chip-brand{border-color:transparent;color:white}
+.ad-footer{border-radius:7px;padding:9px 12px;display:flex;align-items:center;justify-content:space-between}
+.ad-footer-text{font-family:var(--sans);font-size:11px;font-weight:700;color:white}
+.ad-dots{display:flex;gap:4px}
+.ad-dot{width:12px;height:12px;border-radius:50%}
+
+/* ICP guide */
+.guide-card{background:rgba(250,243,214,0.06);border:1.5px solid rgba(250,243,214,0.12);border-radius:14px;overflow:hidden;margin-bottom:10px;opacity:0;transform:translateY(12px);transition:all 0.42s cubic-bezier(0.16,1,0.3,1)}
+.guide-card.shown{opacity:1;transform:translateY(0)}
+.guide-head{background:rgba(250,243,214,0.1);padding:12px 14px;border-bottom:1px solid rgba(250,243,214,0.1)}
+.guide-head-label{font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(250,243,214,0.4);font-family:var(--sans);margin-bottom:3px}
+.guide-head-title{font-family:var(--serif);font-size:14px;font-weight:700;color:var(--cream)}
+.guide-row{padding:10px 14px;border-bottom:1px solid rgba(250,243,214,0.08);display:flex;flex-direction:column;gap:2px}
+.guide-row:last-child{border-bottom:none}
+.guide-row-lbl{font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(250,243,214,0.4);font-family:var(--sans)}
+.guide-row-val{font-family:var(--serif);font-size:13px;font-weight:700;color:var(--cream);line-height:1.3}
+
+.complete-cta{background:var(--mustard);color:var(--ink);border:none;border-radius:100px;padding:16px 28px;font-family:var(--sans);font-size:14px;font-weight:700;cursor:pointer;width:100%;margin-top:16px;transition:opacity 0.12s;max-width:340px;align-self:center}
+.complete-cta:hover{opacity:0.88}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <symbol id="wm" viewBox="80 380 1760 360">
+      <g fill="currentColor">
+        <path d="M445.36,431.57l-3.85,90.49c-.27,6.33-6.88,10.28-12.64,7.63-16.33-7.49-40.24-12.14-66.77-12.14-.31,0-.61,0-.91,0-11.02.03-11.98,16.22-1.04,17.55,64.35,7.81,96.1,36.71,96.1,88.14,0,78.78-43.72,105.68-168.62,105.68-36.48,0-78.6-3.46-127.16-10.8-4.45-.67-7.69-4.59-7.51-9.09l3.9-95.55c.25-6.24,6.73-10.23,12.43-7.66,19.27,8.69,48,14.06,77.99,14.06,3.22,0,6.25-.04,9.09-.14,11.02-.36,11.46-16.61.48-17.57-71.07-6.26-106.13-33.94-106.13-84.62,0-78.78,43.72-105.69,168.62-105.69,38.42,0,78.13,3.4,118.7,10.61,4.37.78,7.5,4.66,7.32,9.09Z"/>
+        <path d="M610.59,415.83l41.24-4.49c4.84-.53,9.19,2.97,9.72,7.81l10.68,98.05c.53,4.84-2.97,9.19-7.81,9.72l-41.22,4.49c-4.84.53-8.34,4.88-7.81,9.72l2.27,20.85c1.51,13.85,7.81,18.48,25.96,16.5,7.65-.83,15.43-2.62,23.47-5.7,5.42-2.08,11.35,1.47,11.97,7.24l13.01,119.51c.45,4.09-2.01,7.95-5.9,9.3-25.43,8.77-42.22,12.65-67.76,15.43-104.11,11.34-146.49-18.36-156.26-108.14l-25.77-235.61c-.53-4.84,2.97-9.19,7.81-9.72l142-15.46c4.83-.53,9.18,2.96,9.71,7.79l4.98,44.93c.54,4.83,4.88,8.32,9.71,7.79Z"/>
+        <path d="M1022.58,561.28v92.24c0,23.86.99,39.82,3.23,55.78.75,5.3-3.37,10.03-8.72,10.03h-134.04c-4.1,0-7.66-2.83-8.59-6.82l-4.66-20.08h-.96c-19.22,24.02-50.92,36.51-92.71,36.51-61.97,0-92.24-27.38-92.24-83.59s32.19-85.51,98.48-85.51c30.26,0,59.57,5.76,78.31,15.37h.96v-.96c0-24.5-21.61-35.55-69.66-35.55-31.93,0-62.53,4.97-83.54,13.54-5.64,2.3-11.84-1.78-12.06-7.87l-4.05-112.84c-.16-4.41,2.95-8.26,7.3-9.01,39.66-6.84,85.64-10.65,130.78-10.65,143.16,0,192.16,37.95,192.16,149.41ZM829.46,637.66c0,18.73,4.81,24.5,18.25,24.5,2.66,0,5.01-.2,7.14-.71,3.98-.93,6.79-4.51,6.79-8.6v-30.39c0-4.09-2.81-7.67-6.79-8.6-2.14-.5-4.49-.7-7.14-.7-13.45,0-18.25,5.76-18.25,24.5Z"/>
+        <path d="M1390.32,531.97v178.54c0,4.87-3.95,8.81-8.81,8.81h-142.82c-4.87,0-8.81-3.95-8.81-8.81v-154.04c0-19.22-4.33-25.94-16.81-25.94-3.08,0-6.17.49-9.06,1.47-3.53,1.2-5.83,4.62-5.83,8.35v170.16c0,4.87-3.95,8.81-8.81,8.81h-142.83c-4.87,0-8.81-3.95-8.81-8.81v-280.22c0-4.87,3.95-8.81,8.81-8.81h136.34c4.58,0,8.39,3.5,8.78,8.06l2.68,31.33h.96c21.14-34.11,51.4-49,98.48-49,70.14,0,96.56,33.15,96.56,120.1Z"/>
+        <path d="M1764.83,653.51c0,23.86.99,39.82,3.23,55.78.75,5.3-3.37,10.03-8.72,10.03h-139.67c-4.58,0-8.39-3.5-8.78-8.06l-2.68-31.33h-.96c-19.7,33.15-49.96,49-91.27,49-75.9,0-113.86-53.32-113.86-156.13s41.79-160.94,126.35-160.94c31.23,0,55.72,7.21,74.94,22.1h.96v-70.92s0-4.77,0-9.42c0-4.86,3.94-8.81,8.81-8.81h142.83c4.86,0,8.81,3.94,8.81,8.81,0,4.66,0,9.42,0,9.42v290.46ZM1569.79,570.4c0,29.3,5.29,39.87,20.18,39.87,3.06,0,5.84-.4,8.35-1.21,3.63-1.17,6.06-4.59,6.06-8.4v-60.52c0-3.81-2.43-7.23-6.06-8.4-2.51-.81-5.3-1.21-8.35-1.21-14.89,0-20.18,10.57-20.18,39.87Z"/>
+      </g>
+    </symbol>
+  </defs>
+</svg>
+
+<div class="sw">
+
+<!-- ═══ S0: RECAP ═══ -->
+<div class="screen active" id="s0">
+<div class="s-inner">
+  <div class="topbar">
+    <svg class="stand-logo" aria-label="Stand"><use href="#wm"/></svg>
+    <span class="module-badge">Module 05 · Marketing</span>
+  </div>
+  <div style="height:16px"></div>
+  <div class="prog-track" style="margin-bottom:0">
+    <div class="seg active"></div>
+    <div class="seg"></div><div class="seg"></div><div class="seg"></div><div class="seg"></div><div class="seg"></div><div class="seg"></div>
+  </div>
+  <div style="height:20px"></div>
+  <div class="overline">where you've got to</div>
+  <div class="display" style="font-size:32px;margin-bottom:6px">Look what you've built.</div>
+  <div class="body" style="margin-bottom:0">You've done the hard part. Before we find your customers, let's take stock.</div>
+  <div class="recap-grid">
+    <div class="rtile rt-ink" id="t0"><div class="rt-label rt-ll">Business</div><div class="rt-val rt-vl" id="r-biz">Alice's Tasty Treats</div><div class="rt-tick tick-l" id="tk0"><svg width="9" height="7" viewBox="0 0 10 8"><path d="M1 4L4 7L9 1" stroke="rgba(250,243,214,0.8)" stroke-width="2" stroke-linecap="round" fill="none"/></svg></div></div>
+    <div class="rtile rt-red" id="t1"><div class="rt-label rt-ll">Type</div><div class="rt-val rt-vl">Baked Goods</div><div class="rt-tick tick-l" id="tk1"><svg width="9" height="7" viewBox="0 0 10 8"><path d="M1 4L4 7L9 1" stroke="white" stroke-width="2" stroke-linecap="round" fill="none"/></svg></div></div>
+    <div class="rtile rt-amber" id="t2"><div class="rt-label rt-ll">Brand</div><div class="rt-val rt-vl">Logo done</div><div class="rt-tick tick-l" id="tk2"><svg width="9" height="7" viewBox="0 0 10 8"><path d="M1 4L4 7L9 1" stroke="white" stroke-width="2" stroke-linecap="round" fill="none"/></svg></div></div>
+    <div class="rtile rt-outline" id="t3"><div class="rt-label rt-ld">Products</div><div class="rt-val rt-vd">Ready to sell</div><div class="rt-tick tick-d" id="tk3"><svg width="9" height="7" viewBox="0 0 10 8"><path d="M1 4L4 7L9 1" stroke="var(--ink)" stroke-width="2" stroke-linecap="round" fill="none"/></svg></div></div>
+  </div>
+  <div class="unlock-strip" id="unlock">
+    <div class="ul-label">module 05</div>
+    <div class="ul-text">Now let's find your customer, own your edge, and write the line that gets them to stop and look.</div>
+  </div>
+  <div class="cta-zone">
+    <button class="big-cta cta-ink cta-pulse" onclick="go('s1')">Find my customer →</button>
+  </div>
+</div>
+</div>
+
+<!-- ═══ S1: Q2 — who's your customer ═══ -->
+<div class="screen" id="s1">
+<div class="s-inner">
+  <div class="topbar"><svg class="stand-logo" aria-label="Stand"><use href="#wm"/></svg><span class="ceo-badge">CEO · Alice</span></div>
+  <div class="nav-row">
+    <button class="back-btn" onclick="go('s0')">← Back</button>
+    <div class="prog-track"><div class="seg filled"></div><div class="seg active"></div><div class="seg"></div><div class="seg"></div><div class="seg"></div><div class="seg"></div><div class="seg"></div></div>
+  </div>
+  <div class="overline">Q2 — who actually wants this?</div>
+  <div class="display" style="font-size:26px;margin-bottom:6px">Who's the one person most likely to buy this?</div>
+  <div class="body" style="margin-bottom:16px">Picture a real person — not "everyone". Describe them in your own words.</div>
+
+  <div id="q2-input">
+    <textarea class="who-textarea" id="who-input" rows="2" placeholder="e.g. mums at the school gate, my friend Sophie…"></textarea>
+    <div class="chips-label">or pick one to start</div>
+    <div class="chips">
+      <div class="chip" onclick="chipWho(this,'a parent at the school gate looking for a treat')">A parent at the school gate looking for a treat</div>
+      <div class="chip" onclick="chipWho(this,'a kid in my class who loves this kind of thing')">A kid in my class who loves this</div>
+      <div class="chip" onclick="chipWho(this,'a neighbour or family friend who supports local kids')">A neighbour or family friend who supports local kids</div>
+      <div class="chip" onclick="chipWho(this,'someone at a local market who loves homemade things')">Someone at a local market who loves homemade things</div>
+    </div>
+    <div class="cta-zone" style="padding-top:14px">
+      <button class="big-cta cta-ink" onclick="submitWho()">That's my customer →</button>
+    </div>
+  </div>
+
+  <div id="q2-response" style="display:none;flex:1;flex-direction:column">
+    <div class="response-card show" id="resp-card">
+      <div class="response-you-said">You said</div>
+      <div class="response-quote" id="resp-quote"></div>
+      <hr class="response-divider">
+      <div id="resp-loading" class="response-loading"><span></span><span></span><span></span></div>
+      <div id="resp-text" class="response-text" style="display:none"></div>
+    </div>
+    <div class="cta-zone" style="margin-top:auto">
+      <button class="big-cta cta-ink" id="who-continue" style="display:none" onclick="next('s1','s2')">That's my person →</button>
+      <button class="cta-outline" id="who-change" style="display:none" onclick="resetWho()">Change my answer</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══ S2: Q3 — your edge ═══ -->
+<div class="screen" id="s2">
+<div class="s-inner">
+  <div class="topbar"><svg class="stand-logo" aria-label="Stand"><use href="#wm"/></svg><span class="ceo-badge">CEO · Alice</span></div>
+  <div class="nav-row">
+    <button class="back-btn" onclick="go('s1')">← Back</button>
+    <div class="prog-track"><div class="seg filled"></div><div class="seg filled"></div><div class="seg filled"></div><div class="seg active"></div><div class="seg"></div><div class="seg"></div><div class="seg"></div></div>
+  </div>
+  <div class="overline">Q3 — why yours and not something else?</div>
+  <div class="display" style="font-size:26px;margin-bottom:6px">What could a big brand never copy about you?</div>
+  <div class="body" style="margin-bottom:16px">This is your secret weapon. It's usually personal.</div>
+  <div class="opt-list">
+    <div class="opt" id="eq0" onclick="selEdge(this,'I made it myself — every single one','the only homemade baked goods made personally by a kid in your neighbourhood')"><div class="opt-radio"><svg class="chk" width="9" height="7" viewBox="0 0 10 8"><path d="M1 4L4 7L9 1" stroke="#fff" stroke-width="2.5" stroke-linecap="round" fill="none"/></svg></div><span class="opt-text">I made it myself — every single one</span></div>
+    <div class="opt" id="eq1" onclick="selEdge(this,'I know my customers personally','the only baked goods made by someone who actually knows you')"><div class="opt-radio"><svg class="chk" width="9" height="7" viewBox="0 0 10 8"><path d="M1 4L4 7L9 1" stroke="#fff" stroke-width="2.5" stroke-linecap="round" fill="none"/></svg></div><span class="opt-text">I know my customers personally</span></div>
+    <div class="opt" id="eq2" onclick="selEdge(this,'My design is completely original','the only baked goods with packaging you won\'t find anywhere else')"><div class="opt-radio"><svg class="chk" width="9" height="7" viewBox="0 0 10 8"><path d="M1 4L4 7L9 1" stroke="#fff" stroke-width="2.5" stroke-linecap="round" fill="none"/></svg></div><span class="opt-text">My design is completely original</span></div>
+    <div class="opt" id="eq3" onclick="selEdge(this,'You\'re buying from a real kid in your community','the only baked goods made by a real kid from your own community')"><div class="opt-radio"><svg class="chk" width="9" height="7" viewBox="0 0 10 8"><path d="M1 4L4 7L9 1" stroke="#fff" stroke-width="2.5" stroke-linecap="round" fill="none"/></svg></div><span class="opt-text">You're buying from a real kid in your community</span></div>
+  </div>
+  <div class="pos-reveal" id="pos-reveal">
+    <div class="pos-label">Your positioning</div>
+    <div class="pos-text" id="pos-text"></div>
+  </div>
+  <div class="cta-zone"><button class="big-cta cta-ink" onclick="next('s2','s3')">That's my edge →</button></div>
+</div>
+</div>
+
+<!-- ═══ S3: Q5 — reach ═══ -->
+<div class="screen" id="s3">
+<div class="s-inner">
+  <div class="topbar"><svg class="stand-logo" aria-label="Stand"><use href="#wm"/></svg><span class="ceo-badge">CEO · Alice</span></div>
+  <div class="nav-row">
+    <button class="back-btn" onclick="go('s2')">← Back</button>
+    <div class="prog-track"><div class="seg filled"></div><div class="seg filled"></div><div class="seg filled"></div><div class="seg filled"></div><div class="seg active"></div><div class="seg"></div><div class="seg"></div></div>
+  </div>
+  <div class="overline">Q5 — how do I reach them?</div>
+  <div class="display" style="font-size:26px;margin-bottom:6px">Where does that person actually spend time?</div>
+  <div class="body" style="margin-bottom:16px">Think about the real person you described. What's the most direct path to them?</div>
+  <div class="opt-list">
+    <div class="opt" onclick="sel(this,'reach','at school or a school event')"><div class="opt-radio"><svg class="chk" width="9" height="7" viewBox="0 0 10 8"><path d="M1 4L4 7L9 1" stroke="#fff" stroke-width="2.5" stroke-linecap="round" fill="none"/></svg></div><span class="opt-text">At school or a school event — where they'll be in the crowd</span></div>
+    <div class="opt" onclick="sel(this,'reach','door to door or at a local market')"><div class="opt-radio"><svg class="chk" width="9" height="7" viewBox="0 0 10 8"><path d="M1 4L4 7L9 1" stroke="#fff" stroke-width="2.5" stroke-linecap="round" fill="none"/></svg></div><span class="opt-text">Door to door or at a local market in my neighbourhood</span></div>
+    <div class="opt" onclick="sel(this,'reach','through a parent or family network')"><div class="opt-radio"><svg class="chk" width="9" height="7" viewBox="0 0 10 8"><path d="M1 4L4 7L9 1" stroke="#fff" stroke-width="2.5" stroke-linecap="round" fill="none"/></svg></div><span class="opt-text">Through a parent or someone in my family's network</span></div>
+    <div class="opt" onclick="sel(this,'reach','online through Instagram or WhatsApp')"><div class="opt-radio"><svg class="chk" width="9" height="7" viewBox="0 0 10 8"><path d="M1 4L4 7L9 1" stroke="#fff" stroke-width="2.5" stroke-linecap="round" fill="none"/></svg></div><span class="opt-text">Online — through Instagram or a WhatsApp group</span></div>
+  </div>
+  <div class="cta-zone"><button class="big-cta cta-ink" onclick="next('s3','s4')">That's my plan →</button></div>
+</div>
+</div>
+
+<!-- ═══ S4: TAGLINE CHALLENGE ═══ -->
+<div class="screen" id="s4">
+<div class="s-inner">
+  <div class="topbar"><svg class="stand-logo" aria-label="Stand"><use href="#wm"/></svg><span class="ceo-badge">CEO · Alice</span></div>
+  <div class="nav-row">
+    <button class="back-btn" onclick="go('s3')">← Back</button>
+    <div class="prog-track"><div class="seg filled"></div><div class="seg filled"></div><div class="seg filled"></div><div class="seg filled"></div><div class="seg filled"></div><div class="seg active"></div><div class="seg"></div></div>
+  </div>
+  <div class="overline">tagline challenge</div>
+  <div class="display" style="font-size:24px;margin-bottom:5px" id="tl-hed">Now write the line that makes them stop.</div>
+  <div class="body" style="margin-bottom:12px">You know who they are, why they'd choose you, and where to find them. Write three taglines and Stand will tell you which one lands — and how to make it even better.</div>
+  <div class="ctx-strip" id="ctx-strip"></div>
+  <div style="display:flex;flex-direction:column;gap:7px;flex:1;margin-bottom:14px">
+    <div class="tl-field"><div class="tl-num">Tagline 1</div><input class="tl-in" id="tl1" placeholder="Short and punchy…"></div>
+    <div class="tl-field"><div class="tl-num">Tagline 2</div><input class="tl-in" id="tl2" placeholder="Try a different angle…"></div>
+    <div class="tl-field"><div class="tl-num">Tagline 3</div><input class="tl-in" id="tl3" placeholder="Go bold…"></div>
+  </div>
+  <div class="cta-zone">
+    <button class="big-cta cta-red" id="judge-btn" onclick="runJudge()">Get Stand's take ✦</button>
+    <div id="ldstate" style="display:none;padding-top:14px">
+      <div class="ldots"><span></span><span></span><span></span></div>
+      <div style="text-align:center;font-size:12px;color:var(--ink-45);font-family:var(--sans);margin-top:-4px">Stand is reading your taglines…</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══ S5: VERDICT ═══ -->
+<div class="screen" id="s5">
+<div class="s-inner" style="padding-top:18px">
+  <div class="topbar" style="margin-bottom:10px"><svg class="stand-logo" aria-label="Stand"><use href="#wm"/></svg><span class="ceo-badge">CEO · Alice</span></div>
+  <div class="nav-row">
+    <button class="back-btn" onclick="go('s4')">← Back</button>
+    <div class="prog-track"><div class="seg filled"></div><div class="seg filled"></div><div class="seg filled"></div><div class="seg filled"></div><div class="seg filled"></div><div class="seg filled"></div><div class="seg active"></div></div>
+  </div>
+  <div class="overline">stand's take</div>
+  <div class="display" style="font-size:24px;margin-bottom:12px">Here's what Stand thinks.</div>
+  <div id="verdict-card" class="verdict-card"></div>
+  <div id="result-wrap"></div>
+  <div class="two-btns" style="margin-top:12px">
+    <button class="cta-sm-outline" onclick="retry()">Try new taglines</button>
+    <button class="big-cta cta-ink" style="flex:1;margin-top:0;font-size:14px" onclick="showComplete()">See my assets →</button>
+  </div>
+</div>
+</div>
+
+<!-- ═══ S6: COMPLETE + AD CARD + ICP GUIDE ═══ -->
+<div class="screen" id="s6">
+<div class="complete-bg">
+  <div class="badge-pos">
+    <div class="badge-ring" id="cbadge"><div class="badge-inner">★</div></div>
+  </div>
+  <div class="c-title" id="ctitle">You know your customer.</div>
+  <div class="c-sub" id="csub">You've answered the three questions most businesses get wrong. Here's what you built — use it.</div>
+  <div class="c-badge-chip" id="cchip">Module 05 complete</div>
+
+  <div class="assets-wrap" id="assets-wrap">
+    <div class="a-label">Your ad</div>
+    <div class="ad-card" id="ad-card">
+      <div class="ad-header" id="ad-header">
+        <div class="ad-logo" id="ad-logo">AT</div>
+        <div>
+          <div class="ad-biz-name" id="ad-biz-name">Alice's Tasty Treats</div>
+          <div class="ad-biz-sub">Baked Goods · Est. 2026</div>
+        </div>
+      </div>
+      <div class="ad-body">
+        <div class="ad-tagline" id="ad-tagline">Your tagline goes here.</div>
+        <div class="ad-pos" id="ad-pos">Your positioning line.</div>
+        <div class="ad-chips-row">
+          <span class="ad-chip ad-chip-brand" id="ad-chip-brand">Handmade</span>
+          <span class="ad-chip" id="ad-chip-who">Your customer</span>
+          <span class="ad-chip" id="ad-chip-reach">Where to find them</span>
+        </div>
+        <div class="ad-footer" id="ad-footer">
+          <span class="ad-footer-text" id="ad-footer-text">Find me at school events</span>
+          <div class="ad-dots">
+            <div class="ad-dot" style="background:var(--biz-primary)"></div>
+            <div class="ad-dot" style="background:var(--biz-2)"></div>
+            <div class="ad-dot" style="background:var(--biz-3)"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="a-label" style="margin-top:2px">Your customer guide</div>
+    <div class="guide-card" id="guide-card">
+      <div class="guide-head">
+        <div class="guide-head-label">ICP — Ideal Customer Profile</div>
+        <div class="guide-head-title" id="g-biz">Alice's Tasty Treats</div>
+      </div>
+      <div class="guide-row"><div class="guide-row-lbl">Your customer</div><div class="guide-row-val" id="g-who">—</div></div>
+      <div class="guide-row"><div class="guide-row-lbl">Your edge (Q3)</div><div class="guide-row-val" id="g-edge">—</div></div>
+      <div class="guide-row"><div class="guide-row-lbl">Your positioning</div><div class="guide-row-val" id="g-pos">—</div></div>
+      <div class="guide-row"><div class="guide-row-lbl">Where to find them</div><div class="guide-row-val" id="g-reach">—</div></div>
+      <div class="guide-row"><div class="guide-row-lbl">Best tagline</div><div class="guide-row-val" id="g-tl">—</div></div>
+    </div>
+  </div>
+
+  <button class="complete-cta" onclick="location.reload()">Start my next lesson →</button>
+</div>
+</div>
+
+</div><!-- .sw -->
+
+<script>
+const BIZ={name:"Alice's Tasty Treats",product:'homemade baked goods',type:'Baked Goods'};
+const S={who:'',edge:'',edgeSentence:'',reach:'',bestTagline:'',positioning:''};
+
+const PROXY='https://corsproxy.io/?url=https://api.anthropic.com/v1/messages';
+
+function go(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function sel(el,key,val){
+  el.closest('.opt-list').querySelectorAll('.opt').forEach(o=>o.classList.remove('sel'));
+  el.classList.add('sel');S[key]=val;
+}
+
+function selEdge(el,short,sentence){
+  document.querySelectorAll('#s2 .opt-list .opt').forEach(o=>o.classList.remove('sel'));
+  el.classList.add('sel');
+  S.edge=short;S.edgeSentence=sentence;
+  S.positioning='We are '+sentence+'.';
+  const pr=document.getElementById('pos-reveal');
+  document.getElementById('pos-text').textContent='"We are '+sentence+'."';
+  pr.classList.add('show');
+}
+
+function next(from,to){
+  if(from==='s3'){
+    const strip=document.getElementById('ctx-strip');
+    strip.innerHTML=
+      `<div><div class="cs-lbl">Your customer</div><div class="cs-val">${S.who||'—'}</div></div>
+       <div><div class="cs-lbl">Your edge</div><div class="cs-val">${S.edge||'—'}</div></div>
+       <div style="grid-column:span 2"><div class="cs-lbl">You'll find them</div><div class="cs-val">${S.reach||'—'}</div></div>`;
+    const hed=document.getElementById('tl-hed');
+    if(S.who){
+      const short=S.who.split(' ').slice(0,5).join(' ');
+      hed.textContent='Write the line that makes '+short+'… stop and look.';
+    }
+  }
+  go(to);
+}
+
+function chipWho(el,val){
+  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('tapped'));
+  el.classList.add('tapped');
+  document.getElementById('who-input').value=val;
+}
+
+async function submitWho(){
+  const raw=document.getElementById('who-input').value.trim();
+  if(!raw)return;
+  S.who=raw;
+  document.getElementById('q2-input').style.display='none';
+  const rp=document.getElementById('q2-response');
+  rp.style.display='flex';
+  document.getElementById('resp-quote').textContent='"'+raw+'"';
+
+  const prompt=`You are Stand — a warm encouraging coach for kids aged 8–14 starting their first business.
+A kid is selling "${BIZ.product}" and just described their ideal customer as: "${raw}"
+In 2 sentences max:
+1. If specific (a real type of person), affirm it warmly and tell them one reason that customer would love what they make.
+2. If vague (like "everyone" or "anyone"), gently say that's a great start and suggest one more specific type of person.
+Keep it encouraging, direct, written for a kid. No lists. No questions back.`;
+
+  try{
+    const res=await fetch(PROXY,{method:'POST',headers:{'Content-Type':'application/json','x-anthropic-version':'2023-06-01'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:180,messages:[{role:'user',content:prompt}]})});
+    const data=await res.json();
+    const text=data.content&&data.content[0]&&data.content[0].text||'Great — that\'s a real person you can actually find.';
+    document.getElementById('resp-loading').style.display='none';
+    document.getElementById('resp-text').style.display='block';
+    document.getElementById('resp-text').textContent=text;
+  }catch(e){
+    document.getElementById('resp-loading').style.display='none';
+    document.getElementById('resp-text').style.display='block';
+    document.getElementById('resp-text').textContent='Great — that\'s a real person you can actually find and sell to.';
+  }
+  document.getElementById('who-continue').style.display='block';
+  document.getElementById('who-change').style.display='block';
+}
+
+function resetWho(){
+  document.getElementById('q2-input').style.display='block';
+  document.getElementById('q2-response').style.display='none';
+  document.getElementById('who-input').value='';
+  document.getElementById('resp-text').textContent='';
+  document.getElementById('resp-loading').style.display='flex';
+  document.getElementById('resp-text').style.display='none';
+  document.getElementById('who-continue').style.display='none';
+  document.getElementById('who-change').style.display='none';
+  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('tapped'));
+}
+
+function retry(){
+  ['tl1','tl2','tl3'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('judge-btn').style.display='';
+  document.getElementById('judge-btn').disabled=false;
+  document.getElementById('ldstate').style.display='none';
+  go('s4');
+}
+
+async function runJudge(){
+  const t1=document.getElementById('tl1').value.trim(),t2=document.getElementById('tl2').value.trim(),t3=document.getElementById('tl3').value.trim();
+  if(!t1&&!t2&&!t3){document.getElementById('tl1').focus();return}
+  document.getElementById('judge-btn').style.display='none';
+  document.getElementById('ldstate').style.display='block';
+  const taglines=[t1,t2,t3].filter(Boolean);
+
+  const prompt=`You are the Stand judge — a warm encouraging coach for kids aged 8–14.
+Business: "${BIZ.name}" selling "${BIZ.product}".
+Ideal customer: ${S.who||'general audience'}.
+Their edge: ${S.edge||'made by a real kid'}. Positioning: ${S.positioning||''}.
+They'll reach customers: ${S.reach||'locally'}.
+Taglines:
+${taglines.map((t,i)=>`${i+1}. "${t}"`).join('\n')}
+You are Stand — a warm encouraging coach for kids aged 8–14.
+Read these taglines and give coaching feedback. Don't grade them like a teacher.
+For each tagline:
+- grade: A if it speaks directly to that specific customer and would make them stop, B if it's good but could be sharper or more specific, C if it needs a different angle
+- feedback: one sentence of warm specific coaching — what works or what to try, written for a kid
+- rewrite: a short 2-6 word alternative for B or C only, empty string for A
+For the overall verdict: one encouraging sentence that tells the kid which direction to go in.
+best: index (0,1,2) of the strongest tagline.
+badge: true if any tagline earns A.
+JSON only, no fences:
+{"results":[{"tagline":"","grade":"A","feedback":"","rewrite":""},{"tagline":"","grade":"B","feedback":"","rewrite":""},{"tagline":"","grade":"C","feedback":"","rewrite":""}],"verdict":"","best":0,"badge":false}`;
+
+  try{
+    const res=await fetch(PROXY,{method:'POST',headers:{'Content-Type':'application/json','x-anthropic-version':'2023-06-01'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:900,messages:[{role:'user',content:prompt}]})});
+    if(!res.ok)throw new Error('HTTP '+res.status);
+    const data=await res.json();
+    const raw=data.content&&data.content[0]&&data.content[0].text;
+    if(!raw)throw new Error('no content');
+    let parsed;
+    try{parsed=JSON.parse(raw)}catch(e){const m=raw.match(/\{[\s\S]*\}/);parsed=m?JSON.parse(m[0]):null}
+    if(!parsed)throw new Error('parse');
+    document.getElementById('ldstate').style.display='none';
+    S.bestTagline=taglines[parsed.best||0]||taglines[0];
+    showResults(parsed,taglines);
+  }catch(e){
+    document.getElementById('ldstate').style.display='none';
+    document.getElementById('judge-btn').style.display='';
+    document.getElementById('judge-btn').disabled=false;
+    S.bestTagline=[t1,t2,t3].find(Boolean)||'';
+    document.getElementById('result-wrap').innerHTML=`<div style="background:var(--card);border:1.5px solid rgba(216,31,38,0.25);border-radius:10px;padding:14px;margin-bottom:8px"><div style="font-size:12px;font-weight:700;color:var(--red);font-family:var(--sans);margin-bottom:4px">Stand couldn't connect right now.</div><div style="font-size:12px;color:var(--ink-45);font-family:var(--sans);line-height:1.5">Andy needs to wire up the API proxy. You can still see your assets below.</div></div>`;
+    go('s5');
+  }
+}
+
+function showResults(data,taglines){
+  go('s5');
+  const rw=document.getElementById('result-wrap');rw.innerHTML='';
+  const gc={A:'grade-A',B:'grade-B',C:'grade-C'};
+  const gl={A:'Your strongest ✦',B:'Getting there',C:'Try this angle'};
+  (data.results||[]).filter((_,i)=>taglines[i]).forEach((r,i)=>{
+    const g=(r.grade||'B').toUpperCase();
+    const card=document.createElement('div');
+    card.className=`result-card ${gc[g]||'grade-B'}`;
+    card.innerHTML=`<div style="font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.55);font-family:var(--sans);margin-bottom:6px">${gl[g]||'Getting there'}</div><div class="r-tl">"${r.tagline||taglines[i]}"</div><div class="r-fb">${r.feedback||''}</div>${r.rewrite?`<div class="r-rw">Try instead: ${r.rewrite}</div>`:''}`;
+    rw.appendChild(card);
+    setTimeout(()=>card.classList.add('shown'),i*360+80);
+  });
+  if(data.verdict){
+    const vc=document.getElementById('verdict-card');
+    vc.innerHTML=`<div class="verdict-text">"${data.verdict}"</div>`;
+    setTimeout(()=>vc.classList.add('shown'),(data.results||[]).length*360+260);
+  }
+}
+
+function showComplete(){
+  // populate ad card
+  const tl=S.bestTagline||'Baked with love, just for you.';
+  const pos=S.edgeSentence?'We are '+S.edgeSentence+'.':'Homemade, every single one.';
+  const whoShort=S.who?S.who.charAt(0).toUpperCase()+S.who.slice(1,40):('Your customer');
+  const reachShort=S.reach?S.reach.split(' ').slice(0,4).join(' '):'Local events';
+
+  document.getElementById('ad-header').style.background=`var(--biz-primary)`;
+  document.getElementById('ad-logo').style.background=`var(--biz-2)`;
+  document.getElementById('ad-footer').style.background=`var(--ink)`;
+  document.getElementById('ad-tagline').textContent=tl;
+  document.getElementById('ad-pos').textContent=pos;
+  document.getElementById('ad-chip-brand').style.background=`var(--biz-primary)`;
+  document.getElementById('ad-chip-brand').style.color=`var(--ink)`;
+  document.getElementById('ad-chip-who').textContent=whoShort.slice(0,28);
+  document.getElementById('ad-chip-reach').textContent=reachShort.charAt(0).toUpperCase()+reachShort.slice(1);
+  document.getElementById('ad-footer-text').textContent='Find me '+reachShort;
+
+  // populate guide
+  document.getElementById('g-who').textContent=S.who||'—';
+  document.getElementById('g-edge').textContent=S.edge||'—';
+  document.getElementById('g-pos').textContent=pos;
+  document.getElementById('g-reach').textContent=S.reach||'—';
+  document.getElementById('g-tl').textContent=tl;
+
+  go('s6');
+
+  setTimeout(()=>{
+    const b=document.getElementById('cbadge');
+    b.classList.add('pop');
+    const ring=document.createElement('div');ring.className='ring-anim';
+    b.parentNode.appendChild(ring);
+    setTimeout(()=>ring.remove(),1300);
+  },100);
+  setTimeout(()=>document.getElementById('ctitle').classList.add('in'),380);
+  setTimeout(()=>document.getElementById('csub').classList.add('in'),540);
+  setTimeout(()=>document.getElementById('cchip').classList.add('in'),680);
+  setTimeout(()=>{
+    const aw=document.getElementById('assets-wrap');
+    aw.classList.add('in');
+    setTimeout(()=>document.getElementById('ad-card').classList.add('shown'),100);
+    setTimeout(()=>document.getElementById('guide-card').classList.add('shown'),360);
+  },860);
+}
+
+// recap animation
+setTimeout(()=>{
+  [0,1,2,3].forEach(i=>{
+    setTimeout(()=>{
+      document.getElementById('t'+i).classList.add('in');
+      setTimeout(()=>document.getElementById('tk'+i).classList.add('pop'),200);
+    },i*120);
+  });
+  setTimeout(()=>document.getElementById('unlock').classList.add('in'),520);
+},80);
+</script>
+</body>
+</html>
