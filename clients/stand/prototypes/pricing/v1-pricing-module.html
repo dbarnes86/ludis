@@ -283,24 +283,24 @@ html,body{height:100%;background:#111}
   <div class="body" style="margin-bottom:16px">Add up everything that goes into a single item — ingredients, packaging, labels. Even a small cost matters.</div>
 
   <div class="money-input-wrap">
-    <span class="money-symbol">£</span>
+    <span class="money-symbol">$</span>
     <input class="money-in" type="number" id="cost-in" min="0" step="0.10" placeholder="0.00" oninput="onCostInput()">
   </div>
 
   <div class="chips-label">Quick examples</div>
   <div class="chips-row">
-    <button class="chip-sm" onclick="setCost(0.25)">25p</button>
-    <button class="chip-sm" onclick="setCost(0.50)">50p</button>
-    <button class="chip-sm" onclick="setCost(0.75)">75p</button>
-    <button class="chip-sm" onclick="setCost(1.00)">£1</button>
-    <button class="chip-sm" onclick="setCost(1.50)">£1.50</button>
-    <button class="chip-sm" onclick="setCost(2.00)">£2</button>
+    <button class="chip-sm" onclick="setCost(0.25)">$0.25</button>
+    <button class="chip-sm" onclick="setCost(0.50)">$0.50</button>
+    <button class="chip-sm" onclick="setCost(0.75)">$0.75</button>
+    <button class="chip-sm" onclick="setCost(1.00)">$1</button>
+    <button class="chip-sm" onclick="setCost(1.50)">$1.50</button>
+    <button class="chip-sm" onclick="setCost(2.00)">$2</button>
   </div>
 
   <div style="background:var(--card);border:1.5px solid var(--ink-12);border-radius:10px;padding:12px 14px;opacity:0;transition:opacity 0.3s ease" id="cost-hint">
     <div style="font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink-45);font-family:var(--sans);margin-bottom:3px">Cost per item</div>
-    <div style="font-family:var(--serif);font-size:18px;font-weight:900;color:var(--ink)" id="cost-hint-val">£—</div>
-    <div style="font-size:12px;color:var(--ink-45);font-family:var(--sans);margin-top:4px">If you sell 10 items, you'll have spent <span id="cost-hint-10" style="font-weight:700;color:var(--ink)">£—</span> on materials.</div>
+    <div style="font-family:var(--serif);font-size:18px;font-weight:900;color:var(--ink)" id="cost-hint-val">$—</div>
+    <div style="font-size:12px;color:var(--ink-45);font-family:var(--sans);margin-top:4px">If you sell 10 items, you'll have spent <span id="cost-hint-10" style="font-weight:700;color:var(--ink)">$—</span> on materials.</div>
   </div>
 
   <div class="cta-zone">
@@ -324,20 +324,20 @@ html,body{height:100%;background:#111}
   <div class="calc-card">
     <div class="calc-row">
       <span class="calc-lbl">Cost to make</span>
-      <span class="calc-fixed" id="disp-cost">£—</span>
+      <span class="calc-fixed" id="disp-cost">$—</span>
     </div>
     <div class="calc-sep"></div>
     <div class="calc-row calc-price-row">
       <span class="calc-lbl">You charge</span>
       <div class="calc-price-input">
-        <span class="calc-currency">£</span>
+        <span class="calc-currency">$</span>
         <input class="calc-in" type="number" id="price-in" min="0" step="0.50" placeholder="0.00" oninput="onPriceInput()">
       </div>
     </div>
     <div class="calc-sep"></div>
     <div class="calc-row">
       <span class="calc-lbl">Profit per sale</span>
-      <span class="calc-profit-val profit-zero" id="disp-profit">£—</span>
+      <span class="calc-profit-val profit-zero" id="disp-profit">$—</span>
     </div>
     <div class="margin-bar-wrap">
       <div class="margin-bar"><div class="margin-fill" id="margin-fill"></div></div>
@@ -347,12 +347,12 @@ html,body{height:100%;background:#111}
 
   <div class="chips-label">Common prices for handmade goods</div>
   <div class="chips-row">
-    <button class="chip-sm" onclick="setPrice(1.00)">£1</button>
-    <button class="chip-sm" onclick="setPrice(1.50)">£1.50</button>
-    <button class="chip-sm" onclick="setPrice(2.00)">£2</button>
-    <button class="chip-sm" onclick="setPrice(2.50)">£2.50</button>
-    <button class="chip-sm" onclick="setPrice(3.00)">£3</button>
-    <button class="chip-sm" onclick="setPrice(5.00)">£5</button>
+    <button class="chip-sm" onclick="setPrice(1.00)">$1</button>
+    <button class="chip-sm" onclick="setPrice(1.50)">$1.50</button>
+    <button class="chip-sm" onclick="setPrice(2.00)">$2</button>
+    <button class="chip-sm" onclick="setPrice(2.50)">$2.50</button>
+    <button class="chip-sm" onclick="setPrice(3.00)">$3</button>
+    <button class="chip-sm" onclick="setPrice(5.00)">$5</button>
   </div>
 
   <div class="cta-zone">
@@ -406,17 +406,17 @@ html,body{height:100%;background:#111}
   <div class="goal-center">
     <div class="goal-label">Monthly goal</div>
     <div class="goal-input-row">
-      <span class="goal-symbol">£</span>
+      <span class="goal-symbol">$</span>
       <input class="goal-in" type="number" id="goal-in" min="0" step="5" placeholder="50" oninput="onGoalInput()">
     </div>
   </div>
 
   <div class="chips-label">Or pick a target</div>
   <div class="chips-row" style="margin-bottom:20px">
-    <button class="chip-sm" onclick="setGoal(20)">£20</button>
-    <button class="chip-sm" onclick="setGoal(50)">£50</button>
-    <button class="chip-sm" onclick="setGoal(100)">£100</button>
-    <button class="chip-sm" onclick="setGoal(200)">£200</button>
+    <button class="chip-sm" onclick="setGoal(20)">$20</button>
+    <button class="chip-sm" onclick="setGoal(50)">$50</button>
+    <button class="chip-sm" onclick="setGoal(100)">$100</button>
+    <button class="chip-sm" onclick="setGoal(200)">$200</button>
   </div>
 
   <div class="sales-card" id="sales-card">
@@ -447,17 +447,17 @@ html,body{height:100%;background:#111}
   <div class="sum-grid" id="sum-grid">
     <div class="stile stile-outline">
       <div class="st-lbl st-lbl-d">Cost</div>
-      <div class="st-val st-val-d" id="sum-cost">£—</div>
+      <div class="st-val st-val-d" id="sum-cost">$—</div>
       <div class="st-sub st-sub-d">to make one</div>
     </div>
     <div class="stile stile-outline">
       <div class="st-lbl st-lbl-d">Price</div>
-      <div class="st-val st-val-d" id="sum-price">£—</div>
+      <div class="st-val st-val-d" id="sum-price">$—</div>
       <div class="st-sub st-sub-d">you charge</div>
     </div>
     <div class="stile stile-green">
       <div class="st-lbl st-lbl-l">Profit</div>
-      <div class="st-val st-val-l" id="sum-profit">£—</div>
+      <div class="st-val st-val-l" id="sum-profit">$—</div>
       <div class="st-sub st-sub-l">per sale</div>
     </div>
     <div class="stile stile-dark">
@@ -467,7 +467,7 @@ html,body{height:100%;background:#111}
     </div>
     <div class="stile stile-outline">
       <div class="st-lbl st-lbl-d">Goal</div>
-      <div class="st-val st-val-d" id="sum-goal">£—</div>
+      <div class="st-val st-val-d" id="sum-goal">$—</div>
       <div class="st-sub st-sub-d">this month</div>
     </div>
     <div class="stile stile-amber">
@@ -514,15 +514,15 @@ html,body{height:100%;background:#111}
         <div class="pc-numbers">
           <div class="pc-num">
             <div class="pc-num-lbl">Cost</div>
-            <div class="pc-num-val" id="pc-cost">£—</div>
+            <div class="pc-num-val" id="pc-cost">$—</div>
           </div>
           <div class="pc-num">
             <div class="pc-num-lbl">Price</div>
-            <div class="pc-num-val" id="pc-price">£—</div>
+            <div class="pc-num-val" id="pc-price">$—</div>
           </div>
           <div class="pc-num">
             <div class="pc-num-lbl">Profit</div>
-            <div class="pc-num-val profit-col" id="pc-profit">£—</div>
+            <div class="pc-num-val profit-col" id="pc-profit">$—</div>
           </div>
         </div>
         <div class="pc-margin-pill">
@@ -533,7 +533,7 @@ html,body{height:100%;background:#111}
         <div class="pc-goal-row">
           <div class="pc-goal-item">
             <div class="pc-goal-lbl">Monthly goal</div>
-            <div class="pc-goal-val" id="pc-goal">£—</div>
+            <div class="pc-goal-val" id="pc-goal">$—</div>
           </div>
           <div class="pc-goal-item">
             <div class="pc-goal-lbl">Sales needed</div>
@@ -559,15 +559,15 @@ html,body{height:100%;background:#111}
         <div class="cert-numbers">
           <div>
             <div class="cert-num-lbl">Cost to make one</div>
-            <div class="cert-num-val" id="cert-cost">£—</div>
+            <div class="cert-num-val" id="cert-cost">$—</div>
           </div>
           <div>
             <div class="cert-num-lbl">Selling price</div>
-            <div class="cert-num-val" id="cert-price">£—</div>
+            <div class="cert-num-val" id="cert-price">$—</div>
           </div>
           <div>
             <div class="cert-num-lbl">Profit per sale</div>
-            <div class="cert-num-val cert-profit" id="cert-profit">£—</div>
+            <div class="cert-num-val cert-profit" id="cert-profit">$—</div>
           </div>
           <div>
             <div class="cert-num-lbl">Profit margin</div>
@@ -575,7 +575,7 @@ html,body{height:100%;background:#111}
           </div>
           <div>
             <div class="cert-num-lbl">Monthly goal</div>
-            <div class="cert-num-val" id="cert-goal">£—</div>
+            <div class="cert-num-val" id="cert-goal">$—</div>
           </div>
           <div>
             <div class="cert-num-lbl">Sales needed</div>
@@ -614,8 +614,8 @@ function go(id){
 }
 
 function fmt(n){
-  if(isNaN(n)||n===null||n==='')return'£—';
-  return'£'+Number(n).toFixed(2);
+  if(isNaN(n)||n===null||n==='')return'$—';
+  return'$'+Number(n).toFixed(2);
 }
 
 function pct(n){
@@ -626,7 +626,7 @@ function pct(n){
 /* ── COST SCREEN ── */
 function setCost(val){
   document.querySelectorAll('.chips-row .chip-sm').forEach(c=>c.classList.remove('tapped'));
-  const matching=[...document.querySelectorAll('.chips-row .chip-sm')].find(c=>parseFloat(c.textContent.replace('£','').replace('p',''))/( c.textContent.includes('p')?100:1)===val);
+  const matching=[...document.querySelectorAll('.chips-row .chip-sm')].find(c=>parseFloat(c.textContent.replace('$',''))===val);
   if(matching)matching.classList.add('tapped');
   document.getElementById('cost-in').value=val.toFixed(2);
   onCostInput();
@@ -657,7 +657,7 @@ function submitCost(){
 /* ── PRICE SCREEN ── */
 function setPrice(val){
   document.querySelectorAll('#s2 .chips-row .chip-sm').forEach(c=>c.classList.remove('tapped'));
-  const matching=[...document.querySelectorAll('#s2 .chips-row .chip-sm')].find(c=>parseFloat(c.textContent.replace('£',''))===val);
+  const matching=[...document.querySelectorAll('#s2 .chips-row .chip-sm')].find(c=>parseFloat(c.textContent.replace('$',''))===val);
   if(matching)matching.classList.add('tapped');
   document.getElementById('price-in').value=val.toFixed(2);
   onPriceInput();
@@ -680,7 +680,7 @@ function updateCalc(priceOverride){
   const marginLbl=document.getElementById('margin-lbl');
 
   if(profit===null||isNaN(profit)){
-    profitEl.textContent='£—';
+    profitEl.textContent='$—';
     profitEl.className='calc-profit-val profit-zero';
     marginFill.style.width='0%';
     marginFill.style.background='var(--ink-12)';
@@ -740,7 +740,7 @@ ${BIZ.ceo} runs "${BIZ.name}" selling "${BIZ.product}".
 Their pricing: cost to make one is ${fmt(S.cost)}, selling price is ${fmt(S.price)}, profit per sale is ${fmt(S.profit)}, profit margin is ${pct(S.margin)}.
 In 2–3 sentences:
 - If margin is 40%+ (healthy): celebrate it warmly and explain in simple terms why a good margin matters — more profit means more money to reinvest or keep.
-- If margin is 20–39% (ok): say it's a solid start, then give one specific, concrete tip to increase it (e.g. "if you charged just 50p more, your profit would jump to X").
+- If margin is 20–39% (ok): say it's a solid start, then give one specific, concrete tip to increase it (e.g. "if you charged just 50 cents more, your profit would jump to X").
 - If margin is under 20% or negative (thin/loss): be kind but honest — tell them they're not making much and suggest raising the price, explaining that customers will still pay a fair price.
 Keep it direct, warm, and specific to their numbers. No lists. No questions back. Written for a kid aged 8–14.`;
 
@@ -790,7 +790,7 @@ function adjustPrice(){
 /* ── GOAL SCREEN ── */
 function setGoal(val){
   document.querySelectorAll('#s4 .chips-row .chip-sm').forEach(c=>c.classList.remove('tapped'));
-  const matching=[...document.querySelectorAll('#s4 .chips-row .chip-sm')].find(c=>parseFloat(c.textContent.replace('£',''))===val);
+  const matching=[...document.querySelectorAll('#s4 .chips-row .chip-sm')].find(c=>parseFloat(c.textContent.replace('$',''))===val);
   if(matching)matching.classList.add('tapped');
   document.getElementById('goal-in').value=val;
   onGoalInput();

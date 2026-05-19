@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stand — Module 06: Pricing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --cream:#FAF3D6;--card:#FFFFFF;--ink:#232120;--red:#D81F26;--mustard:#FFC408;--green:#006238;--blue:#014794;
+  --ink-08:rgba(35,33,32,0.08);--ink-12:rgba(35,33,32,0.12);--ink-20:rgba(35,33,32,0.20);--ink-45:rgba(35,33,32,0.45);
+  --serif:'Playfair Display',Georgia,serif;--sans:'DM Sans','Helvetica Neue',sans-serif;
+  --biz-primary:#FFC408;--biz-2:#006238;--biz-3:#014794;
+}
+html,body{height:100%;background:#111}
+.sw{font-family:var(--sans);color:var(--ink);max-width:430px;margin:0 auto;min-height:100vh;position:relative}
+
+/* ── SCREENS ── */
+.screen{display:none;flex-direction:column;min-height:100vh;background:var(--cream)}
+.screen.active{display:flex}
+.dk{background:var(--ink)}
+
+/* ── TOPBAR ── */
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:16px 20px 0}
+.stand-logo{height:20px;width:auto;display:block;color:var(--ink)}
+.dk .stand-logo{color:var(--cream)}
+.module-badge{background:var(--blue);color:#fff;font-size:9px;font-weight:700;font-family:var(--sans);letter-spacing:0.1em;border-radius:20px;padding:5px 12px;text-transform:uppercase;line-height:1}
+.ceo-badge{background:var(--red);color:#fff;font-size:9px;font-weight:700;font-family:var(--sans);letter-spacing:0.06em;border-radius:20px;padding:4px 10px;text-transform:uppercase;line-height:1.2;white-space:nowrap}
+
+/* ── NAV ROW ── */
+.nav-row{display:flex;align-items:center;gap:10px;padding:14px 20px 0;margin-bottom:20px}
+.back-btn{background:transparent;border:none;font-family:var(--sans);font-size:12px;font-weight:600;color:var(--ink-45);cursor:pointer;display:flex;align-items:center;gap:3px;padding:0;flex-shrink:0;transition:color 0.12s}
+.back-btn:hover{color:var(--ink)}
+.dk .back-btn{color:rgba(250,243,214,0.38)}
+.dk .back-btn:hover{color:var(--cream)}
+.prog-track{display:flex;gap:3px;flex:1}
+.seg{height:4px;flex:1;border-radius:2px;background:var(--ink-12)}
+.seg.filled{background:var(--ink)}
+.seg.active{position:relative;overflow:hidden;background:var(--ink-12)}
+.seg.active::after{content:'';position:absolute;inset:0;background:var(--ink);transform:scaleX(0);transform-origin:left;animation:sf 0.5s cubic-bezier(0.16,1,0.3,1) forwards}
+@keyframes sf{to{transform:scaleX(1)}}
+.dk .seg{background:rgba(250,243,214,0.1)}
+.dk .seg.filled{background:rgba(250,243,214,0.65)}
+.dk .seg.active{background:rgba(250,243,214,0.1)}
+.dk .seg.active::after{background:var(--cream)}
+
+/* ── TYPE ── */
+.overline{font-size:10px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--ink-45);font-family:var(--sans);margin-bottom:6px}
+.display{font-family:var(--serif);font-weight:900;line-height:1.05;letter-spacing:-0.5px;color:var(--ink)}
+.body{font-size:14px;line-height:1.65;color:var(--ink-45);font-family:var(--sans)}
+.dk .overline{color:rgba(250,243,214,0.38)}
+.dk .display{color:var(--cream)}
+.dk .body{color:rgba(250,243,214,0.52)}
+
+/* ── INNER ── */
+.s-inner{padding:20px 20px 32px;display:flex;flex-direction:column;flex:1}
+.cta-zone{margin-top:auto;padding-top:16px}
+
+/* ── BUTTONS ── */
+.big-cta{display:block;border:none;border-radius:100px;padding:17px 28px;font-family:var(--sans);font-size:15px;font-weight:700;cursor:pointer;width:100%;letter-spacing:0.01em;transition:transform 0.1s,opacity 0.1s;text-align:center}
+.big-cta:hover{opacity:0.88;transform:scale(0.988)}.big-cta:active{transform:scale(0.972)}
+.cta-ink{background:var(--ink);color:var(--cream)}
+.cta-mustard{background:var(--mustard);color:var(--ink)}
+.cta-red{background:var(--red);color:var(--cream)}
+.cta-outline{background:transparent;border:1.5px solid var(--ink);color:var(--ink);border-radius:100px;padding:14px 20px;font-family:var(--sans);font-size:14px;font-weight:700;cursor:pointer;width:100%;transition:all 0.12s;margin-top:10px;display:block;text-align:center}
+.cta-outline:hover{background:var(--ink);color:var(--cream)}
+.cta-pulse{animation:ctap 2.4s ease-in-out 1.4s infinite}
+@keyframes ctap{0%,100%{box-shadow:0 0 0 0 rgba(255,196,8,0)}50%{box-shadow:0 0 0 9px rgba(255,196,8,0.18)}}
+
+/* ─────────────────────────────────────────────
+   S0 — DARK INTRO
+───────────────────────────────────────────── */
+.intro-body{position:relative;flex:1;display:flex;flex-direction:column;padding:20px 20px 32px;overflow:hidden}
+.intro-deco{position:absolute;top:-40px;right:-30px;font-family:var(--serif);font-size:280px;font-weight:900;color:rgba(250,243,214,0.035);line-height:1;pointer-events:none;user-select:none}
+.feature-list{display:flex;flex-direction:column;gap:7px;margin:22px 0 28px}
+.feature-item{display:flex;align-items:center;gap:12px;padding:12px 14px;border:1px solid rgba(250,243,214,0.09);border-radius:10px;opacity:0;transform:translateX(-12px);transition:opacity 0.38s ease,transform 0.38s cubic-bezier(0.16,1,0.3,1)}
+.feature-item.in{opacity:1;transform:translateX(0)}
+.fi-icon{width:32px;height:32px;border-radius:7px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:15px}
+.fi-text{font-family:var(--sans);font-size:13px;font-weight:600;color:rgba(250,243,214,0.82)}
+.fi-sub{font-size:11px;color:rgba(250,243,214,0.35);margin-top:1px}
+
+/* ─────────────────────────────────────────────
+   S1 — COST (dark, stepper)
+───────────────────────────────────────────── */
+.cost-display{display:flex;flex-direction:column;align-items:center;margin:20px 0 18px;cursor:pointer;user-select:none}
+.cost-number{display:flex;align-items:baseline;gap:3px;transition:transform 0.2s cubic-bezier(0.34,1.56,0.64,1)}
+.cost-sym{font-family:var(--serif);font-size:42px;font-weight:900;color:rgba(250,243,214,0.38);line-height:1}
+.cost-val{font-family:var(--serif);font-size:84px;font-weight:900;color:var(--cream);line-height:1;min-width:120px;text-align:center}
+.cost-tap{font-size:9px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:rgba(250,243,214,0.25);font-family:var(--sans);margin-top:8px}
+.cost-input-hidden{position:absolute;left:-9999px;opacity:0;width:1px;height:1px}
+
+.stepper-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-bottom:16px}
+.step-btn{border-radius:9px;border:1px solid rgba(250,243,214,0.1);background:rgba(250,243,214,0.06);color:rgba(250,243,214,0.6);font-family:var(--sans);font-size:12px;font-weight:700;padding:12px 6px;cursor:pointer;transition:all 0.1s;text-align:center}
+.step-btn:active{transform:scale(0.93)}
+.step-minus:hover{background:rgba(255,117,117,0.12);border-color:rgba(255,117,117,0.2);color:#FF9090}
+.step-plus{color:var(--mustard);border-color:rgba(255,196,8,0.18);background:rgba(255,196,8,0.06)}
+.step-plus:hover{background:rgba(255,196,8,0.14);border-color:rgba(255,196,8,0.3)}
+
+.preset-label{font-size:9px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:rgba(250,243,214,0.28);font-family:var(--sans);margin-bottom:8px}
+.presets{display:flex;flex-wrap:wrap;gap:6px}
+.preset{background:rgba(250,243,214,0.06);border:1px solid rgba(250,243,214,0.1);border-radius:20px;padding:7px 14px;font-size:12px;font-weight:600;color:rgba(250,243,214,0.58);cursor:pointer;transition:all 0.12s;font-family:var(--sans)}
+.preset:hover{color:var(--cream);background:rgba(250,243,214,0.12)}
+.preset.active{background:var(--mustard);color:var(--ink);border-color:var(--mustard)}
+
+/* ─────────────────────────────────────────────
+   S2 — PRICE CALCULATOR (dark, slider + ring)
+───────────────────────────────────────────── */
+.price-dash{display:grid;grid-template-columns:1fr 1fr 1fr;border:1px solid rgba(250,243,214,0.08);border-radius:12px;overflow:hidden;margin-bottom:20px}
+.pd-cell{padding:14px 10px;text-align:center}
+.pd-cell.active-cell{background:rgba(250,243,214,0.05);border-left:1px solid rgba(250,243,214,0.08);border-right:1px solid rgba(250,243,214,0.08)}
+.pd-lbl{font-size:8px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;font-family:var(--sans);color:rgba(250,243,214,0.32);margin-bottom:5px}
+.pd-val{font-family:var(--serif);font-weight:900;color:var(--cream);transition:color 0.3s ease,transform 0.18s cubic-bezier(0.34,1.56,0.64,1)}
+.pd-val.sm{font-size:16px;opacity:0.5}
+.pd-val.lg{font-size:22px;color:var(--mustard)}
+.pd-val.xl{font-size:22px}
+.pd-val.p-good{color:#5DE0A0}
+.pd-val.p-ok{color:var(--mustard)}
+.pd-val.p-thin{color:#FF8080}
+.pd-val.p-loss{color:#FF5555}
+
+.ring-zone{display:flex;flex-direction:column;align-items:center;margin-bottom:18px}
+.mring{width:132px;height:132px}
+.mring-bg{fill:none;stroke:rgba(250,243,214,0.07);stroke-width:9}
+.mring-arc{fill:none;stroke:#5DE0A0;stroke-width:9;stroke-linecap:round;stroke-dasharray:0 260.75;transition:stroke-dasharray 0.5s cubic-bezier(0.16,1,0.3,1),stroke 0.3s ease}
+.mring-pct{font-family:var(--serif);font-size:26px;font-weight:900;fill:var(--cream);text-anchor:middle;dominant-baseline:middle;transition:fill 0.3s ease}
+.mring-sub{font-size:8.5px;font-weight:700;fill:rgba(250,243,214,0.32);text-anchor:middle;letter-spacing:2.5px;text-transform:uppercase;font-family:'DM Sans',sans-serif}
+
+.slider-zone{width:100%;padding:0 6px}
+.price-slider{-webkit-appearance:none;appearance:none;width:100%;height:5px;border-radius:3px;background:rgba(250,243,214,0.13);outline:none;cursor:pointer;display:block}
+.price-slider::-webkit-slider-thumb{-webkit-appearance:none;width:28px;height:28px;border-radius:50%;background:var(--mustard);cursor:pointer;box-shadow:0 0 0 5px rgba(255,196,8,0.18);transition:box-shadow 0.15s}
+.price-slider:active::-webkit-slider-thumb{box-shadow:0 0 0 9px rgba(255,196,8,0.22)}
+.price-slider::-moz-range-thumb{width:28px;height:28px;border-radius:50%;background:var(--mustard);border:none;cursor:pointer}
+.slider-ends{display:flex;justify-content:space-between;font-size:10px;font-weight:600;color:rgba(250,243,214,0.22);font-family:var(--sans);padding:7px 2px 0}
+.slider-note{text-align:center;font-size:11px;color:rgba(250,243,214,0.28);font-family:var(--sans);margin-top:4px}
+
+/* ─────────────────────────────────────────────
+   S3 — AI FEEDBACK (cream)
+───────────────────────────────────────────── */
+.resp-card{background:var(--ink);border-radius:12px;padding:16px;margin-bottom:12px}
+.resp-label{font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(250,243,214,0.4);font-family:var(--sans);margin-bottom:5px}
+.resp-quote{font-family:var(--serif);font-style:italic;font-size:14px;color:var(--cream);line-height:1.45;margin-bottom:10px}
+.resp-rule{border:none;border-top:1px solid rgba(250,243,214,0.1);margin-bottom:10px}
+.resp-text{font-size:13px;color:rgba(250,243,214,0.78);font-family:var(--sans);line-height:1.6}
+.resp-dots{display:flex;gap:5px;align-items:center;padding:4px 0}
+.resp-dots span{width:7px;height:7px;border-radius:50%;background:rgba(250,243,214,0.35);animation:ld 1.1s ease-in-out infinite}
+.resp-dots span:nth-child(2){animation-delay:0.15s}
+.resp-dots span:nth-child(3){animation-delay:0.3s}
+@keyframes ld{0%,80%,100%{opacity:0.35;transform:scale(0.8)}40%{opacity:1;transform:scale(1.1)}}
+
+/* ─────────────────────────────────────────────
+   S4 — GOAL (dark, two big numbers)
+───────────────────────────────────────────── */
+.goal-section{display:flex;flex-direction:column;align-items:center;margin:16px 0 0}
+.goal-prompt{font-size:11px;font-weight:600;color:rgba(250,243,214,0.38);font-family:var(--sans);letter-spacing:0.05em;margin-bottom:10px;text-align:center}
+.goal-row{display:flex;align-items:flex-end;justify-content:center;gap:5px;margin-bottom:4px}
+.goal-sym{font-family:var(--serif);font-size:50px;font-weight:900;color:rgba(250,243,214,0.35);line-height:1;padding-bottom:7px}
+.goal-in{background:transparent;border:none;border-bottom:2px solid rgba(250,243,214,0.18);font-family:var(--serif);font-size:76px;font-weight:900;color:var(--mustard);outline:none;width:185px;text-align:center;-moz-appearance:textfield;transition:border-color 0.2s;line-height:1.05;padding-bottom:0}
+.goal-in:focus{border-color:rgba(255,196,8,0.45)}
+.goal-in::-webkit-outer-spin-button,.goal-in::-webkit-inner-spin-button{-webkit-appearance:none}
+.goal-in::placeholder{color:rgba(255,196,8,0.22);font-size:52px;font-weight:400}
+
+.goal-chips{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin:14px 0 0}
+.goal-chip{background:rgba(250,243,214,0.06);border:1px solid rgba(250,243,214,0.1);border-radius:20px;padding:7px 14px;font-size:12px;font-weight:600;color:rgba(250,243,214,0.52);cursor:pointer;transition:all 0.12s;font-family:var(--sans)}
+.goal-chip:hover{color:var(--cream);background:rgba(250,243,214,0.11)}
+.goal-chip.active{background:var(--mustard);color:var(--ink);border-color:var(--mustard)}
+
+.result-zone{display:flex;flex-direction:column;align-items:center;margin-top:18px;opacity:0;transform:translateY(14px);transition:all 0.42s cubic-bezier(0.16,1,0.3,1)}
+.result-zone.show{opacity:1;transform:translateY(0)}
+.result-eq{font-size:11px;color:rgba(250,243,214,0.25);font-family:var(--sans);margin-bottom:10px;text-align:center}
+.result-number{font-family:var(--serif);font-size:100px;font-weight:900;color:var(--cream);line-height:1;text-align:center;transition:transform 0.18s cubic-bezier(0.34,1.56,0.64,1)}
+.result-unit{font-size:10px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:rgba(250,243,214,0.32);font-family:var(--sans);text-align:center;margin-top:4px}
+
+/* ─────────────────────────────────────────────
+   S5 — P&L SUMMARY (cream)
+───────────────────────────────────────────── */
+.pl-sheet{background:var(--card);border:1.5px solid var(--ink-12);border-radius:12px;overflow:hidden;margin:16px 0 12px}
+.pl-head{background:var(--ink);padding:14px 16px}
+.pl-biz{font-family:var(--serif);font-size:15px;font-weight:700;color:var(--cream);margin-bottom:2px}
+.pl-sub{font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(250,243,214,0.38);font-family:var(--sans)}
+.pl-section-head{padding:8px 16px 4px;background:rgba(35,33,32,0.025)}
+.pl-section-lbl{font-size:8px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink-45);font-family:var(--sans)}
+.pl-rule{border:none;border-top:1.5px solid var(--ink);margin:0}
+.pl-row{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--ink-08)}
+.pl-row:last-child{border-bottom:none}
+.pl-row-lbl{font-size:12px;font-weight:500;color:var(--ink-45);font-family:var(--sans)}
+.pl-row-val{font-family:var(--serif);font-size:17px;font-weight:700;color:var(--ink)}
+.pl-row-val.green{color:var(--green)}
+.pl-row-val.blue{color:var(--blue)}
+.pl-row-val.amber{color:#8A5200}
+
+.plain-box{background:var(--ink);border-radius:10px;padding:13px 15px;margin-bottom:8px}
+.plain-text{font-family:var(--serif);font-size:14px;font-weight:700;color:var(--cream);line-height:1.5}
+
+/* ─────────────────────────────────────────────
+   S6 — COMPLETE + ASSETS
+───────────────────────────────────────────── */
+.complete-bg{background:var(--ink);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:36px 20px 40px;overflow-y:auto}
+.badge-pos{position:relative;width:88px;height:88px;margin:0 auto 18px;flex-shrink:0}
+.badge-ring-el{width:88px;height:88px;border-radius:50%;background:var(--mustard);display:flex;align-items:center;justify-content:center;opacity:0;transform:scale(0.4);transition:all 0.52s cubic-bezier(0.34,1.56,0.64,1)}
+.badge-ring-el.pop{opacity:1;transform:scale(1)}
+.badge-inner{font-size:36px;line-height:1}
+@keyframes rings{0%{transform:scale(1);opacity:0.55}100%{transform:scale(2.4);opacity:0}}
+.ring-anim{position:absolute;inset:0;border-radius:50%;border:2px solid var(--mustard);animation:rings 1.2s ease-out forwards}
+.c-title{font-family:var(--serif);font-size:26px;font-weight:900;color:var(--cream);line-height:1.05;margin-bottom:6px;opacity:0;transform:translateY(10px);transition:all 0.38s ease;text-align:center;width:100%}
+.c-title.in{opacity:1;transform:translateY(0)}
+.c-sub{font-size:13px;color:rgba(250,243,214,0.6);font-family:var(--sans);line-height:1.6;margin-bottom:16px;opacity:0;transform:translateY(6px);transition:all 0.38s ease;text-align:center;width:100%}
+.c-sub.in{opacity:1;transform:translateY(0)}
+.c-chip{display:inline-block;background:rgba(255,196,8,0.14);border:1.5px solid var(--mustard);color:var(--mustard);font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;border-radius:20px;padding:4px 12px;margin-bottom:18px;opacity:0;transition:opacity 0.38s ease;align-self:center}
+.c-chip.in{opacity:1}
+.assets-wrap{width:100%;opacity:0;transition:opacity 0.4s ease}
+.assets-wrap.in{opacity:1}
+.a-label{font-size:9px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:rgba(250,243,214,0.38);font-family:var(--sans);margin-bottom:10px;text-align:left}
+
+/* Pricing card */
+.price-card{border-radius:14px;overflow:hidden;margin-bottom:12px;border:1.5px solid rgba(250,243,214,0.1);opacity:0;transform:translateY(14px);transition:all 0.42s cubic-bezier(0.16,1,0.3,1)}
+.price-card.shown{opacity:1;transform:translateY(0)}
+.pc-head{padding:16px;display:flex;align-items:center;gap:12px;background:var(--mustard)}
+.pc-logo{width:40px;height:40px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:17px;font-weight:900;color:white;flex-shrink:0;background:var(--biz-2)}
+.pc-name{font-family:var(--serif);font-size:16px;font-weight:900;color:var(--ink);line-height:1.1}
+.pc-sub-lbl{font-size:10px;color:rgba(35,33,32,0.5);font-family:var(--sans);margin-top:2px}
+.pc-body{background:var(--card);padding:16px}
+.pc-product{font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink-45);font-family:var(--sans);margin-bottom:14px}
+.pc-nums{display:grid;grid-template-columns:1fr 1fr 1fr;background:var(--cream);border-radius:10px;overflow:hidden;margin-bottom:12px}
+.pc-num{text-align:center;padding:12px 6px}
+.pc-num+.pc-num{border-left:1px solid var(--ink-08)}
+.pc-num-lbl{font-size:8px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink-45);font-family:var(--sans);margin-bottom:4px}
+.pc-num-val{font-family:var(--serif);font-size:20px;font-weight:900;color:var(--ink)}
+.pc-num-val.g{color:var(--green)}
+.pc-mpill{display:inline-flex;align-items:center;gap:6px;background:rgba(0,98,56,0.08);border:1px solid rgba(0,98,56,0.15);border-radius:20px;padding:6px 12px;margin-bottom:12px}
+.pc-mlbl{font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;font-family:var(--sans);color:var(--green)}
+.pc-mval{font-family:var(--serif);font-size:15px;font-weight:900;color:var(--green)}
+.pc-div{border:none;border-top:1px solid var(--ink-08);margin-bottom:11px}
+.pc-goals{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.pc-g-lbl{font-size:8px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;font-family:var(--sans);color:var(--ink-45);margin-bottom:3px}
+.pc-g-val{font-family:var(--serif);font-size:16px;font-weight:900;color:var(--ink)}
+
+/* Certificate */
+.cert{background:var(--cream);border:2px solid var(--ink);border-radius:14px;overflow:hidden;margin-bottom:16px;opacity:0;transform:translateY(14px);transition:all 0.42s cubic-bezier(0.16,1,0.3,1)}
+.cert.shown{opacity:1;transform:translateY(0)}
+.cert-inner{border:1px solid var(--ink-20);margin:7px;border-radius:9px;padding:20px 16px 18px}
+.cert-stars{text-align:center;font-size:10px;letter-spacing:5px;color:var(--ink-45);margin-bottom:12px;font-family:var(--sans)}
+.cert-over{font-size:8px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;font-family:var(--sans);color:var(--ink-45);text-align:center;margin-bottom:5px}
+.cert-head{font-family:var(--serif);font-size:17px;font-weight:900;color:var(--ink);text-align:center;line-height:1.15;margin-bottom:14px}
+.cert-copy{font-size:11px;color:var(--ink-45);font-family:var(--sans);text-align:center;line-height:1.65}
+.cert-name{font-family:var(--serif);font-size:24px;font-weight:900;color:var(--ink);text-align:center;margin-bottom:1px}
+.cert-role{font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;font-family:var(--sans);color:var(--ink-45);text-align:center;margin-bottom:14px}
+.cert-rule{border:none;border-top:1px solid var(--ink-20);margin:12px 0}
+.cert-nums{display:grid;grid-template-columns:1fr 1fr;gap:10px 16px;margin-bottom:12px}
+.cert-n-lbl{font-size:8px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;font-family:var(--sans);color:var(--ink-45);margin-bottom:3px}
+.cert-n-val{font-family:var(--serif);font-size:17px;font-weight:700;color:var(--ink)}
+.cert-n-val.gv{color:var(--green)}
+.cert-foot{display:flex;align-items:center;justify-content:space-between}
+.cert-logo{opacity:0.22}
+.cert-date{font-size:9px;font-weight:600;color:var(--ink-45);font-family:var(--sans)}
+
+.complete-cta{background:var(--mustard);color:var(--ink);border:none;border-radius:100px;padding:16px 28px;font-family:var(--sans);font-size:14px;font-weight:700;cursor:pointer;width:100%;margin-top:16px;transition:opacity 0.12s;max-width:340px;align-self:center}
+.complete-cta:hover{opacity:0.88}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <symbol id="wm" viewBox="80 380 1760 360">
+      <g fill="currentColor">
+        <path d="M445.36,431.57l-3.85,90.49c-.27,6.33-6.88,10.28-12.64,7.63-16.33-7.49-40.24-12.14-66.77-12.14-.31,0-.61,0-.91,0-11.02.03-11.98,16.22-1.04,17.55,64.35,7.81,96.1,36.71,96.1,88.14,0,78.78-43.72,105.68-168.62,105.68-36.48,0-78.6-3.46-127.16-10.8-4.45-.67-7.69-4.59-7.51-9.09l3.9-95.55c.25-6.24,6.73-10.23,12.43-7.66,19.27,8.69,48,14.06,77.99,14.06,3.22,0,6.25-.04,9.09-.14,11.02-.36,11.46-16.61.48-17.57-71.07-6.26-106.13-33.94-106.13-84.62,0-78.78,43.72-105.69,168.62-105.69,38.42,0,78.13,3.4,118.7,10.61,4.37.78,7.5,4.66,7.32,9.09Z"/>
+        <path d="M610.59,415.83l41.24-4.49c4.84-.53,9.19,2.97,9.72,7.81l10.68,98.05c.53,4.84-2.97,9.19-7.81,9.72l-41.22,4.49c-4.84.53-8.34,4.88-7.81,9.72l2.27,20.85c1.51,13.85,7.81,18.48,25.96,16.5,7.65-.83,15.43-2.62,23.47-5.7,5.42-2.08,11.35,1.47,11.97,7.24l13.01,119.51c.45,4.09-2.01,7.95-5.9,9.3-25.43,8.77-42.22,12.65-67.76,15.43-104.11,11.34-146.49-18.36-156.26-108.14l-25.77-235.61c-.53-4.84,2.97-9.19,7.81-9.72l142-15.46c4.83-.53,9.18,2.96,9.71,7.79l4.98,44.93c.54,4.83,4.88,8.32,9.71,7.79Z"/>
+        <path d="M1022.58,561.28v92.24c0,23.86.99,39.82,3.23,55.78.75,5.3-3.37,10.03-8.72,10.03h-134.04c-4.1,0-7.66-2.83-8.59-6.82l-4.66-20.08h-.96c-19.22,24.02-50.92,36.51-92.71,36.51-61.97,0-92.24-27.38-92.24-83.59s32.19-85.51,98.48-85.51c30.26,0,59.57,5.76,78.31,15.37h.96v-.96c0-24.5-21.61-35.55-69.66-35.55-31.93,0-62.53,4.97-83.54,13.54-5.64,2.3-11.84-1.78-12.06-7.87l-4.05-112.84c-.16-4.41,2.95-8.26,7.3-9.01,39.66-6.84,85.64-10.65,130.78-10.65,143.16,0,192.16,37.95,192.16,149.41ZM829.46,637.66c0,18.73,4.81,24.5,18.25,24.5,2.66,0,5.01-.2,7.14-.71,3.98-.93,6.79-4.51,6.79-8.6v-30.39c0-4.09-2.81-7.67-6.79-8.6-2.14-.5-4.49-.7-7.14-.7-13.45,0-18.25,5.76-18.25,24.5Z"/>
+        <path d="M1390.32,531.97v178.54c0,4.87-3.95,8.81-8.81,8.81h-142.82c-4.87,0-8.81-3.95-8.81-8.81v-154.04c0-19.22-4.33-25.94-16.81-25.94-3.08,0-6.17.49-9.06,1.47-3.53,1.2-5.83,4.62-5.83,8.35v170.16c0,4.87-3.95,8.81-8.81,8.81h-142.83c-4.87,0-8.81-3.95-8.81-8.81v-280.22c0-4.87,3.95-8.81,8.81-8.81h136.34c4.58,0,8.39,3.5,8.78,8.06l2.68,31.33h.96c21.14-34.11,51.4-49,98.48-49,70.14,0,96.56,33.15,96.56,120.1Z"/>
+        <path d="M1764.83,653.51c0,23.86.99,39.82,3.23,55.78.75,5.3-3.37,10.03-8.72,10.03h-139.67c-4.58,0-8.39-3.5-8.78-8.06l-2.68-31.33h-.96c-19.7,33.15-49.96,49-91.27,49-75.9,0-113.86-53.32-113.86-156.13s41.79-160.94,126.35-160.94c31.23,0,55.72,7.21,74.94,22.1h.96v-70.92s0-4.77,0-9.42c0-4.86,3.94-8.81,8.81-8.81h142.83c4.86,0,8.81,3.94,8.81,8.81,0,4.66,0,9.42,0,9.42v290.46ZM1569.79,570.4c0,29.3,5.29,39.87,20.18,39.87,3.06,0,5.84-.4,8.35-1.21,3.63-1.17,6.06-4.59,6.06-8.4v-60.52c0-3.81-2.43-7.23-6.06-8.4-2.51-.81-5.3-1.21-8.35-1.21-14.89,0-20.18,10.57-20.18,39.87Z"/>
+      </g>
+    </symbol>
+  </defs>
+</svg>
+
+<div class="sw">
+
+<!-- ═══ S0: DARK INTRO ═══ -->
+<div class="screen dk active" id="s0">
+  <div class="topbar">
+    <svg class="stand-logo" aria-label="Stand"><use href="#wm"/></svg>
+    <span class="module-badge">Module 06 · Pricing</span>
+  </div>
+  <div class="intro-body">
+    <div class="intro-deco">$</div>
+    <div style="height:18px"></div>
+    <div class="overline">module 06</div>
+    <div class="display" style="font-size:34px;margin-bottom:8px">Know what<br>you're worth.</div>
+    <div class="body" style="margin-bottom:0">Two numbers run your whole business — what it costs to make, and what you charge. Get them right.</div>
+    <div class="feature-list">
+      <div class="feature-item" id="fi0">
+        <div class="fi-icon" style="background:rgba(255,196,8,0.15)">💰</div>
+        <div><div class="fi-text">Your real cost</div><div class="fi-sub">What goes into making one item</div></div>
+      </div>
+      <div class="feature-item" id="fi1">
+        <div class="fi-icon" style="background:rgba(93,224,160,0.12)">📈</div>
+        <div><div class="fi-text">Your price — live</div><div class="fi-sub">Drag a slider, watch your profit change</div></div>
+      </div>
+      <div class="feature-item" id="fi2">
+        <div class="fi-icon" style="background:rgba(1,71,148,0.2)">🎯</div>
+        <div><div class="fi-text">Your monthly goal</div><div class="fi-sub">How many sales you actually need</div></div>
+      </div>
+    </div>
+    <div class="cta-zone">
+      <button class="big-cta cta-mustard cta-pulse" onclick="go('s1')">Let's crunch the numbers →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ S1: COST (dark, stepper) ═══ -->
+<div class="screen dk" id="s1">
+  <div class="s-inner">
+    <div class="topbar"><svg class="stand-logo" aria-label="Stand"><use href="#wm"/></svg><span class="ceo-badge">CEO · Alice</span></div>
+    <div class="nav-row">
+      <button class="back-btn" onclick="go('s0')">← Back</button>
+      <div class="prog-track"><div class="seg filled"></div><div class="seg active"></div><div class="seg"></div><div class="seg"></div><div class="seg"></div><div class="seg"></div><div class="seg"></div></div>
+    </div>
+    <div class="overline">step 1 — your cost</div>
+    <div class="display" style="font-size:26px;margin-bottom:6px">What does ONE cost you to make?</div>
+    <div class="body" style="margin-bottom:0">Every ingredient, every bit of packaging. Add it all up for a single item.</div>
+
+    <div class="cost-display" id="cost-display" onclick="focusCostInput()">
+      <div class="cost-number" id="cost-number">
+        <span class="cost-sym">$</span><span class="cost-val" id="cost-display-val">0.00</span>
+      </div>
+      <div class="cost-tap">tap to type ↑</div>
+    </div>
+    <input class="cost-input-hidden" type="number" id="cost-hidden" min="0" step="0.10" value="0" oninput="onCostType()" onblur="onCostBlur()">
+
+    <div class="stepper-grid">
+      <button class="step-btn step-minus" onclick="stepCost(-1)">−$1.00</button>
+      <button class="step-btn step-minus" onclick="stepCost(-0.5)">−$0.50</button>
+      <button class="step-btn step-minus" onclick="stepCost(-0.1)">−$0.10</button>
+      <button class="step-btn step-plus" onclick="stepCost(0.1)">+$0.10</button>
+      <button class="step-btn step-plus" onclick="stepCost(0.5)">+$0.50</button>
+      <button class="step-btn step-plus" onclick="stepCost(1)">+$1.00</button>
+    </div>
+
+    <div class="preset-label">or pick a starting point</div>
+    <div class="presets">
+      <button class="preset" data-v="0.25" onclick="setPreset(0.25,this)">$0.25</button>
+      <button class="preset" data-v="0.50" onclick="setPreset(0.50,this)">$0.50</button>
+      <button class="preset" data-v="0.75" onclick="setPreset(0.75,this)">$0.75</button>
+      <button class="preset" data-v="1.00" onclick="setPreset(1.00,this)">$1</button>
+      <button class="preset" data-v="1.50" onclick="setPreset(1.50,this)">$1.50</button>
+      <button class="preset" data-v="2.00" onclick="setPreset(2.00,this)">$2</button>
+      <button class="preset" data-v="3.00" onclick="setPreset(3.00,this)">$3</button>
+    </div>
+
+    <div class="cta-zone">
+      <button class="big-cta cta-mustard" onclick="submitCost()">That's my cost →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ S2: PRICE CALCULATOR (dark, slider + ring) ═══ -->
+<div class="screen dk" id="s2">
+  <div class="s-inner">
+    <div class="topbar"><svg class="stand-logo" aria-label="Stand"><use href="#wm"/></svg><span class="ceo-badge">CEO · Alice</span></div>
+    <div class="nav-row">
+      <button class="back-btn" onclick="go('s1')">← Back</button>
+      <div class="prog-track"><div class="seg filled"></div><div class="seg filled"></div><div class="seg active"></div><div class="seg"></div><div class="seg"></div><div class="seg"></div><div class="seg"></div></div>
+    </div>
+    <div class="overline">step 2 — your price</div>
+    <div class="display" style="font-size:24px;margin-bottom:6px">Drag to set your price.</div>
+    <div class="body" style="margin-bottom:14px">Watch your profit update live — every cent counts.</div>
+
+    <div class="price-dash">
+      <div class="pd-cell">
+        <div class="pd-lbl">Cost</div>
+        <div class="pd-val sm" id="pd-cost">$—</div>
+      </div>
+      <div class="pd-cell active-cell">
+        <div class="pd-lbl">Your price</div>
+        <div class="pd-val lg" id="pd-price">$0.00</div>
+      </div>
+      <div class="pd-cell">
+        <div class="pd-lbl">Profit</div>
+        <div class="pd-val xl" id="pd-profit">$—</div>
+      </div>
+    </div>
+
+    <div class="ring-zone">
+      <svg class="mring" viewBox="0 0 100 100">
+        <circle class="mring-bg" cx="50" cy="50" r="41.5"/>
+        <circle class="mring-arc" id="mring-arc" cx="50" cy="50" r="41.5" transform="rotate(-90 50 50)"/>
+        <text class="mring-pct" id="mring-pct" x="50" y="44">—</text>
+        <text class="mring-sub" x="50" y="64">margin</text>
+      </svg>
+      <div class="slider-zone">
+        <input class="price-slider" type="range" id="price-slider" min="0" max="1000" step="10" value="0" oninput="onSlider()">
+        <div class="slider-ends"><span>$0</span><span>$10</span></div>
+        <div class="slider-note" id="slider-note">Slide right to set your price</div>
+      </div>
+    </div>
+
+    <div class="cta-zone">
+      <button class="big-cta cta-red" id="price-cta" onclick="runPriceAI()">Get Stand's take ✦</button>
+      <div id="price-loading" style="display:none;text-align:center;padding-top:16px">
+        <div style="display:flex;gap:5px;justify-content:center;margin-bottom:6px">
+          <span style="width:7px;height:7px;border-radius:50%;background:rgba(250,243,214,0.35);display:inline-block;animation:ld 1.1s ease-in-out infinite"></span>
+          <span style="width:7px;height:7px;border-radius:50%;background:rgba(250,243,214,0.35);display:inline-block;animation:ld 1.1s ease-in-out 0.15s infinite"></span>
+          <span style="width:7px;height:7px;border-radius:50%;background:rgba(250,243,214,0.35);display:inline-block;animation:ld 1.1s ease-in-out 0.3s infinite"></span>
+        </div>
+        <div style="font-size:11px;color:rgba(250,243,214,0.3);font-family:var(--sans)">Stand is reading your numbers…</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ S3: AI FEEDBACK (cream) ═══ -->
+<div class="screen" id="s3">
+  <div class="s-inner">
+    <div class="topbar"><svg class="stand-logo" aria-label="Stand"><use href="#wm"/></svg><span class="ceo-badge">CEO · Alice</span></div>
+    <div class="nav-row">
+      <button class="back-btn" onclick="adjustPrice()">← Back</button>
+      <div class="prog-track"><div class="seg filled"></div><div class="seg filled"></div><div class="seg filled"></div><div class="seg active"></div><div class="seg"></div><div class="seg"></div><div class="seg"></div></div>
+    </div>
+    <div class="overline">stand's take</div>
+    <div class="display" style="font-size:26px;margin-bottom:12px">Here's what<br>Stand thinks.</div>
+    <div class="resp-card">
+      <div class="resp-label">Your numbers</div>
+      <div class="resp-quote" id="resp-quote">—</div>
+      <hr class="resp-rule">
+      <div class="resp-dots" id="resp-loading"><span></span><span></span><span></span></div>
+      <div class="resp-text" id="resp-text" style="display:none"></div>
+    </div>
+    <div class="cta-zone">
+      <button class="big-cta cta-ink" id="lock-btn" style="display:none" onclick="go('s4')">Lock in my price →</button>
+      <button class="cta-outline" id="adjust-btn" style="display:none" onclick="adjustPrice()">Adjust my price</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ S4: GOAL (dark, big numbers) ═══ -->
+<div class="screen dk" id="s4">
+  <div class="s-inner">
+    <div class="topbar"><svg class="stand-logo" aria-label="Stand"><use href="#wm"/></svg><span class="ceo-badge">CEO · Alice</span></div>
+    <div class="nav-row">
+      <button class="back-btn" onclick="go('s3')">← Back</button>
+      <div class="prog-track"><div class="seg filled"></div><div class="seg filled"></div><div class="seg filled"></div><div class="seg filled"></div><div class="seg active"></div><div class="seg"></div><div class="seg"></div></div>
+    </div>
+    <div class="overline">step 3 — your goal</div>
+    <div class="display" style="font-size:26px;margin-bottom:6px">How much do you want to make this month?</div>
+    <div class="body" style="margin-bottom:0">Set a number and Stand will tell you exactly how many sales you need.</div>
+
+    <div class="goal-section">
+      <div class="goal-prompt">I want to make</div>
+      <div class="goal-row">
+        <span class="goal-sym">$</span>
+        <input class="goal-in" type="number" id="goal-in" min="0" step="5" placeholder="50" oninput="onGoalInput()">
+      </div>
+      <div class="goal-chips">
+        <button class="goal-chip" onclick="setGoal(20,this)">$20</button>
+        <button class="goal-chip" onclick="setGoal(50,this)">$50</button>
+        <button class="goal-chip" onclick="setGoal(100,this)">$100</button>
+        <button class="goal-chip" onclick="setGoal(200,this)">$200</button>
+      </div>
+      <div class="result-zone" id="result-zone">
+        <div class="result-eq" id="result-eq"></div>
+        <div class="result-number" id="result-number">0</div>
+        <div class="result-unit">sales needed</div>
+      </div>
+    </div>
+
+    <div class="cta-zone">
+      <button class="big-cta cta-mustard" onclick="submitGoal()">That's my goal →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ S5: P&L SUMMARY (cream) ═══ -->
+<div class="screen" id="s5">
+  <div class="s-inner">
+    <div class="topbar"><svg class="stand-logo" aria-label="Stand"><use href="#wm"/></svg><span class="ceo-badge">CEO · Alice</span></div>
+    <div class="nav-row">
+      <button class="back-btn" onclick="go('s4')">← Back</button>
+      <div class="prog-track"><div class="seg filled"></div><div class="seg filled"></div><div class="seg filled"></div><div class="seg filled"></div><div class="seg filled"></div><div class="seg active"></div><div class="seg"></div></div>
+    </div>
+    <div class="overline">your numbers</div>
+    <div class="display" style="font-size:26px;margin-bottom:6px">Complete picture.</div>
+    <div class="body" style="margin-bottom:0">A real CEO knows these numbers off by heart.</div>
+
+    <div class="pl-sheet">
+      <div class="pl-head">
+        <div class="pl-biz">Alice's Tasty Treats</div>
+        <div class="pl-sub">Pricing Summary · 2026</div>
+      </div>
+      <div class="pl-section-head"><div class="pl-section-lbl">Cost &amp; Price</div></div>
+      <div class="pl-row"><span class="pl-row-lbl">Cost to make one</span><span class="pl-row-val" id="pl-cost">$—</span></div>
+      <div class="pl-row"><span class="pl-row-lbl">Selling price</span><span class="pl-row-val" id="pl-price">$—</span></div>
+      <div class="pl-row"><span class="pl-row-lbl">Profit per sale</span><span class="pl-row-val green" id="pl-profit">$—</span></div>
+      <div class="pl-row" style="border-bottom:none"><span class="pl-row-lbl">Profit margin</span><span class="pl-row-val amber" id="pl-margin">—</span></div>
+      <div class="pl-rule"></div>
+      <div class="pl-section-head"><div class="pl-section-lbl">Monthly Goal</div></div>
+      <div class="pl-row"><span class="pl-row-lbl">Target revenue</span><span class="pl-row-val blue" id="pl-goal">$—</span></div>
+      <div class="pl-row" style="border-bottom:none"><span class="pl-row-lbl">Sales needed</span><span class="pl-row-val" id="pl-sales">—</span></div>
+    </div>
+
+    <div class="plain-box"><div class="plain-text" id="plain-text">—</div></div>
+
+    <div class="cta-zone">
+      <button class="big-cta cta-ink" onclick="showComplete()">See my assets →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ S6: COMPLETE + ASSETS ═══ -->
+<div class="screen" id="s6">
+<div class="complete-bg">
+  <div class="badge-pos">
+    <div class="badge-ring-el" id="cbadge"><div class="badge-inner">💰</div></div>
+  </div>
+  <div class="c-title" id="ctitle">You know your numbers.</div>
+  <div class="c-sub" id="csub">Cost. Price. Profit. Goal. Most adults can't answer all four for their own business. You can.</div>
+  <div class="c-chip" id="cchip">Module 06 complete</div>
+
+  <div class="assets-wrap" id="assets-wrap">
+    <div class="a-label">Your pricing card</div>
+    <div class="price-card" id="asset-price-card">
+      <div class="pc-head">
+        <div class="pc-logo">AT</div>
+        <div><div class="pc-name">Alice's Tasty Treats</div><div class="pc-sub-lbl">Pricing Strategy · 2026</div></div>
+      </div>
+      <div class="pc-body">
+        <div class="pc-product">Homemade Baked Goods</div>
+        <div class="pc-nums">
+          <div class="pc-num"><div class="pc-num-lbl">Cost</div><div class="pc-num-val" id="pc-cost">$—</div></div>
+          <div class="pc-num"><div class="pc-num-lbl">Price</div><div class="pc-num-val" id="pc-price">$—</div></div>
+          <div class="pc-num"><div class="pc-num-lbl">Profit</div><div class="pc-num-val g" id="pc-profit">$—</div></div>
+        </div>
+        <div class="pc-mpill"><span class="pc-mlbl">Margin</span><span class="pc-mval" id="pc-margin">—</span></div>
+        <div class="pc-div"></div>
+        <div class="pc-goals">
+          <div><div class="pc-g-lbl">Monthly goal</div><div class="pc-g-val" id="pc-goal">$—</div></div>
+          <div><div class="pc-g-lbl">Sales needed</div><div class="pc-g-val" id="pc-sales">— items</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="a-label" style="margin-top:4px">Your certificate</div>
+    <div class="cert" id="asset-cert">
+      <div class="cert-inner">
+        <div class="cert-stars">✦ ✦ ✦ ✦ ✦</div>
+        <div class="cert-over">Stand — Kids Entrepreneurship</div>
+        <div class="cert-head">Kids Accountancy<br>Certificate</div>
+        <div class="cert-copy">This certifies that</div>
+        <div style="height:6px"></div>
+        <div class="cert-name">Alice</div>
+        <div class="cert-role">Chief Executive Officer · Alice's Tasty Treats</div>
+        <div class="cert-rule"></div>
+        <div class="cert-copy" style="margin-bottom:14px">has calculated the cost, price, and profit for her business and set a monthly sales goal.</div>
+        <div class="cert-rule"></div>
+        <div class="cert-nums">
+          <div><div class="cert-n-lbl">Cost to make</div><div class="cert-n-val" id="cert-cost">$—</div></div>
+          <div><div class="cert-n-lbl">Selling price</div><div class="cert-n-val" id="cert-price">$—</div></div>
+          <div><div class="cert-n-lbl">Profit per sale</div><div class="cert-n-val gv" id="cert-profit">$—</div></div>
+          <div><div class="cert-n-lbl">Profit margin</div><div class="cert-n-val" id="cert-margin">—</div></div>
+          <div><div class="cert-n-lbl">Monthly goal</div><div class="cert-n-val" id="cert-goal">$—</div></div>
+          <div><div class="cert-n-lbl">Sales needed</div><div class="cert-n-val" id="cert-sales">—</div></div>
+        </div>
+        <div class="cert-rule"></div>
+        <div class="cert-foot">
+          <svg class="cert-logo" height="12" aria-label="Stand"><use href="#wm"/></svg>
+          <div class="cert-date" id="cert-date">May 2026</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <button class="complete-cta" onclick="location.reload()">Start my next lesson →</button>
+</div>
+</div>
+
+</div><!-- .sw -->
+
+<script>
+const BIZ={name:"Alice's Tasty Treats",product:'homemade baked goods',ceo:'Alice'};
+const S={cost:0,price:0,profit:0,margin:0,goal:0,sales:0};
+const PROXY='https://corsproxy.io/?url=https://api.anthropic.com/v1/messages';
+const C=260.75; // ring circumference (r=41.5)
+
+function playSound(n){try{const a=new Audio(`/clients/stand/prototypes/assets/sounds/${n}.mp3`);a.volume=0.6;a.play().catch(()=>{})}catch(e){}}
+
+function go(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+  playSound('transition');
+}
+
+function fmt(n){return'$'+Math.abs(n).toFixed(2)}
+function pct(n){return n+'%'}
+
+/* ── COST SCREEN ── */
+let costVal=0;
+
+function setCostVal(v){
+  costVal=Math.max(0,Math.round(v*100)/100);
+  document.getElementById('cost-display-val').textContent=costVal.toFixed(2);
+  document.getElementById('cost-hidden').value=costVal.toFixed(2);
+  bounce(document.getElementById('cost-number'));
+  document.querySelectorAll('.preset').forEach(p=>p.classList.toggle('active',parseFloat(p.dataset.v)===costVal));
+}
+
+function stepCost(delta){setCostVal(costVal+delta);playSound('select')}
+function setPreset(v,el){setCostVal(v);playSound('select')}
+function focusCostInput(){document.getElementById('cost-hidden').focus()}
+
+function onCostType(){
+  const v=parseFloat(document.getElementById('cost-hidden').value)||0;
+  costVal=Math.max(0,Math.round(v*100)/100);
+  document.getElementById('cost-display-val').textContent=costVal.toFixed(2);
+  document.querySelectorAll('.preset').forEach(p=>p.classList.toggle('active',parseFloat(p.dataset.v)===costVal));
+}
+function onCostBlur(){document.getElementById('cost-hidden').value=costVal.toFixed(2)}
+
+function submitCost(){
+  S.cost=costVal;
+  document.getElementById('pd-cost').textContent=fmt(S.cost);
+  const initCents=Math.min(Math.round(Math.max(S.cost*2.5,S.cost+0.5)*10)*10,1000);
+  document.getElementById('price-slider').value=initCents;
+  onSlider();
+  go('s2');
+}
+
+function bounce(el){
+  el.style.transform='scale(0.9)';
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{el.style.transform='scale(1)'}));
+}
+
+/* ── PRICE CALCULATOR ── */
+function onSlider(){
+  S.price=parseInt(document.getElementById('price-slider').value)/100;
+  updateCalc();
+}
+
+function updateCalc(){
+  const profit=S.price-S.cost;
+  S.profit=Math.round(profit*100)/100;
+  S.margin=S.price>0?Math.round((profit/S.price)*100):0;
+
+  document.getElementById('pd-price').textContent=fmt(S.price);
+
+  const profitEl=document.getElementById('pd-profit');
+  profitEl.textContent=(S.profit<0?'−':'')+fmt(S.profit);
+  profitEl.className='pd-val xl '+(S.profit<0?'p-loss':S.margin<20?'p-thin':S.margin<40?'p-ok':'p-good');
+
+  updateRing(S.margin);
+
+  let note='Slide right to set your price';
+  if(S.price>0){
+    if(S.profit<0)note='You\'re losing money at this price — slide right';
+    else if(S.margin<20)note='Thin margin — a little higher?';
+    else if(S.margin<40)note='Not bad — could you go slightly higher?';
+    else note='Strong margin — nice work';
+  }
+  document.getElementById('slider-note').textContent=note;
+}
+
+function updateRing(m){
+  const fill=Math.max(0,Math.min(m,100))/100*C;
+  const arc=document.getElementById('mring-arc');
+  arc.style.strokeDasharray=`${fill} ${C-fill}`;
+  const color=m>=40?'#5DE0A0':m>=20?'#FFC408':'#FF7575';
+  arc.style.stroke=color;
+  const pctEl=document.getElementById('mring-pct');
+  pctEl.textContent=m>0?m+'%':'—';
+  pctEl.style.fill=m>0?color:'rgba(250,243,214,0.4)';
+}
+
+async function runPriceAI(){
+  if(!S.price||S.price<=0){return}
+  document.getElementById('price-cta').style.display='none';
+  document.getElementById('price-loading').style.display='block';
+  document.getElementById('resp-quote').textContent=
+    `Cost ${fmt(S.cost)} · Price ${fmt(S.price)} · Profit ${fmt(S.profit)} · Margin ${pct(S.margin)}`;
+  go('s3');
+  document.getElementById('lock-btn').style.display='none';
+  document.getElementById('adjust-btn').style.display='none';
+  document.getElementById('resp-loading').style.display='flex';
+  document.getElementById('resp-text').style.display='none';
+
+  const prompt=`You are Stand — a warm encouraging coach for kids aged 8–14 starting their first business.
+Alice runs "Alice's Tasty Treats" selling homemade baked goods.
+Her pricing: cost to make one = ${fmt(S.cost)}, selling price = ${fmt(S.price)}, profit per sale = ${fmt(S.profit)}, margin = ${pct(S.margin)}.
+In 2–3 sentences max:
+- Margin 40%+: celebrate it warmly, explain why a strong margin is powerful in simple terms.
+- Margin 20–39%: affirm it's solid, give one concrete tip (e.g. "charging 25 cents more would take your profit to X").
+- Margin under 20% or negative: be kind but honest — this won't work long-term, suggest a specific price to try.
+Direct, warm, specific to her numbers. No lists. No questions back. Written for a kid.`;
+
+  try{
+    const res=await fetch(PROXY,{method:'POST',headers:{'Content-Type':'application/json','x-anthropic-version':'2023-06-01'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:180,messages:[{role:'user',content:prompt}]})});
+    const data=await res.json();
+    showFeedback(data.content&&data.content[0]&&data.content[0].text||fallback());
+  }catch(e){showFeedback(fallback())}
+
+  document.getElementById('price-loading').style.display='none';
+  document.getElementById('price-cta').style.display='';
+}
+
+function fallback(){
+  if(S.margin>=40)return`A ${pct(S.margin)} margin is really strong — for every ${fmt(S.price)} you earn, ${fmt(S.profit)} is pure profit. That's how a business stays healthy.`;
+  if(S.margin>=20)return`${pct(S.margin)} is a decent margin to start. If you charged just a little more — say ${fmt(S.price+0.25)} — your profit per sale would jump to ${fmt(S.profit+0.25)}.`;
+  return`At ${pct(S.margin)} margin, you won't make much even if you sell loads. Try pushing the price up to around ${fmt(S.cost*2.5)} — customers will still pay for something handmade.`;
+}
+
+function showFeedback(text){
+  document.getElementById('resp-loading').style.display='none';
+  document.getElementById('resp-text').style.display='block';
+  document.getElementById('resp-text').textContent=text;
+  document.getElementById('lock-btn').style.display='block';
+  document.getElementById('adjust-btn').style.display='block';
+  playSound('reveal');
+}
+
+function adjustPrice(){
+  document.getElementById('lock-btn').style.display='none';
+  document.getElementById('adjust-btn').style.display='none';
+  document.getElementById('price-cta').style.display='';
+  document.getElementById('price-loading').style.display='none';
+  go('s2');
+}
+
+/* ── GOAL SCREEN ── */
+function onGoalInput(){
+  const g=parseFloat(document.getElementById('goal-in').value)||0;
+  updateGoalResult(g);
+  document.querySelectorAll('.goal-chip').forEach(c=>c.classList.remove('active'));
+}
+
+function setGoal(v,el){
+  document.getElementById('goal-in').value=v;
+  document.querySelectorAll('.goal-chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  updateGoalResult(v);
+  playSound('select');
+}
+
+function updateGoalResult(g){
+  const rz=document.getElementById('result-zone');
+  if(!g||g<=0||!S.profit||S.profit<=0){rz.classList.remove('show');return}
+  const needed=Math.ceil(g/S.profit);
+  const numEl=document.getElementById('result-number');
+  numEl.style.transform='scale(0.85)';
+  setTimeout(()=>{numEl.textContent=needed;numEl.style.transform='scale(1)'},80);
+  document.getElementById('result-eq').textContent=`${fmt(g)} ÷ ${fmt(S.profit)} profit = ${needed} ${needed===1?'sale':'sales'}`;
+  rz.classList.add('show');
+}
+
+function submitGoal(){
+  const g=parseFloat(document.getElementById('goal-in').value)||0;
+  if(!g||g<=0){document.getElementById('goal-in').focus();return}
+  S.goal=g;S.sales=S.profit>0?Math.ceil(g/S.profit):0;
+  populateSummary();go('s5');
+}
+
+/* ── SUMMARY ── */
+function populateSummary(){
+  document.getElementById('pl-cost').textContent=fmt(S.cost);
+  document.getElementById('pl-price').textContent=fmt(S.price);
+  document.getElementById('pl-profit').textContent=fmt(S.profit);
+  document.getElementById('pl-margin').textContent=pct(S.margin);
+  document.getElementById('pl-goal').textContent=fmt(S.goal);
+  document.getElementById('pl-sales').textContent=S.sales+' items';
+  document.getElementById('plain-text').textContent=
+    `To hit ${fmt(S.goal)} this month, Alice needs ${S.sales} ${S.sales===1?'sale':'sales'} at ${fmt(S.price)} each — earning ${fmt(S.profit)} profit per sale at a ${pct(S.margin)} margin.`;
+}
+
+/* ── COMPLETE ── */
+function showComplete(){
+  document.getElementById('pc-cost').textContent=fmt(S.cost);
+  document.getElementById('pc-price').textContent=fmt(S.price);
+  document.getElementById('pc-profit').textContent=fmt(S.profit);
+  document.getElementById('pc-margin').textContent=pct(S.margin);
+  document.getElementById('pc-goal').textContent=fmt(S.goal);
+  document.getElementById('pc-sales').textContent=S.sales+' items';
+  document.getElementById('cert-cost').textContent=fmt(S.cost);
+  document.getElementById('cert-price').textContent=fmt(S.price);
+  document.getElementById('cert-profit').textContent=fmt(S.profit);
+  document.getElementById('cert-margin').textContent=pct(S.margin);
+  document.getElementById('cert-goal').textContent=fmt(S.goal);
+  document.getElementById('cert-sales').textContent=S.sales+' items';
+  const now=new Date();
+  const mo=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  document.getElementById('cert-date').textContent=mo[now.getMonth()]+' '+now.getFullYear();
+  go('s6');
+  setTimeout(()=>{
+    const b=document.getElementById('cbadge');b.classList.add('pop');playSound('complete');
+    const r=document.createElement('div');r.className='ring-anim';b.parentNode.appendChild(r);
+    setTimeout(()=>r.remove(),1300);
+  },100);
+  setTimeout(()=>document.getElementById('ctitle').classList.add('in'),380);
+  setTimeout(()=>document.getElementById('csub').classList.add('in'),540);
+  setTimeout(()=>document.getElementById('cchip').classList.add('in'),680);
+  setTimeout(()=>{
+    document.getElementById('assets-wrap').classList.add('in');
+    setTimeout(()=>{document.getElementById('asset-price-card').classList.add('shown');playSound('reveal');},100);
+    setTimeout(()=>document.getElementById('asset-cert').classList.add('shown'),400);
+  },860);
+}
+
+/* ── INTRO ANIMATION ── */
+setTimeout(()=>{
+  ['fi0','fi1','fi2'].forEach((id,i)=>setTimeout(()=>document.getElementById(id).classList.add('in'),i*140+120));
+},60);
+</script>
+</body>
+</html>
