@@ -27,10 +27,10 @@ body{font-family:'Manrope',sans-serif;background:var(--cream);color:var(--black)
 
 /* PROGRESS BAR */
 .prog-bar{display:flex;gap:4px;padding:10px 14px 8px;background:var(--creamD);border-bottom:2px solid var(--black)}
-.prog-seg{flex:1;height:10px;border:2px solid var(--black);border-radius:6px;background:var(--cream);transition:background .25s,border-color .25s;position:relative;overflow:visible}
-.prog-seg.filled{background:var(--yellow);border-color:var(--black)}
-.prog-seg.active{background:var(--red);border-color:var(--black);animation:progPulse 1.5s ease-in-out infinite}
-@keyframes progPulse{0%,100%{box-shadow:0 0 0 0 rgba(229,57,53,.5)}50%{box-shadow:0 0 0 4px rgba(229,57,53,0)}}
+.prog-seg{flex:1;height:10px;border:2px solid var(--black);border-radius:6px;background:var(--cream);transition:background .3s ease,border-color .3s ease,box-shadow .3s ease;position:relative;overflow:visible}
+.prog-seg.filled{background:var(--yellow);border-color:var(--black);box-shadow:inset 0 -2px 0 rgba(0,0,0,.15)}
+.prog-seg.active{background:var(--red);border-color:var(--black);box-shadow:inset 0 -2px 0 rgba(0,0,0,.2);animation:progPulse 1.5s ease-in-out infinite}
+@keyframes progPulse{0%,100%{box-shadow:inset 0 -2px 0 rgba(0,0,0,.2),0 0 0 0 rgba(229,57,53,.5)}50%{box-shadow:inset 0 -2px 0 rgba(0,0,0,.2),0 0 0 4px rgba(229,57,53,0)}}
 
 .scene{display:none;animation:scIn .4s ease}
 .scene.on{display:block}
@@ -44,6 +44,9 @@ body{font-family:'Manrope',sans-serif;background:var(--cream);color:var(--black)
 .scene.on > *:nth-child(3){animation-delay:0.1s}
 .scene.on > *:nth-child(4){animation-delay:0.15s}
 .scene.on > *:nth-child(5){animation-delay:0.2s}
+.scene.on > *:nth-child(6){animation-delay:0.25s}
+.scene.on > *:nth-child(7){animation-delay:0.3s}
+.scene.on > *:nth-child(8){animation-delay:0.35s}
 
 /* BUTTON MICRO-BOUNCE */
 .cta:active, .spot:active, .bsOpt:active, .aPill:active, .ap-opt:active, .mOpt:active {
@@ -95,7 +98,7 @@ body{font-family:'Manrope',sans-serif;background:var(--cream);color:var(--black)
 .qInput:focus,.qArea:focus{border-color:var(--pink);border-style:solid}
 .qInput::placeholder,.qArea::placeholder{color:var(--ink);opacity:.45;font-style:italic;font-weight:500}
 .ageP{display:flex;gap:5px;flex-wrap:wrap}
-.aPill{background:var(--cream);border:1.5px solid var(--black);width:34px;height:34px;border-radius:17px;font-family:'Bagel Fat One',sans-serif;font-size:14px;cursor:pointer;transition:all .1s}
+.aPill{background:var(--cream);border:1.5px solid var(--black);min-width:34px;height:34px;padding:0 8px;border-radius:17px;font-family:'Bagel Fat One',sans-serif;font-size:14px;cursor:pointer;transition:all .1s}
 .aPill.on{background:var(--pink);color:var(--cream)}
 .confirm-block{display:none;background:var(--green);color:var(--cream);border:2.5px solid var(--black);border-radius:10px;padding:14px 16px;margin-bottom:14px;box-shadow:3px 3px 0 var(--black);animation:scIn .4s ease;font-size:13px;line-height:1.5}
 .confirm-block.on{display:block}
@@ -197,8 +200,8 @@ body{font-family:'Manrope',sans-serif;background:var(--cream);color:var(--black)
 .pCmpT.has{color:#fff}
 .rStack{display:flex;flex-direction:column;gap:7px;align-items:center;padding-top:6px}
 .reactor{width:68px;background:#fff;border:2.5px solid var(--black);border-radius:8px;padding:8px 4px 5px;text-align:center;box-shadow:2px 2px 0 var(--black);transition:all .3s}
-.reactor.alive{animation:jig .5s ease}
-@keyframes jig{0%,100%{transform:rotate(0)}25%{transform:rotate(-3deg) scale(1.05)}75%{transform:rotate(3deg) scale(1.05)}}
+.reactor.alive{animation:jig .55s cubic-bezier(.34,1.56,.64,1)}
+@keyframes jig{0%{transform:rotate(0) scale(1)}20%{transform:rotate(-5deg) scale(1.12)}50%{transform:rotate(5deg) scale(1.15)}75%{transform:rotate(-2deg) scale(1.08)}100%{transform:rotate(0) scale(1)}}
 .rE{font-size:26px;line-height:1;margin-bottom:2px;display:block;transition:filter .3s}
 .rL{font-family:'Bagel Fat One',sans-serif;font-size:9px;text-transform:lowercase;color:var(--ink)}
 .vm{width:68px;background:var(--black);border:2px solid var(--black);border-radius:6px;padding:5px 5px 7px;text-align:center;color:var(--cream);box-shadow:2px 2px 0 var(--black)}
@@ -256,9 +259,10 @@ body{font-family:'Manrope',sans-serif;background:var(--cream);color:var(--black)
 
 /* OVERLAY */
 .ov{position:fixed;inset:0;background:rgba(26,26,26,.92);z-index:100;display:none;align-items:center;justify-content:center;padding:20px}
-.ov.on{display:flex;animation:scIn .3s ease}
-.ovC{background:var(--cream);border:3px solid var(--black);border-radius:16px;padding:24px 22px;max-width:360px;width:100%;text-align:center;box-shadow:0 8px 0 var(--red);animation:ovP .5s cubic-bezier(.34,1.56,.64,1) .1s both}
-@keyframes ovP{from{opacity:0;transform:scale(.7) rotate(-4deg)}to{opacity:1;transform:scale(1) rotate(0)}}
+.ov.on{display:flex;animation:ovBg .25s ease}
+@keyframes ovBg{from{opacity:0}to{opacity:1}}
+.ovC{background:var(--cream);border:3px solid var(--black);border-radius:16px;padding:24px 22px;max-width:360px;width:100%;text-align:center;box-shadow:0 8px 0 var(--red);animation:ovP .4s cubic-bezier(.34,1.56,.64,1) .05s both}
+@keyframes ovP{from{opacity:0;transform:scale(.65) rotate(-6deg)}to{opacity:1;transform:scale(1) rotate(0)}}
 .ovTr{font-size:60px;line-height:1;margin-bottom:6px;display:block;animation:spin 1s ease}
 @keyframes spin{from{transform:rotate(-180deg) scale(.3);opacity:0}to{transform:rotate(0) scale(1);opacity:1}}
 .ovTag{font-family:'Bagel Fat One',sans-serif;font-size:11px;color:var(--red);text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px}
@@ -305,6 +309,10 @@ body{font-family:'Manrope',sans-serif;background:var(--cream);color:var(--black)
 .cP{position:absolute;top:-10px;width:10px;height:10px;border-radius:2px;animation:fall linear forwards}
 @keyframes fall{to{transform:translateY(100vh) rotate(720deg);opacity:0}}
 
+/* ASSET UNLOCK POP */
+@keyframes assetPop{0%{transform:scale(1)}40%{transform:scale(1.08)}70%{transform:scale(.97)}100%{transform:scale(1)}}
+.asset-btn.pop{animation:assetPop .35s cubic-bezier(.34,1.56,.64,1)}
+
 /* SECTION DIVIDER */
 .sdiv{height:1px;background:var(--line);margin:14px 0}
 </style>
@@ -346,13 +354,13 @@ body{font-family:'Manrope',sans-serif;background:var(--cream);color:var(--black)
     <!-- INTRO -->
     <div class="scene on" id="s-intro">
       <div class="intro">
-        <div class="iTag">let's launch your business</div>
+        <div class="iTag">module 06 · marketing</div>
         <div class="iTitle">build your<br>launch plan.</div>
         <div class="iProd">📣</div>
         <div class="iNarr">
-          <b>Three acts. Real strategy.</b> You'll walk away with a launch kit you can actually use.
+          <b>Three acts. Real decisions.</b> You'll figure out who you're selling to, where you'll find them, and build a kit you can actually use — today.
         </div>
-        <button class="startBtn" id="startBtn">let's go →</button>
+        <button class="startBtn" id="startBtn">let's build it →</button>
       </div>
     </div>
 
@@ -360,15 +368,15 @@ body{font-family:'Manrope',sans-serif;background:var(--cream);color:var(--black)
     <div class="scene" id="s-1">
       <div class="sHd">
         <div class="sNum">ACT 01</div>
-        <h2 class="sTit">finding your person.</h2>
-        <div class="sSub">who's your first customer?</div>
+        <h2 class="sTit">who's your person?</h2>
+        <div class="sSub">build your customer profile.</div>
       </div>
       <div class="sBody">
-        <div class="sNarr">we're going to decide who your target customer is. <b>who are they? why will they love your product? why do they need it?</b></div>
+        <div class="sNarr">before you can sell anything, you need to know <b>exactly</b> who you're selling to. <b>who is this person? what are they into? why would they actually buy your product?</b></div>
 
         <div class="profile" id="profile">
           <div class="stamp">your person</div>
-          <div class="profile-empty" id="profileEmpty">tell us about your customer below ↓<br>they'll appear here as you go.</div>
+          <div class="profile-empty" id="profileEmpty">start filling in the questions below ↓<br>your customer profile builds right here.</div>
           <div id="profileContent" style="display:none">
             <div class="profile-row">
               <div class="profile-av" id="pAv">?</div>
@@ -380,16 +388,16 @@ body{font-family:'Manrope',sans-serif;background:var(--cream);color:var(--black)
           </div>
         </div>
 
-        <div class="qCard" id="qc1"><label class="qLabel" for="qName"><span class="qNum">01</span>what's their name?</label><input type="text" class="qInput" id="qName" placeholder="maya, alex, jordan..."></div>
+        <div class="qCard" id="qc1"><label class="qLabel" for="qName"><span class="qNum">01</span>give them a name.</label><input type="text" class="qInput" id="qName" placeholder="maya, alex, jordan — pick someone real..."></div>
         <div class="qCard" id="qc2"><label class="qLabel"><span class="qNum">02</span>how old are they?</label><div class="ageP">
-          <button class="aPill" data-age="8">8</button><button class="aPill" data-age="9">9</button><button class="aPill" data-age="10">10</button><button class="aPill" data-age="11">11</button><button class="aPill" data-age="12">12</button><button class="aPill" data-age="13">13</button><button class="aPill" data-age="14">14</button><button class="aPill" data-age="adult">adult</button>
+          <button class="aPill" data-age="under 9">under 9</button><button class="aPill" data-age="10–14">10–14</button><button class="aPill" data-age="15–18">15–18</button><button class="aPill" data-age="18+">18+</button>
         </div></div>
-        <div class="qCard" id="qc3"><label class="qLabel" for="qInterests"><span class="qNum">03</span>what are they into?</label><input type="text" class="qInput" id="qInterests" placeholder="soccer, vintage, tiktok, art..."></div>
-        <div class="qCard" id="qc4"><label class="qLabel" for="qWhy"><span class="qNum">04</span>why will they love and want your product?</label><textarea class="qArea" id="qWhy" placeholder="be honest. what's the real reason they'd buy this?"></textarea></div>
-        <div class="qCard" id="qc5"><label class="qLabel" for="qMore"><span class="qNum">05</span>anything else that helps you picture them?</label><textarea class="qArea" id="qMore" placeholder="anything that helps you know WHO this is for."></textarea></div>
+        <div class="qCard" id="qc3"><label class="qLabel" for="qInterests"><span class="qNum">03</span>what's their world like?</label><input type="text" class="qInput" id="qInterests" placeholder="sports, vintage, youtube, baking, gaming..."></div>
+        <div class="qCard" id="qc4"><label class="qLabel" for="qWhy"><span class="qNum">04</span>why would they actually buy your product?</label><textarea class="qArea" id="qWhy" placeholder="be specific. what problem does it solve, or what feeling does it give them?"></textarea></div>
+        <div class="qCard" id="qc5"><label class="qLabel" for="qMore"><span class="qNum">05</span>anything else that makes them easy to picture?</label><textarea class="qArea" id="qMore" placeholder="where do they hang out? what do they talk about? what do they already spend money on?"></textarea></div>
 
-        <div class="confirm-block" id="confirm1"><b>Solid. You know exactly who you're selling to.</b> Lock them in below — you can always come back and update as you learn more.</div>
-        <button class="cta" id="m1cta" disabled>lock it in →</button>
+        <div class="confirm-block" id="confirm1"><b>That's a real customer.</b> You're not selling to "everyone" — you're selling to this person. Lock them in and let's figure out where to find them.</div>
+        <button class="cta" id="m1cta" disabled>lock in my customer →</button>
       </div>
     </div>
 
@@ -397,11 +405,11 @@ body{font-family:'Manrope',sans-serif;background:var(--cream);color:var(--black)
     <div class="scene" id="s-2">
       <div class="sHd">
         <div class="sNum">ACT 02</div>
-        <h2 class="sTit">map their world.</h2>
-        <div class="sSub">where will you find them?</div>
+        <h2 class="sTit">find your spots.</h2>
+        <div class="sSub">where do you actually reach them?</div>
       </div>
       <div class="sBody">
-        <div class="sNarr">Pick the two best places to reach them. <b>You can't be everywhere — pick your shots.</b></div>
+        <div class="sNarr">pick the 2 best places to reach your customer. <b>you can't be everywhere at once — pick your shots and go deep.</b></div>
         <div class="pinCt"><span class="c" id="pCt">0</span> / 2 spots pinned</div>
         <div class="world"><div class="wG">
           <button class="spot" data-c="groupchat"><span class="sE">💬</span><div class="sN">group chat</div><div class="sV">school chat, BFFs</div></button>
@@ -414,10 +422,10 @@ body{font-family:'Manrope',sans-serif;background:var(--cream);color:var(--black)
           <button class="spot" data-c="ownidea"><span class="sE">💡</span><div class="sN">your idea</div><div class="sV">tell us more!</div></button>
         </div></div>
         <div class="missions" id="missions">
-          <div class="mHd"><div class="mTag">your moves.</div><div class="mSub">pick at least 1 per pinned spot. these are your real action items.</div></div>
+          <div class="mHd"><div class="mTag">your action plan.</div><div class="mSub">pick at least 1 move per spot — these are actual things you'll do, not just ideas.</div></div>
           <div class="mBlks" id="mBlks"></div>
         </div>
-        <button class="cta" id="m2cta" disabled>that's my plan →</button>
+        <button class="cta" id="m2cta" disabled>lock in my plan →</button>
       </div>
     </div>
 
@@ -425,13 +433,13 @@ body{font-family:'Manrope',sans-serif;background:var(--cream);color:var(--black)
     <div class="scene" id="s-3">
       <div class="sHd">
         <div class="sNum">ACT 03</div>
-        <h2 class="sTit">your launch kit.</h2>
-        <div class="sSub">real assets for a real launch</div>
+        <h2 class="sTit">build your kit.</h2>
+        <div class="sSub">four assets. real tools. let's go.</div>
       </div>
       <div class="sBody">
         <div class="kit-intro">
-          <div class="kit-intro-title">📦 build your launch kit</div>
-          <div class="kit-intro-body">Now build your kit. <b>Each asset is a real tool you'll actually use.</b> They unlock in order — start with the launch text.</div>
+          <div class="kit-intro-title">📦 your launch kit</div>
+          <div class="kit-intro-body">Time to build. <b>Each asset is something you can use on launch day.</b> They unlock one at a time — nail the first, then move to the next.</div>
         </div>
 
         <div class="assets-grid">
@@ -439,32 +447,32 @@ body{font-family:'Manrope',sans-serif;background:var(--cream);color:var(--black)
             <span class="asset-tag">start here</span>
             <span class="assetE">📱</span>
             <div class="assetN">launch text</div>
-            <div class="assetD">drop it in your group chat</div>
+            <div class="assetD">your first message to the world</div>
           </button>
           <button class="asset-btn locked" id="assetBtn1" onclick="openAsset(1)">
             <span class="asset-tag">locked</span>
             <span class="assetE">🎨</span>
             <div class="assetN">flyer</div>
-            <div class="assetD">printable poster for IRL</div>
+            <div class="assetD">put it up, hand it out, go IRL</div>
           </button>
           <button class="asset-btn locked" id="assetBtn2" onclick="openAsset(2)">
             <span class="asset-tag">locked</span>
             <span class="assetE">📸</span>
             <div class="assetN">instagram story</div>
-            <div class="assetD">vertical post that pops</div>
+            <div class="assetD">3 seconds to stop the scroll</div>
           </button>
           <button class="asset-btn locked" id="assetBtn3" onclick="openAsset(3)">
             <span class="asset-tag">locked</span>
             <span class="assetE">💳</span>
             <div class="assetN">business card</div>
-            <div class="assetD">hand it out at events</div>
+            <div class="assetD">leave one with everyone you meet</div>
           </button>
         </div>
 
         <!-- ASSET 0: LAUNCH TEXT -->
         <div class="asset-panel on" id="panel0">
-          <div class="ap-title">📱 build your launch text</div>
-          <div class="ap-sub">this goes in your group chat, DMs, or wherever you talk to your customer. build it step by step.</div>
+          <div class="ap-title">📱 craft your launch text</div>
+          <div class="ap-sub">this is the message you'll send to your group chat, DMs, or wherever your customer actually is. choose each piece — watch it come together.</div>
 
           <div class="stage">
             <div class="sRow">
@@ -472,7 +480,7 @@ body{font-family:'Manrope',sans-serif;background:var(--cream);color:var(--black)
                 <div class="notch"></div>
                 <div class="pScr">
                   <div class="pcH"><div class="pcN" id="chatName">School chat 📚</div><div class="pcSt">12 members</div></div>
-                  <div class="pMsgs" id="pMsgs"><div class="bubEm">build the message ↓<br>bubbles land here.</div></div>
+                  <div class="pMsgs" id="pMsgs"><div class="bubEm">pick your words below ↓<br>your message appears here.</div></div>
                   <div class="pCmp"><div class="pCmpT" id="cmpT">iMessage</div></div>
                 </div>
               </div>
@@ -484,8 +492,8 @@ body{font-family:'Manrope',sans-serif;background:var(--cream);color:var(--black)
           </div>
 
           <div class="bs" id="bs1">
-            <span class="bsNum">1</span><span class="bsT">the opener.</span>
-            <div class="bsS">how do you start? keep it short.</div>
+            <span class="bsNum">1</span><span class="bsT">the hook.</span>
+            <div class="bsS">your first line. make them want to keep reading.</div>
             <div class="bsO" id="o1">
               <button class="bsOpt" data-text="hey! guess what?" data-vibe="2">hey! guess what?</button>
               <button class="bsOpt" data-text="ok so i'm doing a thing" data-vibe="3">ok so i'm doing a thing</button>
@@ -494,8 +502,8 @@ body{font-family:'Manrope',sans-serif;background:var(--cream);color:var(--black)
             </div>
           </div>
           <div class="bs locked" id="bs2">
-            <span class="bsNum">2</span><span class="bsT">what's the thing?</span>
-            <div class="bsS">describe it like you'd say it.</div>
+            <span class="bsNum">2</span><span class="bsT">the pitch.</span>
+            <div class="bsS">what are you actually selling? say it like you'd say it out loud.</div>
             <div class="bsO" id="o2">
               <button class="bsOpt" data-text="i designed a y2k bucket hat. limited drop, only 10 made." data-vibe="5">i designed a y2k bucket hat. limited drop, only 10 made.</button>
               <button class="bsOpt" data-text="started my own clothing brand. first piece is dropping." data-vibe="3">started my own clothing brand. first piece is dropping.</button>
@@ -504,8 +512,8 @@ body{font-family:'Manrope',sans-serif;background:var(--cream);color:var(--black)
             </div>
           </div>
           <div class="bs locked" id="bs3">
-            <span class="bsNum">3</span><span class="bsT">the ask.</span>
-            <div class="bsS">what do you want them to do? be specific.</div>
+            <span class="bsNum">3</span><span class="bsT">the call to action.</span>
+            <div class="bsS">tell them exactly what to do next. one clear ask only.</div>
             <div class="bsO" id="o3">
               <button class="bsOpt" data-text="link in my story 🔗" data-vibe="2">link in my story 🔗</button>
               <button class="bsOpt" data-text="come see me at lunch tomorrow 👀" data-vibe="5">come see me at lunch tomorrow 👀</button>
@@ -513,16 +521,16 @@ body{font-family:'Manrope',sans-serif;background:var(--cream);color:var(--black)
               <button class="bsOpt" data-text="give me feedback — real answers only." data-vibe="3">give me feedback — real answers only.</button>
             </div>
           </div>
-          <button class="cta-sm" id="lockText" disabled>lock in my launch text →</button>
+          <button class="cta-sm" id="lockText" disabled>that's my message — lock it in →</button>
         </div>
 
         <!-- ASSET 1: FLYER -->
         <div class="asset-panel" id="panel1">
-          <div class="ap-title">🎨 build your flyer</div>
-          <div class="ap-sub">4 things every good flyer needs. fill them in — we'll put it together.</div>
+          <div class="ap-title">🎨 design your flyer</div>
+          <div class="ap-sub">every good flyer has 3 things: a grabby headline, what you're offering, and how to get it. fill these in and watch it build.</div>
 
           <div class="flyer-preview" id="flyerPreview">
-            <div class="fp-empty" id="fpEmpty">fill in the steps below ↓<br>your flyer builds live here.</div>
+            <div class="fp-empty" id="fpEmpty">fill in the steps below ↓<br>your flyer comes to life here.</div>
             <div id="fpContent" style="display:none">
               <div class="fp-headline" id="fpHeadline"></div>
               <div class="fp-product" id="fpProduct"></div>
@@ -532,11 +540,11 @@ body{font-family:'Manrope',sans-serif;background:var(--cream);color:var(--black)
           </div>
 
           <div class="ap-step" id="fs1">
-            <div class="ap-step-label"><span class="ap-step-num">1</span>your headline</div>
-            <input class="ap-input" id="flyerHeadline" placeholder="e.g. handmade cookies baked every friday" oninput="updateFlyerPreview()">
+            <div class="ap-step-label"><span class="ap-step-num">1</span>the big statement — what stops them scrolling?</div>
+            <input class="ap-input" id="flyerHeadline" placeholder="e.g. handmade cookies, baked fresh every friday" oninput="updateFlyerPreview()">
           </div>
           <div class="ap-step" id="fs2">
-            <div class="ap-step-label"><span class="ap-step-num">2</span>what you're selling</div>
+            <div class="ap-step-label"><span class="ap-step-num">2</span>what's the offer?</div>
             <div class="ap-opts">
               <button class="ap-opt" data-target="flyerProduct" data-val="limited drop — only 10 made" onclick="pickOpt(this,'flyerProduct',updateFlyerPreview)">limited drop — only 10 made</button>
               <button class="ap-opt" data-target="flyerProduct" data-val="custom orders — DM for pricing" onclick="pickOpt(this,'flyerProduct',updateFlyerPreview)">custom orders — DM for pricing</button>
@@ -544,7 +552,7 @@ body{font-family:'Manrope',sans-serif;background:var(--cream);color:var(--black)
             </div>
           </div>
           <div class="ap-step" id="fs3">
-            <div class="ap-step-label"><span class="ap-step-num">3</span>how do they get it?</div>
+            <div class="ap-step-label"><span class="ap-step-num">3</span>how do they order or reach you?</div>
             <div class="ap-opts">
               <button class="ap-opt" data-target="flyerCta" data-val="DM me on instagram" onclick="pickOpt(this,'flyerCta',updateFlyerPreview)">DM me on instagram</button>
               <button class="ap-opt" data-target="flyerCta" data-val="find me at lunch" onclick="pickOpt(this,'flyerCta',updateFlyerPreview)">find me at lunch</button>
@@ -552,13 +560,13 @@ body{font-family:'Manrope',sans-serif;background:var(--cream);color:var(--black)
               <button class="ap-opt" data-target="flyerCta" data-val="text me to order" onclick="pickOpt(this,'flyerCta',updateFlyerPreview)">text me to order</button>
             </div>
           </div>
-          <button class="cta-sm" id="lockFlyer" disabled>that's my flyer →</button>
+          <button class="cta-sm" id="lockFlyer" disabled>flyer locked — next asset →</button>
         </div>
 
         <!-- ASSET 2: IG STORY -->
         <div class="asset-panel" id="panel2">
           <div class="ap-title">📸 build your instagram story</div>
-          <div class="ap-sub">3 seconds to get their attention. let's make it count.</div>
+          <div class="ap-sub">you've got 3 seconds before they swipe. your visual, your headline, your ask — make every element count.</div>
 
           <div style="display:flex;justify-content:center">
             <div class="story-preview" id="storyPreview">
@@ -572,7 +580,7 @@ body{font-family:'Manrope',sans-serif;background:var(--cream);color:var(--black)
           </div>
 
           <div class="ap-step" id="ss1">
-            <div class="ap-step-label"><span class="ap-step-num">1</span>what's in the frame?</div>
+            <div class="ap-step-label"><span class="ap-step-num">1</span>what's the main visual?</div>
             <div class="ap-opts">
               <button class="ap-opt" data-target="storyVisual" data-val="📦" onclick="pickOpt(this,'storyVisual',updateStoryPreview)">photo of my product 📦</button>
               <button class="ap-opt" data-target="storyVisual" data-val="🤳" onclick="pickOpt(this,'storyVisual',updateStoryPreview)">me holding / wearing it 🤳</button>
@@ -581,7 +589,7 @@ body{font-family:'Manrope',sans-serif;background:var(--cream);color:var(--black)
             </div>
           </div>
           <div class="ap-step" id="ss2">
-            <div class="ap-step-label"><span class="ap-step-num">2</span>big text on screen</div>
+            <div class="ap-step-label"><span class="ap-step-num">2</span>the headline — bold text on screen</div>
             <div class="ap-opts">
               <button class="ap-opt" data-target="storyHeadline" data-val="NEW DROP 🔥" onclick="pickOpt(this,'storyHeadline',updateStoryPreview)">NEW DROP 🔥</button>
               <button class="ap-opt" data-target="storyHeadline" data-val="I MADE THIS" onclick="pickOpt(this,'storyHeadline',updateStoryPreview)">I MADE THIS</button>
@@ -590,7 +598,7 @@ body{font-family:'Manrope',sans-serif;background:var(--cream);color:var(--black)
             </div>
           </div>
           <div class="ap-step" id="ss3">
-            <div class="ap-step-label"><span class="ap-step-num">3</span>what do you want them to do?</div>
+            <div class="ap-step-label"><span class="ap-step-num">3</span>the CTA — one clear next step</div>
             <div class="ap-opts">
               <button class="ap-opt" data-target="storyCta" data-val="tap the link 🔗" onclick="pickOpt(this,'storyCta',updateStoryPreview)">tap the link 🔗</button>
               <button class="ap-opt" data-target="storyCta" data-val="DM me to order" onclick="pickOpt(this,'storyCta',updateStoryPreview)">DM me to order</button>
@@ -598,56 +606,56 @@ body{font-family:'Manrope',sans-serif;background:var(--cream);color:var(--black)
               <button class="ap-opt" data-target="storyCta" data-val="reply to this story" onclick="pickOpt(this,'storyCta',updateStoryPreview)">reply to this story</button>
             </div>
           </div>
-          <button class="cta-sm" id="lockStory" disabled>that's my story →</button>
+          <button class="cta-sm" id="lockStory" disabled>story locked — next asset →</button>
         </div>
 
         <!-- ASSET 3: BUSINESS CARD -->
         <div class="asset-panel" id="panel3">
           <div class="ap-title">💳 build your business card</div>
-          <div class="ap-sub">hand one to every person you talk to. it makes you look real — because you are.</div>
+          <div class="ap-sub">hand one to every person you talk to. it makes you look like a founder — because you are one.</div>
 
           <div class="card-preview" id="cardPreview">
             <div class="cp-logo" id="cpLogo">🏷️</div>
             <div class="cp-body">
               <div class="cp-name" id="cpName">your business</div>
               <div class="cp-role" id="cpRole">founder & CEO</div>
-              <div class="cp-contact" id="cpContact">add your contact below ↓</div>
+              <div class="cp-contact" id="cpContact">fill in your details below ↓</div>
             </div>
           </div>
 
           <div class="ap-step" id="cs1">
-            <div class="ap-step-label"><span class="ap-step-num">1</span>your name as CEO</div>
-            <input class="ap-input" id="ceoName" placeholder="e.g. Alice, Founder" oninput="updateCardPreview()">
+            <div class="ap-step-label"><span class="ap-step-num">1</span>your name (as it'll appear on the card)</div>
+            <input class="ap-input" id="ceoName" placeholder="e.g. Alex Chen, Founder" oninput="updateCardPreview()">
           </div>
           <div class="ap-step" id="cs2">
             <div class="ap-step-label"><span class="ap-step-num">2</span>your business name</div>
-            <input class="ap-input" id="bizName" placeholder="e.g. Alice's Sweet Sensations" oninput="updateCardPreview()">
+            <input class="ap-input" id="bizName" placeholder="e.g. Oakwood Candle Co." oninput="updateCardPreview()">
           </div>
           <div class="ap-step" id="cs3">
-            <div class="ap-step-label"><span class="ap-step-num">3</span>how do they reach you?</div>
+            <div class="ap-step-label"><span class="ap-step-num">3</span>best way for people to contact you</div>
             <div class="ap-opts">
               <button class="ap-opt" data-target="cardContact" data-val="instagram DMs" onclick="pickOpt(this,'cardContact',updateCardPreview)">instagram DMs 📸</button>
               <button class="ap-opt" data-target="cardContact" data-val="email me" onclick="pickOpt(this,'cardContact',updateCardPreview)">email me 📧</button>
               <button class="ap-opt" data-target="cardContact" data-val="text me" onclick="pickOpt(this,'cardContact',updateCardPreview)">text me 📱</button>
             </div>
           </div>
-          <button class="cta-sm" id="lockCard" disabled>that's my card →</button>
+          <button class="cta-sm" id="lockCard" disabled>card locked — kit complete →</button>
         </div>
 
         <div class="sdiv"></div>
-        <button class="cta" id="m3cta" disabled>finish my launch plan →</button>
+        <button class="cta" id="m3cta" disabled>see my full launch plan →</button>
       </div>
     </div>
 
     <!-- END -->
     <div class="scene" id="s-end">
       <div class="end">
-        <div class="eTag">launch plan · ready 🚀</div>
-        <div class="eT">YOU'VE GOT<br>YOUR LAUNCH KIT!</div>
-        <div class="eS">↓ here's everything you locked in ↓</div>
+        <div class="eTag">module 06 · complete 🚀</div>
+        <div class="eT">your launch<br>plan is ready.</div>
+        <div class="eS">you made real decisions. here's what you built. ↓</div>
         <div class="eCard"><div class="eCH">★ your customer</div><div class="eCV" id="endCustomer">—</div><div class="eCD" id="endCustomerD">—</div></div>
-        <div class="eCard"><div class="eCH">★ where you'll find them</div><div class="eCV" id="endWhere">—</div><ul class="eList" id="endMoves"></ul></div>
-        <div class="eCard"><div class="eCH">★ your launch text</div><div class="eMsg" id="endMsg">—</div></div>
+        <div class="eCard"><div class="eCH">★ where you'll reach them</div><div class="eCV" id="endWhere">—</div><ul class="eList" id="endMoves"></ul></div>
+        <div class="eCard"><div class="eCH">★ your launch message</div><div class="eMsg" id="endMsg">—</div></div>
         <div class="eCard">
           <div class="eCH">★ your launch assets</div>
           <div class="eAssets">
@@ -656,9 +664,9 @@ body{font-family:'Manrope',sans-serif;background:var(--cream);color:var(--black)
             <div class="eAsset" id="eStoryBadge" style="opacity:.4"><span class="ea-e">📸</span>ig story</div>
             <div class="eAsset" id="eCardBadge" style="opacity:.4"><span class="ea-e">💳</span>card</div>
           </div>
-          <div class="eCD" style="margin-top:8px" id="endAssetsNote">Your move: share this with 3 people today. That's how it starts.</div>
+          <div class="eCD" style="margin-top:8px" id="endAssetsNote">Your move: send your launch text to 3 real people today. That's how it starts.</div>
         </div>
-        <button class="eBtn" id="restartBtn">start over →</button>
+        <button class="eBtn" id="restartBtn">start again →</button>
       </div>
     </div>
 
@@ -742,12 +750,12 @@ function fireConf(colors){
     const p=document.createElement('div');p.className='cP';
     p.style.left=(Math.random()*100)+'%';
     p.style.background=colors[i%colors.length];
-    p.style.animationDuration=(1.5+Math.random()*1.5)+'s';
+    p.style.animationDuration=(2+Math.random()*2.5)+'s';
     p.style.animationDelay=(Math.random()*.4)+'s';
     p.style.transform='rotate('+(Math.random()*360)+'deg)';
     c.appendChild(p);
   }
-  setTimeout(()=>{c.innerHTML='';},3500);
+  setTimeout(()=>{c.innerHTML='';},5000);
 }
 function showComplete(opts){
   const ov=document.getElementById('overlay');
@@ -779,7 +787,7 @@ function updateProfile(){
   pE.style.display='none';pC.style.display='block';
   document.getElementById('pAv').textContent=c.name?c.name.charAt(0).toUpperCase():'?';
   document.getElementById('pName').textContent=c.name||'(no name yet)';
-  let meta=[];if(c.age)meta.push(c.age==='adult'?'adult':'age '+c.age);
+  let meta=[];if(c.age)meta.push(c.age);
   document.getElementById('pMeta').textContent=meta.join(' · ')||'—';
   const setD=(id,txt,tId)=>{const el=document.getElementById(id);if(txt){el.style.display='block';document.getElementById(tId).textContent=txt;}else el.style.display='none';};
   setD('pInterests',c.interests,'pInterestsTxt');
@@ -802,7 +810,7 @@ document.querySelectorAll('.aPill').forEach(p=>p.addEventListener('click',()=>{
 m1cta.addEventListener('click',()=>{
   playSound('select');
   setProgress(2);
-  showComplete({trophy:'🔍',tag:'THE WHO IS COMPLETE',title:'you figured out your person.',body:'<b>"everyone"</b> is not a customer. <b>'+(state.customer.name||'your person')+'</b> is. you just figured out who you are building this for.',cta:"next up → where you'll find them",colors:['#FF4D9F','#FBD400','#E53935'],onNext:()=>{showScene('2');setAct(2);setProgress(3);}});
+  showComplete({trophy:'🔍',tag:'ACT 01 · DONE',title:'customer locked in.',body:'<b>"everyone"</b> is not a customer. <b>'+(state.customer.name||'your person')+'</b> is. that clarity is your unfair advantage — most people skip this step.',cta:"next → find where they are",colors:['#FF4D9F','#FBD400','#E53935'],onNext:()=>{showScene('2');setAct(2);setProgress(3);}});
 });
 
 // ─── ACT 02 ──────────────────────────────────────────────
@@ -858,7 +866,7 @@ m2cta.addEventListener('click',()=>{
   playSound('select');
   setProgress(4);
   const ch=state.channels.size;let mv=0;state.channels.forEach(c=>{mv+=(state.strategies[c]?state.strategies[c].size:0);});
-  showComplete({trophy:'🗺️',tag:'THE WHERE IS COMPLETE',title:'you have a real plan.',body:'<b>'+ch+' channels · '+mv+' moves</b>. real action items, not wishes. this is where you\'ll find your customer.',cta:"next up → build your launch kit",colors:['#1B7A3E','#FBD400','#2C5BB5'],onNext:()=>{showScene('3');setAct(3);setProgress(3);}});
+  showComplete({trophy:'🗺️',tag:'ACT 02 · DONE',title:'your plan is locked.',body:'<b>'+ch+' spots · '+mv+' moves</b>. you\'re not hoping your customer finds you — you\'re going to where they already are. that\'s the whole game.',cta:"next → build your launch kit",colors:['#1B7A3E','#FBD400','#2C5BB5'],onNext:()=>{showScene('3');setAct(3);setProgress(3);}});
 });
 
 // ─── ACT 03 — LAUNCH KIT ─────────────────────────────────
@@ -882,6 +890,10 @@ function unlockAsset(i){
   btn.classList.remove('locked');
   btn.querySelector('.asset-tag').textContent='build now';
   btn.classList.add('unlocked');
+  btn.classList.remove('pop');
+  void btn.offsetWidth; // reflow to restart animation
+  btn.classList.add('pop');
+  btn.addEventListener('animationend',()=>btn.classList.remove('pop'),{once:true});
 }
 function markDone(i){
   playSound('select');
@@ -1027,7 +1039,7 @@ m3cta.addEventListener('click',()=>{
   playSound('select');
   const c=state.customer;
   document.getElementById('endCustomer').textContent=c.name||'your person';
-  let det=[];if(c.age)det.push(c.age==='adult'?'adult':'age '+c.age);if(c.interests)det.push('into: '+c.interests);if(c.why)det.push(c.why);
+  let det=[];if(c.age)det.push(c.age);if(c.interests)det.push('into: '+c.interests);if(c.why)det.push(c.why);
   document.getElementById('endCustomerD').textContent=det.join(' · ')||'—';
   const chNames=Array.from(state.channels).map(cid=>strats[cid].name);
   document.getElementById('endWhere').textContent=chNames.join(' + ')||'—';
@@ -1041,7 +1053,7 @@ m3cta.addEventListener('click',()=>{
   if(state.assetsDone.has(2))document.getElementById('eStoryBadge').style.opacity='1';
   if(state.assetsDone.has(3))document.getElementById('eCardBadge').style.opacity='1';
   const count=state.assetsDone.size;
-  document.getElementById('endAssetsNote').textContent=count===4?'Full kit locked in. Your move: share this with 3 people today. That\'s how it starts.':'Launch text locked. Come back to build the rest of your kit.';
+  document.getElementById('endAssetsNote').textContent=count===4?'Full kit locked — four assets ready to deploy. Send your launch text to 3 real people today. That\'s how it starts.':'Launch text ready. Come back to build out the rest of your kit — flyer, story, card.';
   showScene('end');
   setProgress(7);
   document.getElementById('ad3').classList.remove('on');
@@ -1067,7 +1079,7 @@ document.getElementById('restartBtn').addEventListener('click',()=>{
   document.getElementById('confirm1').classList.remove('on');
   document.getElementById('missions').classList.remove('on');
   pCt.textContent='0';bubblesShown=false;
-  pMsgs.innerHTML='<div class="bubEm">build the message ↓<br>bubbles land here.</div>';
+  pMsgs.innerHTML='<div class="bubEm">pick your words below ↓<br>your message appears here.</div>';
   cmpT.textContent='iMessage';cmpT.classList.remove('has');
   rE.textContent='😐';vmFill.style.width='0%';vmSt.textContent='empty';
   [m1cta,m2cta,m3cta,lockText].forEach(b=>{b.disabled=true;b.classList.remove('ready');});

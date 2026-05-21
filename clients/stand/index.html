@@ -206,6 +206,24 @@
   .proto-open:hover { color: var(--olive3); }
   .proto-open::after { content: ' →'; }
 
+  .proto-assets {
+    display: flex;
+    gap: 18px;
+    align-items: center;
+    padding-top: 12px;
+  }
+  .proto-dl, .proto-readme {
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--dim);
+    transition: color 0.2s;
+  }
+  .proto-dl::before { content: '↓ '; }
+  .proto-readme::before { content: '📄 '; }
+  .proto-dl:hover, .proto-readme:hover { color: var(--olive); }
+
   .empty-state {
     background: var(--bg2);
     border: 1px dashed var(--line);
@@ -317,8 +335,11 @@
         <span>Updated 14 May</span>
         <a class="proto-open" href="./prototypes/marketing/v1-marketing-module.html">Open</a>
       </div>
+      <div class="proto-assets">
+        <a class="proto-dl" href="./prototypes/marketing/v1-marketing-module.html" download="v1-marketing-module.html">Download Prototype</a>
+      </div>
     </div>
-  
+
     <div class="proto-card">
       <span class="proto-tag">v0.2 · Superseded</span>
       <h3 class="proto-title">Marketing — Module 05</h3>
@@ -326,6 +347,9 @@
       <div class="proto-meta">
         <span>Updated 19 May</span>
         <a class="proto-open" href="./prototypes/marketing/v2-marketing-module.html">Open</a>
+      </div>
+      <div class="proto-assets">
+        <a class="proto-dl" href="./prototypes/marketing/v2-marketing-module.html" download="v2-marketing-module.html">Download Prototype</a>
       </div>
     </div>
 
@@ -337,6 +361,10 @@
         <span>Updated 21 May</span>
         <a class="proto-open" href="./prototypes/marketing/v3-marketing-module.html">Open</a>
       </div>
+      <div class="proto-assets">
+        <a class="proto-dl" href="./prototypes/marketing/v3-marketing-module.html" download="v3-marketing-module.html">Download Prototype</a>
+        <a class="proto-readme" href="./prototypes/marketing/v3-marketing-module.md" target="_blank">README</a>
+      </div>
     </div>
 
     <div class="proto-card">
@@ -346,6 +374,10 @@
       <div class="proto-meta">
         <span>Updated 19 May</span>
         <a class="proto-open" href="./prototypes/pricing/v2-pricing-module.html">Open</a>
+      </div>
+      <div class="proto-assets">
+        <a class="proto-dl" href="./prototypes/pricing/v2-pricing-module.html" download="v2-pricing-module.html">Download Prototype</a>
+        <a class="proto-readme" href="./prototypes/pricing/v2-pricing-module.md" target="_blank">README</a>
       </div>
     </div>
 
