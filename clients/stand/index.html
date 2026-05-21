@@ -241,6 +241,100 @@
     margin-bottom: 8px;
   }
 
+  /* ── OVERVIEW ── */
+  .overview-card {
+    background: var(--bg2);
+    border: 1px solid var(--line);
+    padding: 36px 40px 32px;
+    margin-bottom: 56px;
+  }
+  .overview-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 24px;
+    margin-bottom: 28px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--line);
+  }
+  .overview-meta { flex: 1; }
+  .overview-eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--olive3);
+    margin-bottom: 10px;
+  }
+  .overview-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 26px;
+    font-weight: 400;
+    color: var(--olive);
+    line-height: 1.2;
+    margin-bottom: 10px;
+  }
+  .overview-summary {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.75;
+    max-width: 520px;
+  }
+  .overview-dl {
+    flex-shrink: 0;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--olive);
+    border: 1px solid var(--line);
+    padding: 10px 18px;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .overview-dl:hover { background: var(--olive); color: var(--bg); border-color: var(--olive); }
+  .overview-dl::before { content: '↓ '; }
+
+  .module-table { width: 100%; border-collapse: collapse; }
+  .module-table tr { border-bottom: 1px solid var(--line); }
+  .module-table tr:last-child { border-bottom: none; }
+  .module-table td { padding: 12px 0; vertical-align: middle; font-size: 13px; }
+  .mod-phase {
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--dim);
+    width: 64px;
+    padding-right: 16px;
+  }
+  .mod-num {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--dim);
+    width: 32px;
+  }
+  .mod-name {
+    color: var(--text);
+    font-weight: 400;
+    flex: 1;
+  }
+  .mod-status {
+    text-align: right;
+    width: 120px;
+  }
+  .status-pill {
+    display: inline-block;
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 3px 9px;
+    border-radius: 20px;
+  }
+  .status-live    { background: #e8f0e9; color: #2d6a35; }
+  .status-proto   { background: #e8ecf5; color: #2c4b8a; }
+  .status-soon    { background: var(--bg3); color: var(--muted); }
+  .status-planned { background: var(--bg3); color: var(--dim); }
+  .mod-phase-rule td { padding-top: 18px; }
+
   .notes-block {
     background: var(--bg2);
     border-left: 2px solid var(--olive);
@@ -307,12 +401,94 @@
     <div class="notes-label">Latest from Dan</div>
     <div class="notes-body">
       <p>Welcome, Lauren. This is where I'll drop everything I'm prototyping for Stand, fully private to you, and not indexed anywhere public.</p>
-      <p>Prototypes below:</p>
+      <p>The curriculum overview below sets the full 10-module picture. Active prototypes are underneath it.</p>
     </div>
   </div>
 
   <div class="section-header">
     <span class="section-num">01</span>
+    <h2 class="section-title">Curriculum Overview</h2>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="overview-card">
+    <div class="overview-top">
+      <div class="overview-meta">
+        <div class="overview-eyebrow">Working document &nbsp;·&nbsp; Dan Barnes / Ludis &nbsp;·&nbsp; May 2026</div>
+        <div class="overview-title">STAND Curriculum — 10 Modules</div>
+        <p class="overview-summary">Three phases across Launch, Grow, and Lead. Modules 05 and 06 are prototyped and live. This document sets out the full curriculum arc, module-by-module thinking, and build priorities.</p>
+      </div>
+      <a class="overview-dl" href="./STAND_Curriculum_Overview.md" download="STAND_Curriculum_Overview.md">Download</a>
+    </div>
+
+    <table class="module-table">
+      <tbody>
+        <tr>
+          <td class="mod-phase">Launch</td>
+          <td class="mod-num">01</td>
+          <td class="mod-name">Your Customer</td>
+          <td class="mod-status"><span class="status-proto status-pill">Prototyped</span></td>
+        </tr>
+        <tr>
+          <td class="mod-phase"></td>
+          <td class="mod-num">02</td>
+          <td class="mod-name">Price It Right</td>
+          <td class="mod-status"><span class="status-live status-pill">Live prototype</span></td>
+        </tr>
+        <tr>
+          <td class="mod-phase"></td>
+          <td class="mod-num">03</td>
+          <td class="mod-name">Your Brand Story</td>
+          <td class="mod-status"><span class="status-planned status-pill">Planned</span></td>
+        </tr>
+        <tr class="mod-phase-rule">
+          <td class="mod-phase">Grow</td>
+          <td class="mod-num">04</td>
+          <td class="mod-name">Social Media 101</td>
+          <td class="mod-status"><span class="status-soon status-pill">Coming Soon</span></td>
+        </tr>
+        <tr>
+          <td class="mod-phase"></td>
+          <td class="mod-num">05</td>
+          <td class="mod-name">Find Your Customer</td>
+          <td class="mod-status"><span class="status-proto status-pill">Prototyped</span></td>
+        </tr>
+        <tr>
+          <td class="mod-phase"></td>
+          <td class="mod-num">06</td>
+          <td class="mod-name">Your Launch Plan</td>
+          <td class="mod-status"><span class="status-live status-pill">Live prototype</span></td>
+        </tr>
+        <tr>
+          <td class="mod-phase"></td>
+          <td class="mod-num">07</td>
+          <td class="mod-name">Land Your First Customer</td>
+          <td class="mod-status"><span class="status-planned status-pill">Planned</span></td>
+        </tr>
+        <tr class="mod-phase-rule">
+          <td class="mod-phase">Lead</td>
+          <td class="mod-num">08</td>
+          <td class="mod-name">Track Your Money</td>
+          <td class="mod-status"><span class="status-planned status-pill">Planned</span></td>
+        </tr>
+        <tr>
+          <td class="mod-phase"></td>
+          <td class="mod-num">09</td>
+          <td class="mod-name">Think Like an Inventor</td>
+          <td class="mod-status"><span class="status-planned status-pill">Planned</span></td>
+        </tr>
+        <tr>
+          <td class="mod-phase"></td>
+          <td class="mod-num">10</td>
+          <td class="mod-name">CEO Review</td>
+          <td class="mod-status"><span class="status-planned status-pill">Planned</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section-header">
+    <span class="section-num">02</span>
     <h2 class="section-title">Prototypes</h2>
     <div class="section-line"></div>
   </div>
