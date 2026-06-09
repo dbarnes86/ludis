@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>How much do you want to make? — STAND</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#FAF3D6;--card:#FFFFFF;--ink:#232120;--red:#D81F26;
+  --mustard:#FFC408;--green:#006238;--blue:#014794;
+  --ink-08:rgba(35,33,32,.08);--ink-12:rgba(35,33,32,.12);
+  --ink-20:rgba(35,33,32,.20);--ink-45:rgba(35,33,32,.45);
+  --serif:'Playfair Display',Georgia,serif;
+  --sans:'DM Sans','Helvetica Neue',sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:#111}
+.sw{font-family:var(--sans);color:var(--ink);background:var(--cream);max-width:430px;margin:0 auto;min-height:100vh}
+
+/* screens */
+.screen{display:none;flex-direction:column;min-height:100vh}
+.screen.active{display:flex}
+.s-inner{padding:20px 20px 32px;display:flex;flex-direction:column;flex:1}
+
+/* topbar */
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:16px 20px 0}
+.stand-logo{height:20px;width:auto;display:block}
+.module-badge{background:var(--blue);color:#fff;font-size:9px;font-weight:700;
+  font-family:var(--sans);letter-spacing:.1em;border-radius:20px;
+  padding:5px 12px;text-transform:uppercase;line-height:1}
+.ceo-badge{background:var(--red);color:#fff;font-size:9px;font-weight:700;
+  font-family:var(--sans);letter-spacing:.06em;border-radius:20px;
+  padding:4px 10px;text-transform:uppercase;white-space:nowrap;line-height:1.2}
+
+/* nav row */
+.nav-row{display:flex;align-items:center;gap:12px;padding:14px 20px 0}
+.back-btn{font-family:var(--sans);font-size:13px;font-weight:500;color:var(--ink-45);
+  background:none;border:none;cursor:pointer;padding:0;white-space:nowrap}
+.back-btn::before{content:'← '}
+.prog-track{display:flex;gap:3px;flex:1}
+.seg{height:4px;flex:1;border-radius:2px;background:var(--ink-12)}
+.seg.filled{background:var(--ink)}
+.seg.active{position:relative;overflow:hidden;background:var(--ink-12)}
+.seg.active::after{content:'';position:absolute;inset:0;background:var(--ink);
+  transform:scaleX(0);transform-origin:left;
+  animation:sf .5s cubic-bezier(.16,1,.3,1) forwards}
+@keyframes sf{to{transform:scaleX(1)}}
+
+/* type */
+.overline{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--ink-45);margin-top:28px}
+.display{font-family:var(--serif);font-size:30px;font-weight:900;line-height:1.08;margin-top:12px}
+.body-copy{font-size:14px;line-height:1.65;color:var(--ink-45);margin-top:10px}
+
+/* goal tiles */
+.goal-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:24px}
+.goal-tile{background:var(--card);border:1.5px solid var(--ink-12);border-radius:14px;
+  padding:18px 14px;cursor:pointer;transition:border-color .15s,background .15s;text-align:center;
+  -webkit-tap-highlight-color:transparent}
+.goal-tile:active{transform:scale(.97)}
+.goal-tile.sel{background:var(--ink);border-color:var(--ink)}
+.goal-tile.sel .gt-amount,.goal-tile.sel .gt-label{color:var(--cream)}
+.gt-amount{font-family:var(--serif);font-size:28px;font-weight:900;color:var(--ink);
+  transition:color .15s;line-height:1}
+.gt-label{font-size:11px;font-weight:500;color:var(--ink-45);margin-top:5px;
+  transition:color .15s;line-height:1.3}
+
+/* custom input */
+.custom-row{margin-top:10px;display:flex;align-items:center;background:var(--card);
+  border:1.5px solid var(--ink-12);border-radius:14px;overflow:hidden;transition:border-color .2s}
+.custom-row.focused{border-color:var(--ink)}
+.custom-sym{font-family:var(--serif);font-size:24px;font-weight:900;
+  padding:0 2px 0 18px;color:var(--ink);line-height:1}
+.custom-in{flex:1;font-family:var(--serif);font-size:24px;font-weight:900;
+  border:none;outline:none;background:transparent;padding:16px 18px 16px 4px;color:var(--ink)}
+.custom-in::placeholder{color:var(--ink-20);font-style:italic}
+
+/* result screen */
+.big-number-block{text-align:center;margin-top:32px;margin-bottom:4px}
+.big-number{font-family:var(--serif);font-size:96px;font-weight:900;line-height:1;color:var(--ink)}
+.big-suffix{font-family:var(--serif);font-size:28px;font-weight:700;color:var(--ink-45);margin-top:2px}
+.reframe{font-size:15px;font-weight:500;line-height:1.6;color:var(--ink-45);
+  text-align:center;margin-top:16px}
+.assumption{font-size:11px;color:var(--ink-20);text-align:center;margin-top:8px;line-height:1.5}
+
+.ai-line{margin-top:20px;background:var(--card);border-radius:12px;
+  padding:14px 16px;font-size:13px;font-style:italic;color:var(--ink-45);line-height:1.65;
+  opacity:0;transform:translateY(6px);transition:opacity .4s ease,transform .4s ease;
+  display:none}
+.ai-line.loaded{opacity:1;transform:translateY(0);display:block}
+
+/* reward */
+.reward-wrap{background:var(--ink);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:48px 24px 40px}
+.reward-badge{width:72px;height:72px;border-radius:50%;background:var(--mustard);
+  display:flex;align-items:center;justify-content:center;font-size:34px;
+  animation:badgePop .5s cubic-bezier(.34,1.56,.64,1) both}
+@keyframes badgePop{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
+.reward-title{font-family:var(--serif);font-size:30px;font-weight:900;color:var(--cream);
+  margin-top:20px;text-align:center;animation:fadeUp .4s ease .15s both}
+.reward-sub{font-size:13px;color:rgba(250,243,214,.5);margin-top:8px;
+  text-align:center;line-height:1.6;animation:fadeUp .4s ease .25s both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* goal card */
+.goal-card{background:var(--card);border-radius:16px;width:100%;max-width:320px;
+  overflow:hidden;margin-top:32px;animation:fadeUp .4s ease .4s both;
+  box-shadow:0 12px 40px rgba(0,0,0,.3)}
+.gc-head{background:var(--mustard);padding:18px 20px 16px}
+.gc-eyebrow{font-size:9px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;
+  color:rgba(35,33,32,.5)}
+.gc-name{font-family:var(--serif);font-size:20px;font-weight:900;color:var(--ink);margin-top:3px}
+.gc-body{padding:4px 0}
+.gc-row{display:flex;justify-content:space-between;align-items:baseline;
+  padding:12px 20px;border-bottom:1px solid var(--ink-08)}
+.gc-row:last-child{border-bottom:none}
+.gc-key{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-45)}
+.gc-val{font-family:var(--serif);font-size:22px;font-weight:900;color:var(--ink)}
+
+/* CTAs */
+.cta-zone{margin-top:auto;padding-top:16px}
+.cta{display:block;width:100%;padding:17px 28px;border-radius:100px;
+  font-family:var(--sans);font-size:15px;font-weight:700;border:none;cursor:pointer;
+  transition:opacity .15s,transform .1s;-webkit-tap-highlight-color:transparent}
+.cta:active{transform:scale(.98)}
+.cta:disabled{opacity:.3;pointer-events:none}
+.cta-ink{background:var(--ink);color:var(--cream)}
+.cta-red{background:var(--red);color:var(--cream)}
+.cta-cream{background:var(--cream);color:var(--ink)}
+.cta-pulse{animation:ctap 2.4s ease-in-out 1.4s infinite}
+@keyframes ctap{0%,100%{box-shadow:0 0 0 0 rgba(35,33,32,0)}50%{box-shadow:0 0 0 7px rgba(35,33,32,.08)}}
+
+.reward-cta-zone{margin-top:auto;padding-top:16px;width:100%;max-width:320px}
+</style>
+</head>
+<body>
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+  <symbol id="wm" viewBox="80 380 1760 360">
+    <path d="M445.36,431.57l-3.85,90.49c-.27,6.33-6.88,10.28-12.64,7.63-16.33-7.49-40.24-12.14-66.77-12.14-.31,0-.61,0-.91,0-11.02.03-11.98,16.22-1.04,17.55,64.35,7.81,96.1,36.71,96.1,88.14,0,78.78-43.72,105.68-168.62,105.68-36.48,0-78.6-3.46-127.16-10.8-4.45-.67-7.69-4.59-7.51-9.09l3.9-95.55c.25-6.24,6.73-10.23,12.43-7.66,19.27,8.69,48,14.06,77.99,14.06,3.22,0,6.25-.04,9.09-.14,11.02-.36,11.46-16.61.48-17.57-71.07-6.26-106.13-33.94-106.13-84.62,0-78.78,43.72-105.69,168.62-105.69,38.42,0,78.13,3.4,118.7,10.61,4.37.78,7.5,4.66,7.32,9.09Z"/>
+    <path d="M610.59,415.83l41.24-4.49c4.84-.53,9.19,2.97,9.72,7.81l10.68,98.05c.53,4.84-2.97,9.19-7.81,9.72l-41.22,4.49c-4.84.53-8.34,4.88-7.81,9.72l2.27,20.85c1.51,13.85,7.81,18.48,25.96,16.5,7.65-.83,15.43-2.62,23.47-5.7,5.42-2.08,11.35,1.47,11.97,7.24l13.01,119.51c.45,4.09-2.01,7.95-5.9,9.3-25.43,8.77-42.22,12.65-67.76,15.43-104.11,11.34-146.49-18.36-156.26-108.14l-25.77-235.61c-.53-4.84,2.97-9.19,7.81-9.72l142-15.46c4.83-.53,9.18,2.96,9.71,7.79l4.98,44.93c.54,4.83,4.88,8.32,9.71,7.79Z"/>
+    <path d="M1022.58,561.28v92.24c0,23.86.99,39.82,3.23,55.78.75,5.3-3.37,10.03-8.72,10.03h-134.04c-4.1,0-7.66-2.83-8.59-6.82l-4.66-20.08h-.96c-19.22,24.02-50.92,36.51-92.71,36.51-61.97,0-92.24-27.38-92.24-83.59s32.19-85.51,98.48-85.51c30.26,0,59.57,5.76,78.31,15.37h.96v-.96c0-24.5-21.61-35.55-69.66-35.55-31.93,0-62.53,4.97-83.54,13.54-5.64,2.3-11.84-1.78-12.06-7.87l-4.05-112.84c-.16-4.41,2.95-8.26,7.3-9.01,39.66-6.84,85.64-10.65,130.78-10.65,143.16,0,192.16,37.95,192.16,149.41ZM829.46,637.66c0,18.73,4.81,24.5,18.25,24.5,2.66,0,5.01-.2,7.14-.71,3.98-.93,6.79-4.51,6.79-8.6v-30.39c0-4.09-2.81-7.67-6.79-8.6-2.14-.5-4.49-.7-7.14-.7-13.45,0-18.25,5.76-18.25,24.5Z"/>
+    <path d="M1390.32,531.97v178.54c0,4.87-3.95,8.81-8.81,8.81h-142.82c-4.87,0-8.81-3.95-8.81-8.81v-154.04c0-19.22-4.33-25.94-16.81-25.94-3.08,0-6.17.49-9.06,1.47-3.53,1.2-5.83,4.62-5.83,8.35v170.16c0,4.87-3.95,8.81-8.81,8.81h-142.83c-4.87,0-8.81-3.95-8.81-8.81v-280.22c0-4.87,3.95-8.81,8.81-8.81h136.34c4.58,0,8.39,3.5,8.78,8.06l2.68,31.33h.96c21.14-34.11,51.4-49,98.48-49,70.14,0,96.56,33.15,96.56,120.1Z"/>
+    <path d="M1764.83,653.51c0,23.86.99,39.82,3.23,55.78.75,5.3-3.37,10.03-8.72,10.03h-139.67c-4.58,0-8.39-3.5-8.78-8.06l-2.68-31.33h-.96c-19.7,33.15-49.96,49-91.27,49-75.9,0-113.86-53.32-113.86-156.13s41.79-160.94,126.35-160.94c31.23,0,55.72,7.21,74.94,22.1h.96v-70.92s0-4.77,0-9.42c0-4.86,3.94-8.81,8.81-8.81h142.83c4.86,0,8.81,3.94,8.81,8.81,0,4.66,0,9.42,0,9.42v290.46ZM1569.79,570.4c0,29.3,5.29,39.87,20.18,39.87,3.06,0,5.84-.4,8.35-1.21,3.63-1.17,6.06-4.59,6.06-8.4v-60.52c0-3.81-2.43-7.23-6.06-8.4-2.51-.81-5.3-1.21-8.35-1.21-14.89,0-20.18,10.57-20.18,39.87Z"/>
+  </symbol>
+</svg>
+
+<div class="sw">
+
+  <!-- S0: GOAL INPUT -->
+  <div class="screen active" id="s0">
+    <div class="topbar">
+      <svg class="stand-logo" aria-label="Stand"><use href="#wm"/></svg>
+      <span class="module-badge">Lesson · Goals</span>
+    </div>
+    <div class="s-inner">
+      <div class="overline">your business goal</div>
+      <h1 class="display">How much do you want to make?</h1>
+      <p class="body-copy">Pick a goal. We will work out what it takes.</p>
+
+      <div class="goal-grid">
+        <div class="goal-tile" id="tile-20" onclick="setGoal(20,this)">
+          <div class="gt-amount">$20</div>
+          <div class="gt-label">enough for a game</div>
+        </div>
+        <div class="goal-tile" id="tile-50" onclick="setGoal(50,this)">
+          <div class="gt-amount">$50</div>
+          <div class="gt-label">new trainers</div>
+        </div>
+        <div class="goal-tile" id="tile-100" onclick="setGoal(100,this)">
+          <div class="gt-amount">$100</div>
+          <div class="gt-label">solid savings</div>
+        </div>
+        <div class="goal-tile" id="tile-200" onclick="setGoal(200,this)">
+          <div class="gt-amount">$200</div>
+          <div class="gt-label">big trip</div>
+        </div>
+      </div>
+
+      <div class="custom-row" id="custom-row">
+        <span class="custom-sym">$</span>
+        <input class="custom-in" id="custom-in" type="number" min="1" max="9999"
+          placeholder="your own number" oninput="onCustom()" onfocus="onCustomFocus()" onblur="onCustomBlur()">
+      </div>
+
+      <div class="cta-zone">
+        <button class="cta cta-red cta-pulse" id="cta0" onclick="goResult()" disabled>
+          That's my goal
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- S1: THE MATHS -->
+  <div class="screen" id="s1">
+    <div class="topbar">
+      <svg class="stand-logo" aria-label="Stand"><use href="#wm"/></svg>
+      <span class="ceo-badge">CEO</span>
+    </div>
+    <div class="nav-row">
+      <button class="back-btn" onclick="go('s0')">Back</button>
+      <div class="prog-track">
+        <div class="seg active" id="p1"></div>
+        <div class="seg" id="p2"></div>
+      </div>
+    </div>
+    <div class="s-inner">
+      <div class="overline">your target</div>
+      <h2 class="display" id="s1-head">To make $50, you need to sell...</h2>
+
+      <div class="big-number-block">
+        <div class="big-number" id="s1-n">10</div>
+        <div class="big-suffix">sales.</div>
+      </div>
+
+      <p class="reframe" id="s1-reframe">That is about 3 a week if you sell for a month.</p>
+      <p class="assumption" id="s1-assumption">Based on $5 profit per sale. Ask your teacher to update this for your business.</p>
+
+      <div class="ai-line" id="ai-line"></div>
+
+      <div class="cta-zone">
+        <button class="cta cta-ink" onclick="goReward()">Save my goal</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- S2: REWARD -->
+  <div class="screen" id="s2">
+    <div class="reward-wrap">
+      <div class="reward-badge">🎯</div>
+      <div class="reward-title">Goal locked in.</div>
+      <div class="reward-sub">You know your number. Now you know what to aim for.</div>
+
+      <div class="goal-card">
+        <div class="gc-head">
+          <div class="gc-eyebrow">My Goal Card</div>
+          <div class="gc-name" id="gc-name">$50 goal</div>
+        </div>
+        <div class="gc-body">
+          <div class="gc-row">
+            <span class="gc-key">My goal</span>
+            <span class="gc-val" id="gc-goal">$50</span>
+          </div>
+          <div class="gc-row">
+            <span class="gc-key">Sales needed</span>
+            <span class="gc-val" id="gc-sales">10</span>
+          </div>
+          <div class="gc-row">
+            <span class="gc-key">Weekly target</span>
+            <span class="gc-val" id="gc-weekly">3 per week</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="reward-cta-zone">
+        <button class="cta cta-cream" onclick="go('s0')">Start over</button>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /.sw -->
+
+<script>
+(function(){
+
+const PROFIT = 5; // $ profit per sale — placeholder
+const S = { goal: 0 };
+
+function playSound(name){
+  const a = new Audio('/clients/stand/prototypes/assets/sounds/'+name+'.mp3');
+  a.volume = 0.6; a.play().catch(function(){});
+}
+
+function go(id){
+  playSound('transition');
+  document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('active'); });
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function setGoal(amount, el){
+  playSound('select');
+  S.goal = amount;
+  document.getElementById('custom-in').value = '';
+  document.querySelectorAll('.goal-tile').forEach(function(t){ t.classList.remove('sel'); });
+  el.classList.add('sel');
+  document.getElementById('cta0').disabled = false;
+}
+
+function onCustom(){
+  var val = parseInt(document.getElementById('custom-in').value, 10);
+  document.querySelectorAll('.goal-tile').forEach(function(t){ t.classList.remove('sel'); });
+  if(val > 0){
+    S.goal = val;
+    document.getElementById('cta0').disabled = false;
+  } else {
+    S.goal = 0;
+    document.getElementById('cta0').disabled = true;
+  }
+}
+
+function onCustomFocus(){
+  document.getElementById('custom-row').classList.add('focused');
+}
+function onCustomBlur(){
+  document.getElementById('custom-row').classList.remove('focused');
+}
+
+function goResult(){
+  var n = Math.ceil(S.goal / PROFIT);
+  var weekly = Math.ceil(n / 4);
+
+  document.getElementById('s1-head').textContent = 'To make $'+S.goal+', you need to sell...';
+  document.getElementById('s1-n').textContent = n;
+
+  var reframe;
+  if(n <= 4){
+    reframe = 'That is just '+n+' sales total. You could knock that out this week.';
+  } else if(weekly === 1){
+    reframe = 'That is roughly one sale a week for a month. Very doable.';
+  } else {
+    reframe = 'That is about '+weekly+' sales a week if you spread it over a month.';
+  }
+  document.getElementById('s1-reframe').textContent = reframe;
+
+  // reset progress bar animation
+  var seg = document.getElementById('p1');
+  seg.classList.remove('active'); void seg.offsetWidth; seg.classList.add('active');
+
+  // navigate
+  document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('active'); });
+  document.getElementById('s1').classList.add('active');
+  window.scrollTo(0,0);
+  playSound('transition');
+
+  // fire AI in background
+  maybeAI(n);
+}
+
+function goReward(){
+  var n = Math.ceil(S.goal / PROFIT);
+  var weekly = Math.ceil(n / 4);
+
+  document.getElementById('gc-name').textContent = '$'+S.goal+' goal';
+  document.getElementById('gc-goal').textContent = '$'+S.goal;
+  document.getElementById('gc-sales').textContent = n;
+  document.getElementById('gc-weekly').textContent = weekly+' per week';
+
+  playSound('complete');
+  document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('active'); });
+  document.getElementById('s2').classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function maybeAI(n){
+  var el = document.getElementById('ai-line');
+  el.classList.remove('loaded');
+  el.style.display = 'none';
+  fetch('https://corsproxy.io/?url=https://api.anthropic.com/v1/messages',{
+    method:'POST',
+    headers:{'x-api-key':'STAND_API_KEY','anthropic-version':'2023-06-01','content-type':'application/json'},
+    body:JSON.stringify({
+      model:'claude-sonnet-4-20250514',
+      max_tokens:60,
+      messages:[{role:'user',content:'A kid just set a goal to make $'+S.goal+' and needs to sell '+n+' units to hit it. Write one short warm sentence for them. Write for age 10. No em dashes. Keep it under 15 words.'}]
+    })
+  })
+  .then(function(r){ return r.json(); })
+  .then(function(d){
+    var text = d && d.content && d.content[0] && d.content[0].text;
+    if(text){ el.textContent = text; el.style.display = 'block'; el.classList.add('loaded'); }
+  })
+  .catch(function(){});
+}
+
+})();
+</script>
+</body>
+</html>
