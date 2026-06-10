@@ -159,6 +159,10 @@ html,body{font-family:'Manrope',sans-serif;background:#FFF8E7;color:#1A1A1A;over
 .lbadge.b-review{background:#F4A261;color:#1A1A1A}
 .lbadge.b-locked{background:rgba(26,26,26,.08);color:rgba(26,26,26,.5)}
 /* lock tooltip */
+.lcard-format{
+  font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;
+  color:#b06a2c;margin-bottom:8px;
+}
 .lcard.locked::after{
   content:"🔒 Not yet unlocked";
   position:absolute;left:50%;top:8px;transform:translateX(-50%) translateY(-4px);
@@ -546,7 +550,7 @@ const USER = {
   xpToNextLevel: 1200,
   streak: 5,
   completedModules: ["perfect-your-pitch"],
-  reviewModules: ["find-your-customer", "launch-plan"],
+  reviewModules: ["customer-feedback", "how-much-to-make", "launch-plan"],
   totalSales: 0,
   storeViews: 12,
   daysActive: 14
@@ -555,10 +559,10 @@ const USER = {
 const LESSONS = [
   { id: "perfect-your-pitch", title: "Perfect Your Pitch", description: "Learn what makes a great pitch and practice yours out loud.", icon: "🎤", color: "#E63946", status: "COMPLETED", xp: 200 },
   { id: "price-it-right", title: "Price It Right", description: "Figure out what to charge so you make money and customers feel good paying.", icon: "💰", color: "#2D9F6E", status: "AVAILABLE", xp: 200 },
-  { id: "find-your-customer", title: "Who's Going to Buy From You?", description: "Work out exactly who your customers are and how to reach them.", icon: "🔍", color: "#F4A261", status: "FOR_REVIEW", xp: 200 },
-  { id: "launch-plan", title: "Tell the World", description: "Build a real marketing plan for your launch.", icon: "📣", color: "#7B2FBE", status: "FOR_REVIEW", xp: 250 },
-  { id: "customer-feedback", title: "What Do Your Customers Think?", description: "Find out what people really think about your business.", icon: "💬", color: "#E63946", status: "LOCKED", xp: 200 },
-  { id: "how-much-to-make", title: "How Much Do You Want to Make?", description: "Set a real sales goal and work out what it takes to hit it.", icon: "🎯", color: "#2D9F6E", status: "LOCKED", xp: 150 },
+  { id: "find-your-customer", title: "Who's Going to Buy From You?", description: "Work out exactly who your customers are and how to reach them.", icon: "🔍", color: "#F4A261", status: "AVAILABLE", xp: 200 },
+  { id: "launch-plan", title: "Tell the World", description: "Build a real marketing plan for your launch.", icon: "📣", color: "#7B2FBE", status: "FOR_REVIEW", xp: 250, format: "✍️ Form + free text", external: "../prototypes/marketing/v3-marketing-module.html" },
+  { id: "customer-feedback", title: "What Do Your Customers Think?", description: "Find out what people really think about your business.", icon: "💬", color: "#E63946", status: "FOR_REVIEW", xp: 200, format: "🎥 Video lesson", external: "../prototypes/customer-feedback/index.html" },
+  { id: "how-much-to-make", title: "How Much Do You Want to Make?", description: "Set a real sales goal and work out what it takes to hit it.", icon: "🎯", color: "#2D9F6E", status: "FOR_REVIEW", xp: 150, format: "📝 Quick form", external: "../prototypes/goal-setting/index.html" },
   { id: "land-first-customer", title: "Land Your First Customer", description: "Get your first real sale — strategies from friends and family to strangers.", icon: "🤝", color: "#F4A261", status: "LOCKED", xp: 300 },
   { id: "track-your-money", title: "Track Your Money", description: "Learn the basics of tracking what you earn and spend.", icon: "📊", color: "#7B2FBE", status: "LOCKED", xp: 200 },
   { id: "think-like-inventor", title: "Think Like an Inventor", description: "Brainstorm new products and solve problems creatively.", icon: "💡", color: "#E63946", status: "LOCKED", xp: 200 },
@@ -748,6 +752,7 @@ function renderCarousel(){
       <div class="lcard-icon" style="background:${l.color}22;color:${l.color}">${l.icon}</div>
       <div class="lcard-title">${escHTML(l.title)}</div>
       <div class="lcard-desc">${escHTML(l.description)}</div>
+      ${l.format ? `<div class="lcard-format">${l.format}</div>` : ""}
       ${badgeFor(l.status)}
     </div>`;
   }).join("");
@@ -783,6 +788,11 @@ function renderOtherBusinesses(){
 /* ════════════════════════ ROUTER / VIEW TRANSITIONS ════════════════════════ */
 
 function openLesson(id){
+  const lesson = LESSONS.find(l => l.id === id);
+  if (lesson && lesson.external){
+    window.location.href = lesson.external;
+    return;
+  }
   location.hash = "#lesson/" + id;
 }
 
