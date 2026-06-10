@@ -1,0 +1,1394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>STAND — Dashboard</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Manrope:wght@400;500;600;700;800&family=Caveat:wght@400;700&display=swap');
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{font-family:'Manrope',sans-serif;background:#FFF8E7;color:#1A1A1A;overflow-x:hidden;min-height:100%}
+
+.bagel{font-family:'Bagel Fat One',system-ui,sans-serif;line-height:1.05}
+.caveat{font-family:'Caveat',cursive;font-weight:700}
+
+/* ── APP / VIEWS ── */
+#app{position:relative;width:100%;min-height:100vh;overflow-x:hidden}
+.view{width:100%;min-height:100vh;transition:transform .3s ease,opacity .3s ease;background:#FFF8E7}
+.view.offstage{display:none}
+.view.anim-absolute{position:absolute;top:0;left:0;right:0}
+.view.slide-out-left{transform:translateX(-100%)}
+.view.slide-out-right{transform:translateX(100%)}
+.view.slide-in-from-right{transform:translateX(100%)}
+.view.slide-in-from-left{transform:translateX(-100%)}
+.view.slide-in-active{transform:translateX(0)}
+
+/* ── DASHBOARD COLUMN ── */
+.dash-col{max-width:480px;margin:0 auto;padding:0 20px 64px}
+@media(min-width:1280px){.dash-col{max-width:880px;padding:0 32px 80px}}
+
+/* ── SECTION ENTRANCE ── */
+.dsec{opacity:0;transform:translateY(16px);animation:secIn .5s ease-out forwards}
+@keyframes secIn{to{opacity:1;transform:translateY(0)}}
+.dsec.d1{animation-delay:.05s}.dsec.d2{animation-delay:.12s}.dsec.d3{animation-delay:.19s}
+.dsec.d4{animation-delay:.26s}.dsec.d5{animation-delay:.33s}.dsec.d6{animation-delay:.40s}.dsec.d7{animation-delay:.47s}
+
+/* ── HEADER ── */
+.hdr{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:18px 0 14px;border-bottom:2px solid rgba(26,26,26,.07);margin-bottom:18px;
+}
+.hdr-wordmark{font-family:'Bagel Fat One',system-ui,sans-serif;font-size:24px;color:#E5341A;letter-spacing:.01em}
+.hdr-biz{display:flex;align-items:center;gap:8px;min-width:0}
+.hdr-avatar{
+  width:30px;height:30px;border-radius:50%;flex:none;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Bagel Fat One',system-ui,sans-serif;font-size:12px;color:#fff;
+}
+.hdr-bizname{font-size:13px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hdr-right{display:flex;align-items:center;gap:8px;flex:none}
+.hdr-pill{
+  font-size:11px;font-weight:800;padding:6px 10px;border-radius:999px;
+  background:#1A1A1A;color:#FFF8E7;white-space:nowrap;
+}
+.hdr-streak{background:#FFD93D;color:#1A1A1A}
+@media(max-width:480px){.hdr-bizname{max-width:110px}.hdr-wordmark{font-size:20px}}
+
+/* ── XP BAR ── */
+.xp-wrap{margin-bottom:24px}
+.xp-amount{text-align:center;font-size:12px;font-weight:800;color:rgba(26,26,26,.6);margin-bottom:6px}
+.xp-row{display:flex;align-items:center;gap:12px}
+.xp-lv{font-family:'Bagel Fat One',system-ui,sans-serif;font-size:14px;flex:none}
+.xp-track{
+  flex:1;height:16px;border-radius:999px;background:#fff;
+  border:2px solid rgba(26,26,26,.1);overflow:hidden;
+}
+.xp-fill{
+  height:100%;width:0%;background:#E5341A;border-radius:999px;
+  transition:width .5s ease-out;
+}
+
+/* ── CARDS / SECTION HEADINGS ── */
+.sec-h{font-family:'Bagel Fat One',system-ui,sans-serif;font-size:22px;margin:28px 0 14px}
+.card{
+  background:#fff;border-radius:20px;padding:20px;
+  border:2px solid rgba(26,26,26,.07);
+}
+
+/* ── BUSINESS SNAPSHOT ── */
+.snap{display:flex;flex-direction:column;gap:14px}
+.snap-top{display:flex;align-items:center;gap:14px}
+.snap-avatar{
+  width:54px;height:54px;border-radius:50%;flex:none;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Bagel Fat One',system-ui,sans-serif;font-size:20px;color:#fff;
+}
+.snap-name{font-family:'Bagel Fat One',system-ui,sans-serif;font-size:20px;line-height:1.15}
+.snap-type{font-size:12px;font-weight:700;color:rgba(26,26,26,.5);margin-top:3px;text-transform:uppercase;letter-spacing:.08em}
+.snap-pills{display:flex;flex-wrap:wrap;gap:8px}
+.stat-pill{
+  font-size:12px;font-weight:700;padding:7px 12px;border-radius:999px;
+  background:#FFF8E7;border:2px solid rgba(26,26,26,.08);
+}
+.snap-cta{
+  font-size:14px;font-weight:800;color:#E5341A;text-decoration:none;
+  display:inline-block;cursor:pointer;
+}
+.snap-cta:active{transform:scale(.96)}
+
+/* ── TASKS ── */
+.task-list{display:flex;flex-direction:column;gap:12px}
+.task{
+  display:flex;align-items:center;gap:14px;background:#fff;border-radius:18px;
+  padding:16px 18px;border:2px solid rgba(26,26,26,.07);cursor:pointer;
+  transition:opacity .3s ease,transform .12s ease;
+}
+.task:active{transform:scale(.98)}
+.task.done{opacity:.6;cursor:default}
+.task-check{
+  width:28px;height:28px;border-radius:50%;flex:none;
+  border:2.5px solid rgba(26,26,26,.2);background:#fff;
+  display:flex;align-items:center;justify-content:center;
+  transition:background .2s ease,border-color .2s ease;
+}
+.task.done .task-check{background:#2D9F6E;border-color:#2D9F6E;animation:checkPop .35s cubic-bezier(.34,1.56,.64,1)}
+@keyframes checkPop{0%{transform:scale(.6)}60%{transform:scale(1.18)}100%{transform:scale(1)}}
+.task-check svg{display:none}
+.task.done .task-check svg{display:block}
+.task-copy{flex:1;min-width:0}
+.task-title{font-size:15px;font-weight:800;margin-bottom:2px}
+.task.done .task-title{text-decoration:line-through}
+.task-desc{font-size:13px;font-weight:500;color:rgba(26,26,26,.55);line-height:1.45}
+.task-arrow{flex:none;font-size:16px;color:rgba(26,26,26,.3);font-weight:800}
+
+/* ── LESSON CAROUSEL ── */
+.carousel{
+  display:flex;gap:16px;overflow-x:auto;padding:4px 4px 16px;
+  scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch;
+}
+.carousel::-webkit-scrollbar{height:6px}
+.carousel::-webkit-scrollbar-thumb{background:rgba(26,26,26,.15);border-radius:3px}
+.lcard{
+  width:200px;flex:none;height:240px;scroll-snap-align:start;
+  background:#fff;border-radius:20px;padding:18px 16px;
+  border:2px solid rgba(26,26,26,.08);cursor:pointer;position:relative;
+  display:flex;flex-direction:column;
+  transition:transform .15s ease,box-shadow .15s ease;
+}
+.lcard:not(.locked):hover{transform:translateY(-3px);box-shadow:0 6px 0 rgba(26,26,26,.08)}
+.lcard:not(.locked):active{transform:scale(.97)}
+.lcard.review{border-color:#F4A261;border-width:2.5px}
+.lcard.completed{opacity:.78}
+.lcard.locked{opacity:.5;cursor:default}
+.lcard-icon{
+  width:56px;height:56px;border-radius:16px;font-size:30px;
+  display:flex;align-items:center;justify-content:center;margin-bottom:12px;
+}
+.lcard-title{font-family:'Bagel Fat One',system-ui,sans-serif;font-size:15px;line-height:1.15;margin-bottom:6px}
+.lcard-desc{
+  font-size:11.5px;font-weight:500;color:rgba(26,26,26,.55);line-height:1.45;flex:1;
+  display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;
+}
+.lbadge{
+  align-self:flex-start;font-size:11px;font-weight:800;padding:5px 10px;
+  border-radius:999px;margin-top:10px;
+}
+.lbadge.b-done{background:#2D9F6E;color:#fff}
+.lbadge.b-start{background:#E5341A;color:#fff}
+.lbadge.b-review{background:#F4A261;color:#1A1A1A}
+.lbadge.b-locked{background:rgba(26,26,26,.08);color:rgba(26,26,26,.5)}
+/* lock tooltip */
+.lcard.locked::after{
+  content:"🔒 Not yet unlocked";
+  position:absolute;left:50%;top:8px;transform:translateX(-50%) translateY(-4px);
+  background:#1A1A1A;color:#FFF8E7;font-size:11px;font-weight:700;
+  padding:6px 10px;border-radius:8px;white-space:nowrap;
+  opacity:0;pointer-events:none;transition:opacity .15s ease,transform .15s ease;z-index:5;
+}
+.lcard.locked:hover::after{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ── PROGRESS BARS ── */
+.pbar-row{margin-bottom:16px}
+.pbar-labels{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
+.pbar-name{font-size:13px;font-weight:800}
+.pbar-val{font-size:12px;font-weight:700;color:rgba(26,26,26,.55)}
+.pbar-track{height:14px;border-radius:999px;background:#fff;border:2px solid rgba(26,26,26,.08);overflow:hidden}
+.pbar-fill{height:100%;width:0%;border-radius:999px;transition:width .3s ease-out}
+
+/* ── OTHER BUSINESSES ── */
+.biz-row{display:flex;gap:12px;overflow-x:auto;padding:4px 4px 16px;-webkit-overflow-scrolling:touch}
+.biz-row::-webkit-scrollbar{height:6px}
+.biz-row::-webkit-scrollbar-thumb{background:rgba(26,26,26,.15);border-radius:3px}
+.bcard{
+  width:150px;flex:none;background:#fff;border-radius:18px;padding:16px 14px;
+  border:2px solid rgba(26,26,26,.07);text-align:center;
+}
+.bcard-emoji{
+  width:48px;height:48px;border-radius:50%;margin:0 auto 10px;font-size:24px;
+  display:flex;align-items:center;justify-content:center;
+}
+.bcard-name{font-family:'Bagel Fat One',system-ui,sans-serif;font-size:13px;line-height:1.2;margin-bottom:6px}
+.bcard-type{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:rgba(26,26,26,.45);margin-bottom:8px}
+.bcard-sales{
+  display:inline-block;font-size:11px;font-weight:800;padding:4px 10px;
+  border-radius:999px;background:#FFD93D;
+}
+
+/* ── BUTTONS ── */
+.btn{
+  display:block;width:100%;padding:18px 24px;border:none;border-radius:16px;
+  font-family:'Bagel Fat One',system-ui,sans-serif;font-size:18px;
+  cursor:pointer;transition:transform .12s,opacity .12s,box-shadow .12s;
+  text-align:center;line-height:1;
+}
+.btn-red{background:#E5341A;color:#FFF8E7;box-shadow:0 4px 0 #a81e08}
+.btn-red:active{box-shadow:0 2px 0 #a81e08;transform:translateY(2px) scale(.96)}
+.btn-black{background:#1A1A1A;color:#FFF8E7;box-shadow:0 4px 0 #000}
+.btn-black:active{box-shadow:0 2px 0 #000;transform:translateY(2px) scale(.96)}
+.btn-yellow{background:#FFD93D;color:#1A1A1A;box-shadow:0 4px 0 #c9a800}
+.btn-yellow:active{box-shadow:0 2px 0 #c9a800;transform:translateY(2px) scale(.96)}
+.btn:disabled{opacity:.35;pointer-events:none;box-shadow:none}
+
+/* ── LESSON VIEW ── */
+.lesson-col{max-width:480px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;padding:0 20px 32px}
+.ltop{
+  display:flex;align-items:center;gap:12px;padding:18px 0 12px;
+}
+.lback{
+  width:40px;height:40px;border-radius:12px;border:2px solid rgba(26,26,26,.12);
+  background:#fff;font-size:18px;font-weight:800;cursor:pointer;flex:none;
+  display:flex;align-items:center;justify-content:center;
+  transition:transform .12s ease;
+}
+.lback:active{transform:scale(.92)}
+.ltitle{flex:1;text-align:center;font-family:'Bagel Fat One',system-ui,sans-serif;font-size:16px;line-height:1.15}
+.lxp{
+  flex:none;font-size:11px;font-weight:800;padding:6px 10px;border-radius:999px;
+  background:#FFD93D;white-space:nowrap;
+}
+.ldots{display:flex;gap:6px;justify-content:center;margin:6px 0 20px}
+.ldot{width:8px;height:8px;border-radius:50%;background:rgba(26,26,26,.15);transition:background .3s}
+.ldot.done{background:rgba(26,26,26,.55)}
+.ldot.now{background:#E5341A}
+
+.lsteps{flex:1;position:relative;display:flex;flex-direction:column}
+.lstep{
+  flex:1;display:none;flex-direction:column;
+}
+.lstep.active{display:flex;animation:stepInR .3s ease-out}
+.lstep.active.from-left{animation:stepInL .3s ease-out}
+@keyframes stepInR{from{opacity:0;transform:translateX(48px)}to{opacity:1;transform:translateX(0)}}
+@keyframes stepInL{from{opacity:0;transform:translateX(-48px)}to{opacity:1;transform:translateX(0)}}
+.lstep-body{flex:1;display:flex;flex-direction:column}
+.lstep-cta{margin-top:28px}
+
+/* STAND voice bubble */
+.voice{
+  background:#E5341A;color:#FFF8E7;border-radius:18px;border-bottom-left-radius:4px;
+  padding:16px 18px;margin-bottom:22px;position:relative;
+}
+.voice-label{
+  font-family:'Bagel Fat One',system-ui,sans-serif;font-size:10px;letter-spacing:.15em;
+  color:rgba(255,248,231,.75);margin-bottom:6px;
+}
+.voice-text{font-size:14.5px;font-weight:600;line-height:1.55}
+
+.lh{font-family:'Bagel Fat One',system-ui,sans-serif;font-size:24px;line-height:1.15;margin-bottom:18px}
+.lsub{font-size:14px;font-weight:500;color:rgba(26,26,26,.6);line-height:1.55;margin-bottom:18px}
+
+.hero-emoji{
+  font-size:88px;text-align:center;margin:auto 0;padding:32px 0;
+  animation:heroFloat 3s ease-in-out infinite;
+}
+@keyframes heroFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+.hero-prompt{
+  font-family:'Caveat',cursive;font-weight:700;font-size:28px;text-align:center;
+  color:rgba(26,26,26,.75);line-height:1.25;margin-bottom:auto;
+}
+
+/* form fields */
+.fblock{background:#fff;border-radius:16px;padding:16px 18px;border:2px solid rgba(26,26,26,.07);margin-bottom:12px;transition:border-color .2s}
+.fblock:focus-within{border-color:#1A1A1A}
+.flabel{font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:rgba(26,26,26,.5);margin-bottom:8px}
+.frow{display:flex;align-items:center;gap:4px}
+.fsym{font-family:'Bagel Fat One',system-ui,sans-serif;font-size:24px}
+.fin{
+  flex:1;width:100%;border:none;outline:none;background:transparent;
+  font-family:'Bagel Fat One',system-ui,sans-serif;font-size:24px;color:#1A1A1A;
+  -moz-appearance:textfield;min-width:0;
+}
+.fin::-webkit-outer-spin-button,.fin::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.fin::placeholder{color:rgba(26,26,26,.2)}
+.fin-text{
+  width:100%;border:none;outline:none;background:transparent;
+  font-family:'Manrope',sans-serif;font-size:16px;font-weight:600;color:#1A1A1A;
+}
+.fin-text::placeholder{color:rgba(26,26,26,.25);font-style:italic}
+.fnote{font-size:11px;font-weight:600;color:rgba(26,26,26,.45);margin-top:6px}
+.f2col{display:flex;gap:12px}
+.f2col .fblock{flex:1;margin-bottom:0}
+.f2col-wrap{margin-bottom:12px}
+.fx{font-family:'Bagel Fat One',system-ui,sans-serif;font-size:20px;align-self:center;color:rgba(26,26,26,.4)}
+
+/* calc results */
+.calc-out{background:#1A1A1A;border-radius:18px;padding:18px 20px;margin:8px 0 14px}
+.calc-line{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
+.calc-line:last-child{margin-bottom:0}
+.calc-k{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,248,231,.55)}
+.calc-v{font-family:'Bagel Fat One',system-ui,sans-serif;font-size:26px;color:#FFF8E7;transition:transform .2s cubic-bezier(.34,1.56,.64,1)}
+.calc-v.big{font-size:34px;color:#FFD93D}
+.calc-v.pop{transform:scale(1.12)}
+.profit-pill{
+  display:inline-block;background:#2D9F6E;color:#fff;font-weight:800;font-size:14px;
+  padding:9px 16px;border-radius:999px;margin-bottom:14px;align-self:flex-start;
+}
+
+/* preview panel */
+.preview-panel{
+  background:#FFD93D;border-radius:18px;padding:18px 20px;margin:10px 0 14px;
+}
+.preview-label{font-size:10px;font-weight:800;letter-spacing:.15em;text-transform:uppercase;color:rgba(26,26,26,.5);margin-bottom:8px}
+.preview-text{font-size:15px;font-weight:600;line-height:1.6}
+.preview-text .ph{color:rgba(26,26,26,.35);font-style:italic}
+
+/* output asset cards */
+.asset-card{
+  border-radius:22px;padding:26px 24px;color:#fff;margin:6px 0 16px;
+  box-shadow:0 10px 40px rgba(26,26,26,.18);
+  animation:assetIn .45s cubic-bezier(.34,1.56,.64,1) both;
+}
+@keyframes assetIn{from{transform:scale(.9) translateY(14px);opacity:0}to{transform:scale(1) translateY(0);opacity:1}}
+.asset-biz{font-family:'Bagel Fat One',system-ui,sans-serif;font-size:22px;margin-bottom:16px;line-height:1.15}
+.asset-line{font-size:16px;font-weight:700;margin-bottom:10px;line-height:1.45}
+.asset-line .asset-big{font-family:'Bagel Fat One',system-ui,sans-serif;font-size:30px;display:block;margin-top:2px}
+.asset-para{font-size:14.5px;font-weight:600;line-height:1.65;margin-bottom:12px}
+.asset-sec-label{font-size:10px;font-weight:800;letter-spacing:.15em;text-transform:uppercase;opacity:.7;margin:14px 0 8px}
+.asset-foot{font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;opacity:.55;margin-top:18px}
+.asset-li{font-size:14px;font-weight:600;line-height:1.5;margin-bottom:6px}
+.save-btn{
+  display:block;width:100%;padding:14px;border:none;border-radius:14px;cursor:pointer;
+  background:#fff;color:#1A1A1A;font-family:'Bagel Fat One',system-ui,sans-serif;font-size:15px;
+  box-shadow:0 4px 0 rgba(26,26,26,.25);transition:transform .12s;
+}
+.save-btn:active{transform:translateY(2px) scale(.97);box-shadow:0 2px 0 rgba(26,26,26,.25)}
+
+/* option cards (launch step 1) */
+.opt-card{
+  background:#fff;border:2.5px solid rgba(26,26,26,.1);border-radius:18px;
+  padding:18px 20px;cursor:pointer;margin-bottom:12px;
+  font-size:16px;font-weight:700;transition:border-color .15s,background .15s,transform .12s;
+}
+.opt-card:active{transform:scale(.97)}
+.opt-card.sel{border-color:#E5341A;background:#fdeae6}
+
+/* chips (warm list) */
+.chip-group{background:#fff;border-radius:16px;padding:14px 16px;border:2px solid rgba(26,26,26,.07);margin-bottom:12px}
+.chip-cat{font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:rgba(26,26,26,.5);margin-bottom:10px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}
+.chips:empty{display:none}
+.chip{
+  background:#FFD93D;font-size:13px;font-weight:800;padding:7px 13px;border-radius:999px;
+  animation:chipIn .25s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes chipIn{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+.chip-add-row{display:flex;gap:8px}
+.chip-in{
+  flex:1;border:2px solid rgba(26,26,26,.1);border-radius:12px;padding:10px 12px;
+  font-family:'Manrope',sans-serif;font-size:14px;font-weight:600;outline:none;min-width:0;
+}
+.chip-in:focus{border-color:#1A1A1A}
+.chip-plus{
+  width:42px;height:42px;flex:none;border:none;border-radius:12px;background:#1A1A1A;color:#FFF8E7;
+  font-size:20px;font-weight:800;cursor:pointer;transition:transform .12s;
+}
+.chip-plus:active{transform:scale(.9)}
+.chip-plus:disabled{opacity:.3;pointer-events:none}
+.warm-total{
+  font-family:'Caveat',cursive;font-weight:700;font-size:23px;color:rgba(26,26,26,.7);
+  text-align:center;margin:6px 0 4px;
+}
+
+/* channel cards */
+.chan-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+.chan-card{
+  background:#fff;border:2.5px solid rgba(26,26,26,.1);border-radius:16px;padding:14px;
+  cursor:pointer;transition:border-color .15s,background .15s,color .15s,transform .12s;
+}
+.chan-card:active{transform:scale(.95)}
+.chan-card.sel{background:#E5341A;border-color:#a81e08;color:#FFF8E7}
+.chan-emoji{font-size:24px;margin-bottom:6px}
+.chan-name{font-size:13.5px;font-weight:800;margin-bottom:3px}
+.chan-desc{font-size:11px;font-weight:600;opacity:.6;line-height:1.4}
+
+/* completed summary */
+.done-state{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px 0}
+.done-emoji{font-size:72px;margin-bottom:18px}
+.done-h{font-family:'Bagel Fat One',system-ui,sans-serif;font-size:26px;margin-bottom:10px;max-width:300px;line-height:1.15}
+.done-sub{font-size:15px;font-weight:600;color:rgba(26,26,26,.55);margin-bottom:8px}
+
+/* ── XP TOAST ── */
+#toast-zone{position:fixed;bottom:24px;right:20px;z-index:900;display:flex;flex-direction:column;gap:8px;align-items:flex-end;pointer-events:none}
+.xp-toast{
+  background:#1A1A1A;color:#FFD93D;font-family:'Bagel Fat One',system-ui,sans-serif;
+  font-size:17px;padding:12px 20px;border-radius:999px;
+  box-shadow:0 6px 24px rgba(26,26,26,.3);
+  animation:toastIn 1.5s ease forwards;
+}
+@keyframes toastIn{
+  0%{opacity:0;transform:translateY(20px)}
+  12%{opacity:1;transform:translateY(0)}
+  70%{opacity:1;transform:translateY(-6px)}
+  100%{opacity:0;transform:translateY(-18px)}
+}
+
+/* ── LESSON COMPLETE OVERLAY ── */
+#complete-overlay{
+  position:fixed;inset:0;background:#FFF8E7;z-index:800;
+  display:none;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:32px 28px;
+}
+#complete-overlay.show{display:flex;animation:ovIn .35s ease-out}
+@keyframes ovIn{from{opacity:0}to{opacity:1}}
+.ov-trophy{font-size:96px;margin-bottom:14px;animation:trophyPop .6s cubic-bezier(.34,1.56,.64,1)}
+@keyframes trophyPop{from{transform:scale(.4) rotate(-12deg);opacity:0}to{transform:scale(1) rotate(0);opacity:1}}
+.ov-xp{font-family:'Bagel Fat One',system-ui,sans-serif;font-size:30px;color:#E5341A;margin-bottom:12px}
+.ov-headline{font-family:'Bagel Fat One',system-ui,sans-serif;font-size:clamp(26px,7vw,36px);line-height:1.15;max-width:380px;margin-bottom:8px}
+.ov-caveat{font-family:'Caveat',cursive;font-weight:700;font-size:25px;color:rgba(26,26,26,.6);margin-bottom:34px}
+.ov-cta{max-width:340px;width:100%}
+
+/* confetti canvas */
+#confetti-canvas{position:fixed;inset:0;z-index:950;pointer-events:none}
+</style>
+</head>
+<body>
+
+<div id="app">
+
+  <!-- ══════════ DASHBOARD VIEW ══════════ -->
+  <div class="view" id="view-dashboard">
+    <div class="dash-col">
+
+      <!-- 1. Header -->
+      <header class="hdr dsec d1">
+        <div class="hdr-wordmark">STAND</div>
+        <div class="hdr-biz">
+          <div class="hdr-avatar" id="hdr-avatar">AS</div>
+          <div class="hdr-bizname" id="hdr-bizname"></div>
+        </div>
+        <div class="hdr-right">
+          <div class="hdr-pill" id="hdr-level"></div>
+          <div class="hdr-pill hdr-streak" id="hdr-streak"></div>
+        </div>
+      </header>
+
+      <!-- 2. XP bar -->
+      <div class="xp-wrap dsec d2">
+        <div class="xp-amount" id="xp-amount"></div>
+        <div class="xp-row">
+          <div class="xp-lv" id="xp-lv-left"></div>
+          <div class="xp-track"><div class="xp-fill" id="xp-fill"></div></div>
+          <div class="xp-lv" id="xp-lv-right"></div>
+        </div>
+      </div>
+
+      <!-- 3. Business snapshot -->
+      <div class="card snap dsec d3">
+        <div class="snap-top">
+          <div class="snap-avatar" id="snap-avatar">AS</div>
+          <div>
+            <div class="snap-name" id="snap-name"></div>
+            <div class="snap-type" id="snap-type"></div>
+          </div>
+        </div>
+        <div class="snap-pills" id="snap-pills"></div>
+        <a class="snap-cta" onclick="return false" href="#dashboard">View your store →</a>
+      </div>
+
+      <!-- 4. Today's Tasks -->
+      <section class="dsec d4">
+        <h2 class="sec-h">Today's Tasks</h2>
+        <div class="task-list" id="task-list"></div>
+      </section>
+
+      <!-- 5. Stand Lessons -->
+      <section class="dsec d5">
+        <h2 class="sec-h">Stand Lessons</h2>
+        <div class="carousel" id="lesson-carousel"></div>
+      </section>
+
+      <!-- 6. Your Progress -->
+      <section class="dsec d6">
+        <h2 class="sec-h">Your Progress</h2>
+        <div class="card" id="progress-card">
+          <div class="pbar-row">
+            <div class="pbar-labels"><span class="pbar-name">Lessons completed</span><span class="pbar-val" id="pb-lessons-val"></span></div>
+            <div class="pbar-track"><div class="pbar-fill" id="pb-lessons" style="background:#E5341A"></div></div>
+          </div>
+          <div class="pbar-row">
+            <div class="pbar-labels"><span class="pbar-name">Business health score</span><span class="pbar-val">Building 🔨</span></div>
+            <div class="pbar-track"><div class="pbar-fill" id="pb-health" style="background:#F4A261"></div></div>
+          </div>
+          <div class="pbar-row" style="margin-bottom:0">
+            <div class="pbar-labels"><span class="pbar-name">Days active</span><span class="pbar-val">14 days on Stand 🔥</span></div>
+            <div class="pbar-track"><div class="pbar-fill" id="pb-days" style="background:#2D9F6E"></div></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 7. Other businesses -->
+      <section class="dsec d7">
+        <h2 class="sec-h">Other kids on Stand</h2>
+        <div class="biz-row" id="biz-row"></div>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- ══════════ LESSON VIEW ══════════ -->
+  <div class="view offstage" id="view-lesson">
+    <div class="lesson-col" id="lesson-col"></div>
+  </div>
+
+</div>
+
+<!-- XP toasts -->
+<div id="toast-zone"></div>
+
+<!-- Lesson complete overlay -->
+<div id="complete-overlay">
+  <div class="ov-trophy">🏆</div>
+  <div class="ov-xp" id="ov-xp"></div>
+  <div class="ov-headline" id="ov-headline"></div>
+  <div class="ov-caveat">That was real work. It counts.</div>
+  <div class="ov-cta"><button class="btn btn-red" onclick="overlayDone()">Back to dashboard</button></div>
+</div>
+
+<script>
+/* ════════════════════════ STATE ════════════════════════ */
+
+const USER = {
+  name: "Alice",
+  businessName: "Alice's Sweet Sensations",
+  businessType: "Baked Goods",
+  logoInitials: "AS",
+  logoColor: "#7B2FBE",
+  level: 3,
+  xp: 840,
+  xpToNextLevel: 1200,
+  streak: 5,
+  completedModules: ["perfect-your-pitch"],
+  reviewModules: ["find-your-customer", "launch-plan"],
+  totalSales: 0,
+  storeViews: 12,
+  daysActive: 14
+};
+
+const LESSONS = [
+  { id: "perfect-your-pitch", title: "Perfect Your Pitch", description: "Learn what makes a great pitch and practice yours out loud.", icon: "🎤", color: "#E63946", status: "COMPLETED", xp: 200 },
+  { id: "price-it-right", title: "Price It Right", description: "Figure out what to charge so you make money and customers feel good paying.", icon: "💰", color: "#2D9F6E", status: "AVAILABLE", xp: 200 },
+  { id: "find-your-customer", title: "Who's Going to Buy From You?", description: "Work out exactly who your customers are and how to reach them.", icon: "🔍", color: "#F4A261", status: "FOR_REVIEW", xp: 200 },
+  { id: "launch-plan", title: "Tell the World", description: "Build a real marketing plan for your launch.", icon: "📣", color: "#7B2FBE", status: "FOR_REVIEW", xp: 250 },
+  { id: "customer-feedback", title: "What Do Your Customers Think?", description: "Find out what people really think about your business.", icon: "💬", color: "#E63946", status: "LOCKED", xp: 200 },
+  { id: "how-much-to-make", title: "How Much Do You Want to Make?", description: "Set a real sales goal and work out what it takes to hit it.", icon: "🎯", color: "#2D9F6E", status: "LOCKED", xp: 150 },
+  { id: "land-first-customer", title: "Land Your First Customer", description: "Get your first real sale — strategies from friends and family to strangers.", icon: "🤝", color: "#F4A261", status: "LOCKED", xp: 300 },
+  { id: "track-your-money", title: "Track Your Money", description: "Learn the basics of tracking what you earn and spend.", icon: "📊", color: "#7B2FBE", status: "LOCKED", xp: 200 },
+  { id: "think-like-inventor", title: "Think Like an Inventor", description: "Brainstorm new products and solve problems creatively.", icon: "💡", color: "#E63946", status: "LOCKED", xp: 200 },
+  { id: "keep-or-grow", title: "Keep It or Grow It?", description: "Decide whether to reinvest your profits or take them home.", icon: "🌱", color: "#2D9F6E", status: "LOCKED", xp: 250 }
+];
+
+const OTHER_BUSINESSES = [
+  { name: "Jake's Sticker Lab", type: "Stickers", emoji: "🎨", color: "#E63946", sales: 7 },
+  { name: "Maya's Jewels", type: "Jewelry", emoji: "💎", color: "#7B2FBE", sales: 3 },
+  { name: "Theo's Snack Co", type: "Snacks", emoji: "🍿", color: "#F4A261", sales: 12 },
+  { name: "Sofia's Skincare", type: "Skincare", emoji: "✨", color: "#2D9F6E", sales: 5 }
+];
+
+const TASKS = [
+  { id: "t1", title: "Share your store with someone", desc: "Tell a friend, family member, or neighbour about Alice's Sweet Sensations.", done: false },
+  { id: "t2", title: "Set your first sales goal", desc: "Decide how many cupcakes you want to sell this week.", done: false },
+  { id: "t3", title: "Pitch your parents", desc: "Practice your pitch and get them to support your business.", done: false }
+];
+
+/* per-lesson working state */
+const lessonState = {
+  "price-it-right": { ing: 4.50, pack: 0.80, rate: 8.00, hours: 0.5, cost: 0, price: 0, profit: 0 },
+  "find-your-customer": { age: "", hangout: "", reason: "", differentiator: "" },
+  "launch-plan": { when: null, family: [], friends: [], neighbours: [], channels: [] }
+};
+
+let currentLessonId = null;
+let currentStep = 0;
+let pendingCompleteLesson = null;
+let viewAnimating = false;
+
+const $ = (id) => document.getElementById(id);
+const fmt$ = (n) => "$" + n.toFixed(2);
+
+function escHTML(s){
+  return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+}
+
+/* ════════════════════════ XP / TOASTS ════════════════════════ */
+
+function refreshXPUI(animateFromZero){
+  $("hdr-level").textContent = `CEO • Lv.${USER.level}`;
+  $("hdr-streak").textContent = `🔥 ${USER.streak}`;
+  $("xp-amount").textContent = `${USER.xp} / ${USER.xpToNextLevel} XP`;
+  $("xp-lv-left").textContent = `Level ${USER.level}`;
+  $("xp-lv-right").textContent = `Level ${USER.level + 1}`;
+  const pct = Math.min(100, USER.xp / USER.xpToNextLevel * 100);
+  const fill = $("xp-fill");
+  if (animateFromZero){
+    fill.style.width = "0%";
+    requestAnimationFrame(() => requestAnimationFrame(() => { fill.style.width = pct + "%"; }));
+  } else {
+    fill.style.width = pct + "%";
+  }
+}
+
+function addXP(n){
+  USER.xp += n;
+  let levelled = false;
+  while (USER.xp >= USER.xpToNextLevel){
+    USER.xp -= USER.xpToNextLevel;
+    USER.level += 1;
+    levelled = true;
+  }
+  refreshXPUI(false);
+  if (levelled){
+    setTimeout(() => xpToast(`Level up! CEO Lv.${USER.level} 🎉`), 600);
+  }
+}
+
+function xpToast(text){
+  const el = document.createElement("div");
+  el.className = "xp-toast";
+  el.textContent = text;
+  $("toast-zone").appendChild(el);
+  setTimeout(() => el.remove(), 1600);
+}
+
+/* ════════════════════════ CONFETTI ════════════════════════ */
+
+function fireConfetti(){
+  const canvas = document.createElement("canvas");
+  canvas.id = "confetti-canvas";
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  document.body.appendChild(canvas);
+  const ctx = canvas.getContext("2d");
+  const colors = ["#E5341A", "#FFD93D", "#FFF8E7"];
+  const parts = [];
+  for (let i = 0; i < 90; i++){
+    parts.push({
+      x: canvas.width / 2 + (Math.random() - 0.5) * 120,
+      y: canvas.height * 0.55,
+      vx: (Math.random() - 0.5) * 14,
+      vy: -6 - Math.random() * 11,
+      size: 5 + Math.random() * 7,
+      rot: Math.random() * Math.PI * 2,
+      vr: (Math.random() - 0.5) * 0.4,
+      color: colors[i % 3]
+    });
+  }
+  const start = performance.now();
+  function frame(now){
+    const t = now - start;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    parts.forEach(p => {
+      p.x += p.vx; p.y += p.vy; p.vy += 0.45; p.rot += p.vr;
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot);
+      ctx.globalAlpha = Math.max(0, 1 - t / 1000);
+      ctx.fillStyle = p.color;
+      ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.6);
+      ctx.restore();
+    });
+    if (t < 1000){ requestAnimationFrame(frame); } else { canvas.remove(); }
+  }
+  requestAnimationFrame(frame);
+}
+
+/* ════════════════════════ DASHBOARD RENDER ════════════════════════ */
+
+function renderHeader(){
+  $("hdr-avatar").style.background = USER.logoColor;
+  $("hdr-avatar").textContent = USER.logoInitials;
+  $("hdr-bizname").textContent = USER.businessName;
+}
+
+function renderSnapshot(){
+  $("snap-avatar").style.background = USER.logoColor;
+  $("snap-avatar").textContent = USER.logoInitials;
+  $("snap-name").textContent = USER.businessName;
+  $("snap-type").textContent = USER.businessType;
+  $("snap-pills").innerHTML = [
+    `🛍 ${USER.totalSales} sales`,
+    `👀 ${USER.storeViews} store views`,
+    `📅 ${USER.daysActive} days active`
+  ].map(t => `<span class="stat-pill">${t}</span>`).join("");
+}
+
+function renderTasks(){
+  $("task-list").innerHTML = TASKS.map(t => `
+    <div class="task ${t.done ? "done" : ""}" id="task-${t.id}" onclick="completeTask('${t.id}')">
+      <div class="task-check">
+        <svg width="13" height="10" viewBox="0 0 14 11" fill="none">
+          <path d="M1.5 5.5L5.5 9.5L12.5 1.5" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="task-copy">
+        <div class="task-title">${escHTML(t.title)}</div>
+        <div class="task-desc">${escHTML(t.desc)}</div>
+      </div>
+      <div class="task-arrow">→</div>
+    </div>`).join("");
+}
+
+function completeTask(id){
+  const t = TASKS.find(x => x.id === id);
+  if (!t || t.done) return;
+  t.done = true;
+  const card = $("task-" + id);
+  card.classList.add("done");
+  xpToast("+50 XP");
+  addXP(50);
+  if (TASKS.every(x => x.done)){
+    setTimeout(fireConfetti, 350);
+  }
+}
+
+function badgeFor(status){
+  if (status === "COMPLETED") return `<span class="lbadge b-done">✓ Done</span>`;
+  if (status === "AVAILABLE") return `<span class="lbadge b-start">Start →</span>`;
+  if (status === "FOR_REVIEW") return `<span class="lbadge b-review">👁 Review</span>`;
+  return `<span class="lbadge b-locked">🔒 Coming soon</span>`;
+}
+
+function renderCarousel(){
+  $("lesson-carousel").innerHTML = LESSONS.map(l => {
+    const locked = (l.status === "LOCKED" || l.status === "COMING_SOON");
+    const cls = ["lcard"];
+    if (locked) cls.push("locked");
+    if (l.status === "FOR_REVIEW") cls.push("review");
+    if (l.status === "COMPLETED") cls.push("completed");
+    const click = locked ? "" : `onclick="openLesson('${l.id}')"`;
+    return `
+    <div class="${cls.join(" ")}" ${click}>
+      <div class="lcard-icon" style="background:${l.color}22;color:${l.color}">${l.icon}</div>
+      <div class="lcard-title">${escHTML(l.title)}</div>
+      <div class="lcard-desc">${escHTML(l.description)}</div>
+      ${badgeFor(l.status)}
+    </div>`;
+  }).join("");
+}
+
+function renderProgressBars(animate){
+  const done = LESSONS.filter(l => l.status === "COMPLETED").length;
+  $("pb-lessons-val").textContent = `${done} of ${LESSONS.length} lessons`;
+  const set = (id, pct) => {
+    const el = $(id);
+    if (animate){
+      requestAnimationFrame(() => requestAnimationFrame(() => { el.style.width = pct + "%"; }));
+    } else {
+      el.style.width = pct + "%";
+    }
+  };
+  set("pb-lessons", done / LESSONS.length * 100);
+  set("pb-health", 35);
+  set("pb-days", USER.daysActive);
+}
+
+function renderOtherBusinesses(){
+  $("biz-row").innerHTML = OTHER_BUSINESSES.map(b => `
+    <div class="bcard">
+      <div class="bcard-emoji" style="background:${b.color}22">${b.emoji}</div>
+      <div class="bcard-name">${escHTML(b.name)}</div>
+      <div class="bcard-type">${escHTML(b.type)}</div>
+      <span class="bcard-sales">${b.sales} sales</span>
+    </div>`).join("");
+}
+
+/* ════════════════════════ ROUTER / VIEW TRANSITIONS ════════════════════════ */
+
+function openLesson(id){
+  location.hash = "#lesson/" + id;
+}
+
+function goDashboard(){
+  location.hash = "#dashboard";
+}
+
+function switchView(showEl, hideEl, dir){
+  /* dir = 1 → forward (new view enters from right), -1 → back */
+  if (hideEl.classList.contains("offstage")){
+    showEl.classList.remove("offstage");
+    window.scrollTo(0, 0);
+    return;
+  }
+  viewAnimating = true;
+  hideEl.classList.add("anim-absolute");
+  showEl.classList.remove("offstage");
+  showEl.classList.add(dir === 1 ? "slide-in-from-right" : "slide-in-from-left");
+  window.scrollTo(0, 0);
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    hideEl.classList.add(dir === 1 ? "slide-out-left" : "slide-out-right");
+    showEl.classList.add("slide-in-active");
+    showEl.classList.remove("slide-in-from-right", "slide-in-from-left");
+  }));
+  setTimeout(() => {
+    hideEl.classList.add("offstage");
+    hideEl.classList.remove("anim-absolute", "slide-out-left", "slide-out-right");
+    showEl.classList.remove("slide-in-active");
+    viewAnimating = false;
+  }, 320);
+}
+
+function route(){
+  const hash = location.hash || "#dashboard";
+  const dash = $("view-dashboard");
+  const lesson = $("view-lesson");
+  const m = hash.match(/^#lesson\/([\w-]+)$/);
+  if (m){
+    renderLessonView(m[1]);
+    if (!dash.classList.contains("offstage")){
+      switchView(lesson, dash, 1);
+    } else {
+      lesson.classList.remove("offstage");
+      window.scrollTo(0, 0);
+    }
+  } else {
+    currentLessonId = null;
+    if (!lesson.classList.contains("offstage")){
+      switchView(dash, lesson, -1);
+    } else {
+      dash.classList.remove("offstage");
+    }
+    renderCarousel();
+    renderProgressBars(true);
+  }
+}
+
+window.addEventListener("hashchange", route);
+
+/* ════════════════════════ LESSON SHELL ════════════════════════ */
+
+function lessonShell(lesson, stepsHTML, stepCount){
+  return `
+  <div class="ltop">
+    <button class="lback" onclick="goDashboard()" aria-label="Back to dashboard">←</button>
+    <div class="ltitle">${escHTML(lesson.title)}</div>
+    <div class="lxp">+${lesson.xp} XP</div>
+  </div>
+  <div class="ldots" id="ldots">${Array.from({length: stepCount}, (_, i) =>
+    `<div class="ldot ${i === 0 ? "now" : ""}"></div>`).join("")}</div>
+  <div class="lsteps" id="lsteps">${stepsHTML}</div>`;
+}
+
+function voice(text){
+  return `<div class="voice"><div class="voice-label">STAND</div><div class="voice-text">${text}</div></div>`;
+}
+
+function setStep(n, dir){
+  const steps = document.querySelectorAll("#lsteps .lstep");
+  steps.forEach((s, i) => {
+    s.classList.remove("active", "from-left");
+    if (i === n){
+      s.classList.add("active");
+      if (dir === -1) s.classList.add("from-left");
+    }
+  });
+  const dots = document.querySelectorAll("#ldots .ldot");
+  dots.forEach((d, i) => {
+    d.classList.remove("now", "done");
+    if (i < n) d.classList.add("done");
+    if (i === n) d.classList.add("now");
+  });
+  currentStep = n;
+  window.scrollTo(0, 0);
+}
+
+function nextStep(){ setStep(currentStep + 1, 1); afterStepShow(); }
+function prevStep(){ setStep(currentStep - 1, -1); }
+
+function afterStepShow(){
+  const m = location.hash.match(/^#lesson\/([\w-]+)$/);
+  const id = currentLessonId || (m && m[1]);
+  if (id === "price-it-right" && currentStep === 2) renderPricingCard();
+  if (id === "find-your-customer" && currentStep === 2) renderCustomerCard();
+  if (id === "launch-plan" && currentStep === 3) renderLaunchPlanCard();
+}
+
+function renderLessonView(id){
+  currentLessonId = id;
+  currentStep = 0;
+  const lesson = LESSONS.find(l => l.id === id);
+  const col = $("lesson-col");
+  if (!lesson){
+    col.innerHTML = placeholderView({ title: "Lesson", xp: 0 }, "🔒", "This lesson is coming soon", "Check back after your next unlock.");
+    return;
+  }
+  if (lesson.status === "COMPLETED"){
+    col.innerHTML = placeholderView(lesson, "🏆", "You completed this lesson!", `You earned +${lesson.xp} XP for ${USER.businessName}. Nice work, ${USER.name}.`);
+    return;
+  }
+  if (id === "price-it-right"){ col.innerHTML = buildPriceItRight(lesson); setStep(0, 1); recalcPrice(); return; }
+  if (id === "find-your-customer"){ col.innerHTML = buildFindCustomer(lesson); setStep(0, 1); updateCustomerPreview(); return; }
+  if (id === "launch-plan"){ col.innerHTML = buildLaunchPlan(lesson); setStep(0, 1); updateWarmTotal(); updateChannelUI(); return; }
+  col.innerHTML = placeholderView(lesson, "🔒", "This lesson is coming soon", "We are still building this one. Check back soon!");
+}
+
+function placeholderView(lesson, emoji, headline, sub){
+  return `
+  <div class="ltop">
+    <button class="lback" onclick="goDashboard()" aria-label="Back to dashboard">←</button>
+    <div class="ltitle">${escHTML(lesson.title)}</div>
+    <div class="lxp">+${lesson.xp} XP</div>
+  </div>
+  <div class="done-state">
+    <div class="done-emoji">${emoji}</div>
+    <div class="done-h">${escHTML(headline)}</div>
+    <div class="done-sub">${escHTML(sub)}</div>
+  </div>
+  <button class="btn btn-black" onclick="goDashboard()">Back to dashboard</button>`;
+}
+
+/* ════════════════════════ LESSON: PRICE IT RIGHT (3 steps) ════════════════════════ */
+
+function buildPriceItRight(lesson){
+  const s = lessonState["price-it-right"];
+  const steps = `
+  <!-- Step 1: Hook -->
+  <div class="lstep active">
+    <div class="lstep-body">
+      ${voice(`Running a baked goods business means you need to charge the right price. Too cheap and you lose money. Too expensive and nobody buys. Let's find Alice's Sweet Sensations' sweet spot.`)}
+      <div class="hero-emoji">🏷️</div>
+      <div class="hero-prompt">Time to find your sweet spot.</div>
+    </div>
+    <div class="lstep-cta"><button class="btn btn-red" onclick="nextStep()">Let's do it →</button></div>
+  </div>
+
+  <!-- Step 2: Calculator -->
+  <div class="lstep">
+    <div class="lstep-body">
+      ${voice(`<span id="pir-voice">Type in your numbers and watch the price find itself.</span>`)}
+      <h2 class="lh">What does one cupcake actually cost you?</h2>
+      <div class="fblock">
+        <div class="flabel">Ingredients per batch</div>
+        <div class="frow"><span class="fsym">$</span><input class="fin" id="pir-ing" type="number" step="0.10" min="0" value="${s.ing.toFixed(2)}" oninput="recalcPrice()"></div>
+        <div class="fnote">We treat one batch as 12 cupcakes.</div>
+      </div>
+      <div class="fblock">
+        <div class="flabel">Packaging per unit</div>
+        <div class="frow"><span class="fsym">$</span><input class="fin" id="pir-pack" type="number" step="0.10" min="0" value="${s.pack.toFixed(2)}" oninput="recalcPrice()"></div>
+      </div>
+      <div class="f2col-wrap">
+        <div class="flabel" style="margin-bottom:8px">Your time (per hour, how many hours?)</div>
+        <div class="f2col">
+          <div class="fblock">
+            <div class="flabel">Hourly rate</div>
+            <div class="frow"><span class="fsym">$</span><input class="fin" id="pir-rate" type="number" step="0.50" min="0" value="${s.rate.toFixed(2)}" oninput="recalcPrice()"></div>
+          </div>
+          <span class="fx">×</span>
+          <div class="fblock">
+            <div class="flabel">Hours per batch</div>
+            <div class="frow"><input class="fin" id="pir-hours" type="number" step="0.25" min="0" value="${s.hours}" oninput="recalcPrice()"></div>
+          </div>
+        </div>
+      </div>
+      <div class="calc-out">
+        <div class="calc-line"><span class="calc-k">Your cost</span><span class="calc-v" id="pir-cost">$0.00</span></div>
+        <div class="calc-line"><span class="calc-k">Suggested price</span><span class="calc-v big" id="pir-price">$0.00</span></div>
+      </div>
+      <span class="profit-pill" id="pir-profit">Profit per sale: $0.00</span>
+    </div>
+    <div class="lstep-cta"><button class="btn btn-red" id="pir-cta" onclick="nextStep()">That's my price →</button></div>
+  </div>
+
+  <!-- Step 3: Output -->
+  <div class="lstep">
+    <div class="lstep-body">
+      ${voice(`<span id="pir-voice-3"></span>`)}
+      <div class="asset-card" id="pir-card" style="background:${USER.logoColor}">
+        <div class="asset-biz">Alice's Sweet Sensations</div>
+        <div class="asset-line">My price: <span class="asset-big" id="pir-card-price">$0.00</span></div>
+        <div class="asset-line">My profit per sale: <span class="asset-big" id="pir-card-profit">$0.00</span></div>
+        <div class="asset-foot">Built with STAND</div>
+      </div>
+      <button class="save-btn" id="pir-save" onclick="savePricingCard()">Save this card</button>
+    </div>
+    <div class="lstep-cta"><button class="btn btn-red" onclick="finishLesson('price-it-right')">Complete lesson →</button></div>
+  </div>`;
+  return lessonShell(lesson, steps, 3);
+}
+
+function recalcPrice(){
+  const s = lessonState["price-it-right"];
+  s.ing = parseFloat($("pir-ing") && $("pir-ing").value) || 0;
+  s.pack = parseFloat($("pir-pack") && $("pir-pack").value) || 0;
+  s.rate = parseFloat($("pir-rate") && $("pir-rate").value) || 0;
+  s.hours = parseFloat($("pir-hours") && $("pir-hours").value) || 0;
+  /* per-unit cost: ingredients + labour spread over a 12-cupcake batch, plus per-unit packaging */
+  const cost = (s.ing + s.rate * s.hours) / 12 + s.pack;
+  const price = Math.max(0.5, Math.round(cost * 2.5 / 0.5) * 0.5);
+  const profit = price - cost;
+  const margin = price > 0 ? profit / price : 0;
+  s.cost = cost; s.price = price; s.profit = profit;
+
+  const costEl = $("pir-cost"), priceEl = $("pir-price");
+  if (!costEl) return;
+  costEl.textContent = fmt$(cost);
+  priceEl.textContent = fmt$(price);
+  priceEl.classList.remove("pop");
+  void priceEl.offsetWidth;
+  priceEl.classList.add("pop");
+  $("pir-profit").textContent = "Profit per sale: " + fmt$(profit);
+
+  const v = $("pir-voice");
+  if (v){
+    if (margin < 0.30){
+      v.textContent = "Hmm, that's tight. You'd be working really hard for not much profit.";
+    } else if (margin <= 0.60){
+      v.textContent = "That's a solid price. You'll make real money and customers will think it's fair.";
+    } else {
+      v.textContent = "Wow, great margins! Make sure it still feels like good value to your customers.";
+    }
+  }
+}
+
+function renderPricingCard(){
+  const s = lessonState["price-it-right"];
+  $("pir-card-price").textContent = fmt$(s.price);
+  $("pir-card-profit").textContent = fmt$(s.profit);
+  $("pir-voice-3").textContent = `That's your pricing locked in, Alice. ${fmt$(s.price)} per cupcake — and you keep ${fmt$(s.profit)} every time you sell one. That's real money.`;
+}
+
+function savePricingCard(){
+  const s = lessonState["price-it-right"];
+  const text = `${USER.businessName} — Pricing Card\nMy price: ${fmt$(s.price)}\nMy profit per sale: ${fmt$(s.profit)}\nBuilt with STAND`;
+  copyText(text, $("pir-save"));
+}
+
+/* ════════════════════════ LESSON: WHO'S GOING TO BUY FROM YOU? (3 steps) ════════════════════════ */
+
+function buildFindCustomer(lesson){
+  const steps = `
+  <!-- Step 1: Hook -->
+  <div class="lstep active">
+    <div class="lstep-body">
+      ${voice(`Every great business knows exactly who their customer is. Not 'everyone' — a real, specific person. Let's figure out who's going to love Alice's Sweet Sensations.`)}
+      <div class="hero-emoji">🔍</div>
+      <div class="hero-prompt">Picture your ideal customer.<br>Who is this person?</div>
+    </div>
+    <div class="lstep-cta"><button class="btn btn-red" onclick="nextStep()">I'm thinking... →</button></div>
+  </div>
+
+  <!-- Step 2: Profile builder -->
+  <div class="lstep">
+    <div class="lstep-body">
+      ${voice(`<span id="fyc-voice">Answer all four and your customer comes into focus.</span>`)}
+      <h2 class="lh">Build your customer profile</h2>
+      <div class="fblock">
+        <div class="flabel">How old are they?</div>
+        <input class="fin-text" id="fyc-age" type="text" placeholder="like, 25-40 year olds?" oninput="updateCustomerPreview()">
+      </div>
+      <div class="fblock">
+        <div class="flabel">Where do they hang out?</div>
+        <input class="fin-text" id="fyc-hangout" type="text" placeholder="school events, markets, Instagram?" oninput="updateCustomerPreview()">
+      </div>
+      <div class="fblock">
+        <div class="flabel">Why do they want baked goods?</div>
+        <input class="fin-text" id="fyc-reason" type="text" placeholder="birthdays, treats for the office, gifts?" oninput="updateCustomerPreview()">
+      </div>
+      <div class="fblock">
+        <div class="flabel">What would make them choose YOU over a shop?</div>
+        <input class="fin-text" id="fyc-diff" type="text" placeholder="homemade, personal touch, fun packaging?" oninput="updateCustomerPreview()">
+      </div>
+      <div class="preview-panel">
+        <div class="preview-label">Your customer</div>
+        <div class="preview-text" id="fyc-preview"></div>
+      </div>
+    </div>
+    <div class="lstep-cta"><button class="btn btn-red" id="fyc-cta" onclick="nextStep()" disabled>That's them →</button></div>
+  </div>
+
+  <!-- Step 3: Output -->
+  <div class="lstep">
+    <div class="lstep-body">
+      ${voice(`Now you know who you're selling to, Alice. That changes everything — your photos, your captions, where you show up. It all targets this person.`)}
+      <div class="asset-card" style="background:#F4A261">
+        <div class="asset-biz">Alice's Customer</div>
+        <div class="asset-para" id="fyc-card-para"></div>
+        <div class="asset-sec-label">Where to find them</div>
+        <div id="fyc-card-places"></div>
+        <div class="asset-foot">Built with STAND</div>
+      </div>
+      <button class="save-btn" id="fyc-save" onclick="saveCustomerCard()">Save this card</button>
+    </div>
+    <div class="lstep-cta"><button class="btn btn-red" onclick="finishLesson('find-your-customer')">Complete lesson →</button></div>
+  </div>`;
+  return lessonShell(lesson, steps, 3);
+}
+
+function fycSummary(s){
+  const ph = (v, fallback) => v ? escHTML(v) : `<span class="ph">${fallback}</span>`;
+  return `Your ideal customer is ${ph(s.age, "[age]")} who hangs out at ${ph(s.hangout, "[where]")}. They want baked goods for ${ph(s.reason, "[reason]")}. They'd choose Alice's Sweet Sensations because ${ph(s.differentiator, "[differentiator]")}.`;
+}
+
+function updateCustomerPreview(){
+  const s = lessonState["find-your-customer"];
+  if (!$("fyc-age")) return;
+  s.age = $("fyc-age").value.trim();
+  s.hangout = $("fyc-hangout").value.trim();
+  s.reason = $("fyc-reason").value.trim();
+  s.differentiator = $("fyc-diff").value.trim();
+  $("fyc-preview").innerHTML = fycSummary(s);
+  const allFilled = s.age && s.hangout && s.reason && s.differentiator;
+  $("fyc-cta").disabled = !allFilled;
+  if (allFilled){
+    $("fyc-voice").textContent = "That's a real customer. That's someone you can find and sell to.";
+  }
+}
+
+function customerPlaces(hangout){
+  const h = hangout.toLowerCase();
+  const out = [];
+  if (h.includes("instagram") || h.includes("insta") || h.includes("tiktok")) out.push("Post on Instagram stories");
+  if (h.includes("market") || h.includes("fair")) out.push("Set up at a local market or fair");
+  if (h.includes("school")) out.push("Talk to parents at school pickup");
+  if (out.length < 2) out.push("Tell friends and family first");
+  if (out.length < 2) out.push("Set up at a local market or fair");
+  return out.slice(0, 2);
+}
+
+function renderCustomerCard(){
+  const s = lessonState["find-your-customer"];
+  $("fyc-card-para").innerHTML = fycSummary(s);
+  $("fyc-card-places").innerHTML = customerPlaces(s.hangout).map(p => `<div class="asset-li">• ${escHTML(p)}</div>`).join("");
+}
+
+function saveCustomerCard(){
+  const s = lessonState["find-your-customer"];
+  const places = customerPlaces(s.hangout);
+  const text = `Alice's Customer\nYour ideal customer is ${s.age} who hangs out at ${s.hangout}. They want baked goods for ${s.reason}. They'd choose Alice's Sweet Sensations because ${s.differentiator}.\nWhere to find them: ${places.join("; ")}\nBuilt with STAND`;
+  copyText(text, $("fyc-save"));
+}
+
+/* ════════════════════════ LESSON: TELL THE WORLD (4 steps) ════════════════════════ */
+
+const LAUNCH_OPTIONS = [
+  { id: "week", label: "This week — I'm ready now!", days: 7 },
+  { id: "twoweeks", label: "In 2 weeks — I want to prep first", days: 14 },
+  { id: "month", label: "Next month — I want to do this properly", days: 30 }
+];
+
+const CHANNELS = [
+  { id: "social", emoji: "📸", name: "Instagram/TikTok", desc: "Post about your launch" },
+  { id: "whatsapp", emoji: "💬", name: "WhatsApp/text", desc: "Message your list directly" },
+  { id: "email", emoji: "📧", name: "Email", desc: "Send a launch email" },
+  { id: "school", emoji: "🏫", name: "School", desc: "Tell people at school" },
+  { id: "local", emoji: "🏘", name: "Local community", desc: "Nextdoor, community groups" },
+  { id: "inperson", emoji: "🎤", name: "In person", desc: "Tell people face to face" }
+];
+
+function buildLaunchPlan(lesson){
+  const steps = `
+  <!-- Step 1: Hook + when -->
+  <div class="lstep active">
+    <div class="lstep-body">
+      ${voice(`You built the business. Now people need to know it exists. A launch plan isn't complicated — it's just deciding who you're going to tell, how, and when.`)}
+      <h2 class="lh">When do you want to launch Alice's Sweet Sensations?</h2>
+      <div id="lp-options">${LAUNCH_OPTIONS.map(o =>
+        `<div class="opt-card" id="lp-opt-${o.id}" onclick="pickLaunchWhen('${o.id}')">${escHTML(o.label)}</div>`).join("")}</div>
+    </div>
+    <div class="lstep-cta"><button class="btn btn-red" id="lp-cta-1" onclick="nextStep()" disabled>Let's plan it →</button></div>
+  </div>
+
+  <!-- Step 2: Warm list -->
+  <div class="lstep">
+    <div class="lstep-body">
+      ${voice(`These are your first customers. Before you go anywhere else, these are the people who want you to succeed.`)}
+      <h2 class="lh">Start with the people who already love you.</h2>
+      ${["family", "friends", "neighbours"].map(cat => `
+      <div class="chip-group">
+        <div class="chip-cat">${cat === "neighbours" ? "Neighbours / local" : cat.charAt(0).toUpperCase() + cat.slice(1)}</div>
+        <div class="chips" id="lp-chips-${cat}"></div>
+        <div class="chip-add-row">
+          <input class="chip-in" id="lp-in-${cat}" type="text" placeholder="Add a name..." onkeydown="if(event.key==='Enter'){addWarmName('${cat}');event.preventDefault()}">
+          <button class="chip-plus" id="lp-plus-${cat}" onclick="addWarmName('${cat}')" aria-label="Add name">+</button>
+        </div>
+      </div>`).join("")}
+      <div class="warm-total" id="lp-total"></div>
+    </div>
+    <div class="lstep-cta"><button class="btn btn-red" onclick="nextStep()">Now for the bigger world →</button></div>
+  </div>
+
+  <!-- Step 3: Channels -->
+  <div class="lstep">
+    <div class="lstep-body">
+      ${voice(`<span id="lp-chan-voice">Pick at least two channels — a launch needs a few angles.</span>`)}
+      <h2 class="lh">How will you tell people?</h2>
+      <div class="chan-grid">${CHANNELS.map(c => `
+        <div class="chan-card" id="lp-chan-${c.id}" onclick="toggleChannel('${c.id}')">
+          <div class="chan-emoji">${c.emoji}</div>
+          <div class="chan-name">${escHTML(c.name)}</div>
+          <div class="chan-desc">${escHTML(c.desc)}</div>
+        </div>`).join("")}</div>
+    </div>
+    <div class="lstep-cta"><button class="btn btn-red" id="lp-cta-3" onclick="nextStep()" disabled>Build my plan →</button></div>
+  </div>
+
+  <!-- Step 4: Output -->
+  <div class="lstep">
+    <div class="lstep-body">
+      ${voice(`That's a real launch plan. You know who you're telling, how you're telling them, and when. That's more planning than most adults do.`)}
+      <div class="asset-card" style="background:#7B2FBE">
+        <div class="asset-biz">Alice's Sweet Sensations — Launch Plan</div>
+        <div class="asset-line">Launch date: <span class="asset-big" id="lp-card-date"></span></div>
+        <div class="asset-line" id="lp-card-warm"></div>
+        <div class="asset-line" id="lp-card-channels"></div>
+        <div class="asset-sec-label">The plan</div>
+        <div class="asset-para" id="lp-card-para"></div>
+        <div class="asset-foot">Built with STAND</div>
+      </div>
+      <button class="save-btn" id="lp-save" onclick="saveLaunchPlan()">Save this plan</button>
+    </div>
+    <div class="lstep-cta"><button class="btn btn-red" onclick="finishLesson('launch-plan')">Complete lesson →</button></div>
+  </div>`;
+  return lessonShell(lesson, steps, 4);
+}
+
+function pickLaunchWhen(id){
+  const s = lessonState["launch-plan"];
+  s.when = id;
+  LAUNCH_OPTIONS.forEach(o => {
+    $("lp-opt-" + o.id).classList.toggle("sel", o.id === id);
+  });
+  $("lp-cta-1").disabled = false;
+}
+
+function addWarmName(cat){
+  const s = lessonState["launch-plan"];
+  const input = $("lp-in-" + cat);
+  const name = input.value.trim();
+  if (!name) return;
+  if (s[cat].length >= 5) return;
+  s[cat].push(name);
+  input.value = "";
+  $("lp-chips-" + cat).innerHTML = s[cat].map(n => `<span class="chip">${escHTML(n)}</span>`).join("");
+  if (s[cat].length >= 5){
+    $("lp-plus-" + cat).disabled = true;
+    input.disabled = true;
+    input.placeholder = "That's the limit — 5 max!";
+  }
+  updateWarmTotal();
+}
+
+function updateWarmTotal(){
+  const s = lessonState["launch-plan"];
+  const n = s.family.length + s.friends.length + s.neighbours.length;
+  const el = $("lp-total");
+  if (el) el.textContent = `You've got ${n} ${n === 1 ? "person" : "people"} ready to hear about your launch.`;
+}
+
+function toggleChannel(id){
+  const s = lessonState["launch-plan"];
+  const i = s.channels.indexOf(id);
+  if (i >= 0){ s.channels.splice(i, 1); } else { s.channels.push(id); }
+  updateChannelUI();
+}
+
+function updateChannelUI(){
+  const s = lessonState["launch-plan"];
+  if (!$("lp-chan-voice")) return;
+  CHANNELS.forEach(c => {
+    $("lp-chan-" + c.id).classList.toggle("sel", s.channels.includes(c.id));
+  });
+  const n = s.channels.length;
+  const v = $("lp-chan-voice");
+  if (n <= 1){
+    v.textContent = "Pick at least one more — a launch needs a few angles.";
+  } else if (n <= 3){
+    v.textContent = "Good mix. That'll reach different people.";
+  } else {
+    v.textContent = "You're going big! Make sure you can actually follow through on all of these.";
+  }
+  $("lp-cta-3").disabled = n < 2;
+}
+
+function launchDateString(){
+  const s = lessonState["launch-plan"];
+  const opt = LAUNCH_OPTIONS.find(o => o.id === s.when) || LAUNCH_OPTIONS[0];
+  const d = new Date(Date.now() + opt.days * 86400000);
+  return d.toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
+}
+
+function joinAnd(arr){
+  if (arr.length <= 1) return arr.join("");
+  return arr.slice(0, -1).join(", ") + " and " + arr[arr.length - 1];
+}
+
+function launchPlanData(){
+  const s = lessonState["launch-plan"];
+  const warm = [...s.family, ...s.friends, ...s.neighbours];
+  const chans = CHANNELS.filter(c => s.channels.includes(c.id)).map(c => c.name);
+  const date = launchDateString();
+  const warmNames = warm.length ? warm.slice(0, 4).join(", ") + (warm.length > 4 ? ` and ${warm.length - 4} more` : "") : "your warm list";
+  const firstChans = chans.slice(0, Math.max(1, Math.ceil(chans.length / 2)));
+  const restChans = chans.slice(firstChans.length);
+  let para = `On ${date}, Alice's Sweet Sensations launches. First up: ${warmNames} hear about it via ${joinAnd(firstChans)}.`;
+  if (restChans.length){
+    para += ` Then ${restChans.length === 1 ? restChans[0] + " goes" : joinAnd(restChans) + " go"} live to reach new customers.`;
+  }
+  return { warm, chans, date, para };
+}
+
+function renderLaunchPlanCard(){
+  const d = launchPlanData();
+  $("lp-card-date").textContent = d.date;
+  $("lp-card-warm").textContent = `Warm list: ${d.warm.length} ${d.warm.length === 1 ? "person" : "people"}`;
+  $("lp-card-channels").textContent = `Channels: ${d.chans.join(", ")}`;
+  $("lp-card-para").textContent = d.para;
+}
+
+function saveLaunchPlan(){
+  const d = launchPlanData();
+  const text = `Alice's Sweet Sensations — Launch Plan\nLaunch date: ${d.date}\nWarm list: ${d.warm.length} people${d.warm.length ? " (" + d.warm.join(", ") + ")" : ""}\nChannels: ${d.chans.join(", ")}\n\n${d.para}\n\nBuilt with STAND`;
+  copyText(text, $("lp-save"));
+}
+
+/* ════════════════════════ CLIPBOARD ════════════════════════ */
+
+function copyText(text, btn){
+  const done = () => {
+    if (!btn) return;
+    const orig = btn.textContent;
+    btn.textContent = "Copied!";
+    setTimeout(() => { btn.textContent = orig; }, 1500);
+  };
+  if (navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(done).catch(() => fallbackCopy(text, done));
+  } else {
+    fallbackCopy(text, done);
+  }
+}
+
+function fallbackCopy(text, done){
+  const ta = document.createElement("textarea");
+  ta.value = text;
+  ta.style.position = "fixed";
+  ta.style.opacity = "0";
+  document.body.appendChild(ta);
+  ta.select();
+  try { document.execCommand("copy"); } catch(e){}
+  ta.remove();
+  done();
+}
+
+/* ════════════════════════ LESSON COMPLETION ════════════════════════ */
+
+function finishLesson(id){
+  const lesson = LESSONS.find(l => l.id === id);
+  pendingCompleteLesson = lesson;
+  $("ov-xp").textContent = `+${lesson.xp} XP earned!`;
+  $("ov-headline").textContent = `${USER.businessName} just levelled up`;
+  $("complete-overlay").classList.add("show");
+}
+
+function overlayDone(){
+  const lesson = pendingCompleteLesson;
+  pendingCompleteLesson = null;
+  $("complete-overlay").classList.remove("show");
+  if (lesson && lesson.status !== "COMPLETED"){
+    lesson.status = "COMPLETED";
+    if (!USER.completedModules.includes(lesson.id)) USER.completedModules.push(lesson.id);
+    goDashboard();
+    setTimeout(() => {
+      xpToast(`+${lesson.xp} XP`);
+      addXP(lesson.xp);
+    }, 380);
+  } else {
+    goDashboard();
+  }
+}
+
+/* ════════════════════════ INIT ════════════════════════ */
+
+function init(){
+  renderHeader();
+  renderSnapshot();
+  renderTasks();
+  renderCarousel();
+  renderOtherBusinesses();
+  refreshXPUI(true);
+  renderProgressBars(true);
+  if (!location.hash) location.hash = "#dashboard";
+  route();
+}
+
+document.addEventListener("DOMContentLoaded", init);
+</script>
+</body>
+</html>
