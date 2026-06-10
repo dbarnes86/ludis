@@ -53,7 +53,38 @@ html,body{font-family:'Manrope',sans-serif;background:#FFF8E7;color:#1A1A1A;over
   background:#1A1A1A;color:#FFF8E7;white-space:nowrap;
 }
 .hdr-streak{background:#FFD93D;color:#1A1A1A}
+.hdr-avatar-wrap{position:relative;flex:none}
+.hdr-badge-bub{
+  position:absolute;bottom:-5px;right:-7px;width:18px;height:18px;border-radius:50%;
+  background:#FFF8E7;border:1.5px solid rgba(26,26,26,.15);
+  display:flex;align-items:center;justify-content:center;font-size:10px;line-height:1;
+  cursor:pointer;
+}
 @media(max-width:480px){.hdr-bizname{max-width:110px}.hdr-wordmark{font-size:20px}}
+
+/* ── BADGES ── */
+.sec-note{font-size:11px;font-weight:700;color:rgba(26,26,26,.4);margin-left:10px}
+.badge-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+@media(min-width:720px){.badge-grid{grid-template-columns:repeat(8,1fr)}}
+.badge-tile{
+  background:#fff;border:2px solid rgba(26,26,26,.07);border-radius:16px;
+  padding:14px 6px 12px;text-align:center;cursor:pointer;position:relative;
+  transition:border-color .15s,transform .12s,box-shadow .15s;
+}
+.badge-tile:not(.locked):hover{border-color:#1A1A1A}
+.badge-tile:not(.locked):active{transform:scale(.95)}
+.badge-tile.equipped{border-color:#E5341A;border-width:2.5px;box-shadow:0 4px 0 rgba(229,52,26,.25)}
+.badge-tile.locked{opacity:.45;cursor:default;background:transparent;border-style:dashed}
+.badge-emoji{font-size:28px;line-height:1;margin-bottom:8px}
+.badge-tile.locked .badge-emoji{filter:grayscale(1)}
+.badge-name{font-family:'Bagel Fat One',system-ui,sans-serif;font-size:10px;line-height:1.2;margin-bottom:4px}
+.badge-req{font-size:9px;font-weight:600;color:rgba(26,26,26,.45);line-height:1.3}
+.badge-on{
+  position:absolute;top:-7px;left:50%;transform:translateX(-50%);
+  background:#E5341A;color:#FFF8E7;font-size:8px;font-weight:800;
+  letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:999px;
+  white-space:nowrap;
+}
 
 /* ── XP BAR ── */
 .xp-wrap{margin-bottom:24px}
@@ -445,7 +476,10 @@ html,body{font-family:'Manrope',sans-serif;background:#FFF8E7;color:#1A1A1A;over
       <header class="hdr dsec d1">
         <div class="hdr-wordmark">STAND</div>
         <div class="hdr-biz">
-          <div class="hdr-avatar" id="hdr-avatar">AS</div>
+          <div class="hdr-avatar-wrap">
+            <div class="hdr-avatar" id="hdr-avatar">AS</div>
+            <span class="hdr-badge-bub" id="hdr-badge-bub" onclick="scrollToBadges()"></span>
+          </div>
           <div class="hdr-bizname" id="hdr-bizname"></div>
         </div>
         <div class="hdr-right">
@@ -501,11 +535,21 @@ html,body{font-family:'Manrope',sans-serif;background:#FFF8E7;color:#1A1A1A;over
             <div class="pbar-labels"><span class="pbar-name">Business health score</span><span class="pbar-val">Building 🔨</span></div>
             <div class="pbar-track"><div class="pbar-fill" id="pb-health" style="background:#F4A261"></div></div>
           </div>
+          <div class="pbar-row">
+            <div class="pbar-labels"><span class="pbar-name">Daily streak</span><span class="pbar-val" id="pb-streak-val"></span></div>
+            <div class="pbar-track"><div class="pbar-fill" id="pb-streak" style="background:#E63946"></div></div>
+          </div>
           <div class="pbar-row" style="margin-bottom:0">
-            <div class="pbar-labels"><span class="pbar-name">Days active</span><span class="pbar-val">14 days on Stand 🔥</span></div>
+            <div class="pbar-labels"><span class="pbar-name">Days on Stand</span><span class="pbar-val" id="pb-days-val"></span></div>
             <div class="pbar-track"><div class="pbar-fill" id="pb-days" style="background:#2D9F6E"></div></div>
           </div>
         </div>
+      </section>
+
+      <!-- 6b. My Badges -->
+      <section class="dsec d6" id="badges-section">
+        <h2 class="sec-h">My Badges<span class="sec-note">Tap one to show it off on your profile</span></h2>
+        <div class="badge-grid" id="badge-grid"></div>
       </section>
 
       <!-- 7. Other businesses -->
@@ -553,8 +597,22 @@ const USER = {
   reviewModules: ["customer-feedback", "how-much-to-make", "launch-plan"],
   totalSales: 0,
   storeViews: 12,
-  daysActive: 14
+  daysActive: 14,
+  equippedBadge: "streak-5"
 };
+
+/* Earned flags derive from USER state so the data stays consistent:
+   1 lesson done, level 3, 5-day streak, 14 days active, 0 sales. */
+const BADGES = [
+  { id: "first-lesson", name: "Pitch Perfect", emoji: "🎤", req: "Complete your first lesson", earned: true },
+  { id: "level-3", name: "CEO Level 3", emoji: "👑", req: "Reach Level 3", earned: true },
+  { id: "streak-5", name: "On Fire", emoji: "🔥", req: "5-day streak", earned: true },
+  { id: "two-weeks", name: "Open for Business", emoji: "🌱", req: "Two weeks on Stand", earned: true },
+  { id: "first-sale", name: "First Sale", emoji: "🛍", req: "Make your first sale", earned: false },
+  { id: "streak-10", name: "Unstoppable", emoji: "⚡", req: "10-day streak", earned: false },
+  { id: "level-5", name: "CEO Level 5", emoji: "🚀", req: "Reach Level 5", earned: false },
+  { id: "graduate", name: "Graduate", emoji: "🎓", req: "Finish all 10 lessons", earned: false }
+];
 
 const LESSONS = [
   { id: "perfect-your-pitch", title: "Perfect Your Pitch", description: "Learn what makes a great pitch and practice yours out loud.", icon: "🎤", color: "#E63946", status: "COMPLETED", xp: 200 },
@@ -689,6 +747,45 @@ function renderHeader(){
   $("hdr-avatar").style.background = USER.logoColor;
   $("hdr-avatar").textContent = USER.logoInitials;
   $("hdr-bizname").textContent = USER.businessName;
+  const badge = BADGES.find(b => b.id === USER.equippedBadge);
+  const bub = $("hdr-badge-bub");
+  if (badge){
+    bub.textContent = badge.emoji;
+    bub.title = badge.name + " — " + badge.req;
+    bub.style.display = "flex";
+  } else {
+    bub.style.display = "none";
+  }
+}
+
+function renderBadges(){
+  $("badge-grid").innerHTML = BADGES.map(b => {
+    const equipped = b.earned && b.id === USER.equippedBadge;
+    const cls = ["badge-tile"];
+    if (!b.earned) cls.push("locked");
+    if (equipped) cls.push("equipped");
+    return `
+    <div class="${cls.join(" ")}" ${b.earned ? `onclick="equipBadge('${b.id}')"` : ""}>
+      ${equipped ? `<span class="badge-on">Showing</span>` : ""}
+      <div class="badge-emoji">${b.emoji}</div>
+      <div class="badge-name">${escHTML(b.name)}</div>
+      <div class="badge-req">${b.earned ? escHTML(b.req) : "🔒 " + escHTML(b.req)}</div>
+    </div>`;
+  }).join("");
+}
+
+function equipBadge(id){
+  const badge = BADGES.find(b => b.id === id);
+  if (!badge || !badge.earned || USER.equippedBadge === id) return;
+  USER.equippedBadge = id;
+  renderBadges();
+  renderHeader();
+  xpToast(`${badge.emoji} ${badge.name} is now on your profile`);
+}
+
+function scrollToBadges(){
+  const el = $("badges-section");
+  if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
 }
 
 function renderSnapshot(){
@@ -771,6 +868,9 @@ function renderProgressBars(animate){
   };
   set("pb-lessons", done / LESSONS.length * 100);
   set("pb-health", 35);
+  $("pb-streak-val").textContent = `🔥 ${USER.streak} days in a row`;
+  set("pb-streak", Math.min(100, USER.streak / 30 * 100));
+  $("pb-days-val").textContent = `📅 ${USER.daysActive} days`;
   set("pb-days", USER.daysActive);
 }
 
@@ -1400,6 +1500,7 @@ function init(){
   renderSnapshot();
   renderTasks();
   renderCarousel();
+  renderBadges();
   renderOtherBusinesses();
   refreshXPUI(true);
   renderProgressBars(true);
