@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Alice's Sweet Sensations — Powered by STAND</title>
+<title>Store — Powered by STAND</title>
 <link href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Manrope:wght@400;500;600;700;800&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -21,7 +21,7 @@ html,body{min-height:100%;font-family:'Manrope',sans-serif;background:#1A1A1A}
 .powered .stand{font-family:'Bagel Fat One',system-ui,sans-serif;font-size:13px;color:#E5341A;letter-spacing:0;text-transform:none}
 
 /* ── HERO ── */
-.hero{background:#E5341A;padding:36px 24px 32px;text-align:center;position:relative}
+.hero{background:#E5341A;padding:36px 24px 32px;text-align:center;position:relative;transition:background .2s}
 .hero-avatar{
   width:72px;height:72px;border-radius:50%;background:#7B2FBE;color:#FFF8E7;
   font-family:'Bagel Fat One',system-ui,sans-serif;font-size:26px;
@@ -35,6 +35,10 @@ html,body{min-height:100%;font-family:'Manrope',sans-serif;background:#1A1A1A}
   background:rgba(0,0,0,.18);color:#FFF8E7;font-size:11px;font-weight:700;
   padding:6px 12px;border-radius:14px;
 }
+/* dark-text variant for light brand colours (e.g. amber) */
+.hero.dark .hero-name{color:#1A1A1A}
+.hero.dark .hero-tag{color:rgba(26,26,26,.7)}
+.hero.dark .hero-pill{background:rgba(26,26,26,.12);color:#1A1A1A}
 
 /* ── MENU ── */
 .menu{padding:28px 20px 140px;flex:1}
@@ -71,6 +75,20 @@ html,body{min-height:100%;font-family:'Manrope',sans-serif;background:#1A1A1A}
 }
 .step-btn:active{transform:scale(.92)}
 .step-qty{font-family:'Bagel Fat One',system-ui,sans-serif;font-size:18px;color:#1A1A1A;min-width:18px;text-align:center}
+
+/* ── OTHER STORES STRIP ── */
+.other-stores{padding:0 20px 28px}
+.os-h{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(26,26,26,.4);margin-bottom:12px}
+.os-row{display:flex;gap:10px;overflow-x:auto;padding-bottom:6px;-webkit-overflow-scrolling:touch}
+.os-card{
+  flex-shrink:0;display:flex;align-items:center;gap:8px;text-decoration:none;
+  background:#FFF;border:2px solid rgba(26,26,26,.07);border-radius:14px;padding:10px 14px;
+  transition:border-color .15s,transform .12s;
+}
+.os-card:active{transform:scale(.97)}
+.os-card:hover{border-color:#1A1A1A}
+.os-emoji{font-size:20px}
+.os-name{font-family:'Bagel Fat One',system-ui,sans-serif;font-size:12px;color:#1A1A1A;white-space:nowrap}
 
 /* ── CART BAR ── */
 .cart-bar{
@@ -135,7 +153,7 @@ html,body{min-height:100%;font-family:'Manrope',sans-serif;background:#1A1A1A}
 .confirm{
   position:fixed;inset:0;background:#FFD93D;z-index:60;display:flex;flex-direction:column;
   align-items:center;justify-content:center;text-align:center;padding:32px 24px;
-  opacity:0;pointer-events:none;transition:opacity .3s;
+  opacity:0;pointer-events:none;transition:opacity .3s;overflow-y:auto;
 }
 .confirm.show{opacity:1;pointer-events:all}
 .confirm-inner{max-width:480px;width:100%;display:flex;flex-direction:column;align-items:center}
@@ -173,25 +191,26 @@ html,body{min-height:100%;font-family:'Manrope',sans-serif;background:#1A1A1A}
 <div class="shell">
 
   <div class="topbar">
-    <a class="back-link" href="./index.html#dashboard">← Back to my dashboard</a>
+    <a class="back-link" href="./index.html#dashboard">← Back to dashboard</a>
     <div class="powered">Powered by <span class="stand">STAND</span></div>
   </div>
 
-  <div class="hero">
-    <div class="hero-avatar">AS</div>
-    <h1 class="bagel hero-name">Alice's Sweet Sensations</h1>
-    <p class="caveat hero-tag">Homemade cupcakes, baked with love.</p>
-    <div class="hero-pills">
-      <span class="hero-pill">🧁 Baked Goods</span>
-      <span class="hero-pill">⭐ Kid-run business</span>
-      <span class="hero-pill">📍 Local pickup</span>
-    </div>
+  <div class="hero" id="hero">
+    <div class="hero-avatar" id="hero-avatar"></div>
+    <h1 class="bagel hero-name" id="hero-name"></h1>
+    <p class="caveat hero-tag" id="hero-tag"></p>
+    <div class="hero-pills" id="hero-pills"></div>
   </div>
 
   <div class="menu">
-    <h2 class="menu-h">The menu</h2>
-    <p class="menu-sub">Tap + to add cupcakes to your order.</p>
+    <h2 class="menu-h" id="menu-h">The menu</h2>
+    <p class="menu-sub" id="menu-sub"></p>
     <div class="products" id="products"></div>
+  </div>
+
+  <div class="other-stores">
+    <div class="os-h">Visit other kids on Stand</div>
+    <div class="os-row" id="os-row"></div>
   </div>
 
   <div class="store-foot">This store was built by a kid CEO on <span class="stand">STAND</span></div>
@@ -214,11 +233,11 @@ html,body{min-height:100%;font-family:'Manrope',sans-serif;background:#1A1A1A}
   <div class="order-lines" id="order-lines"></div>
   <div class="form-field">
     <div class="ff-label">Your name</div>
-    <input class="ff-input" id="o-name" type="text" placeholder="Who should Alice make these for?" oninput="checkForm()">
+    <input class="ff-input" id="o-name" type="text" placeholder="" oninput="checkForm()">
   </div>
   <div class="form-field">
-    <div class="ff-label">Anything Alice should know?</div>
-    <textarea class="ff-input" id="o-note" rows="2" placeholder="Allergies, a birthday message, pickup time..."></textarea>
+    <div class="ff-label" id="note-label">Anything to know?</div>
+    <textarea class="ff-input" id="o-note" rows="2" placeholder=""></textarea>
   </div>
   <button class="btn btn-red" id="place-btn" onclick="placeOrder()" disabled>Place my order</button>
 </div>
@@ -226,19 +245,19 @@ html,body{min-height:100%;font-family:'Manrope',sans-serif;background:#1A1A1A}
 <!-- confirmation -->
 <div class="confirm" id="confirm">
   <div class="confirm-inner">
-    <div class="confirm-emoji">🧁</div>
+    <div class="confirm-emoji" id="confirm-emoji">🧁</div>
     <h2 class="confirm-h">Order placed!</h2>
-    <p class="confirm-caveat">Alice just made her next sale.</p>
+    <p class="confirm-caveat" id="confirm-caveat"></p>
     <div class="receipt">
       <div class="receipt-head">
         <div class="receipt-tag">Order confirmation</div>
-        <div class="receipt-biz">Alice's Sweet Sensations</div>
+        <div class="receipt-biz" id="receipt-biz"></div>
       </div>
       <div class="receipt-body" id="receipt-body"></div>
-      <div class="receipt-foot" id="receipt-foot">Thanks! Alice will be in touch.</div>
+      <div class="receipt-foot" id="receipt-foot"></div>
     </div>
     <div class="confirm-actions">
-      <button class="btn btn-black" onclick="resetStore()">Order more cupcakes</button>
+      <button class="btn btn-black" id="more-btn" onclick="resetStore()">Order more</button>
       <a class="btn btn-ghost" href="./index.html#dashboard" style="text-decoration:none">Back to dashboard</a>
     </div>
   </div>
@@ -247,16 +266,134 @@ html,body{min-height:100%;font-family:'Manrope',sans-serif;background:#1A1A1A}
 <script>
 (function(){
 
-var PRODUCTS = [
-  { id: "classic", name: "Classic Vanilla", desc: "Fluffy vanilla sponge with buttercream swirl.", emoji: "🧁", bg: "#FDE8E6", price: 4.00 },
-  { id: "choc", name: "Double Chocolate", desc: "Rich cocoa sponge, chocolate frosting on top.", emoji: "🍫", bg: "#F3E8FB", price: 4.50 },
-  { id: "berry", name: "Strawberry Surprise", desc: "Strawberry sponge with a jam centre.", emoji: "🍓", bg: "#FDEEDC", price: 4.50 },
-  { id: "rainbow", name: "Rainbow Party Box", desc: "Six mini cupcakes in six colours. Party-ready.", emoji: "🌈", bg: "#E6F4EC", price: 12.00 }
-];
+var BUSINESSES = {
+  alice: {
+    name: "Alice's Sweet Sensations",
+    owner: "Alice", their: "her",
+    initials: "AS", avatarColor: "#7B2FBE", brandColor: "#E5341A", heroDark: false,
+    tagline: "Homemade cupcakes, baked with love.",
+    typePill: "🧁 Baked Goods",
+    menuSub: "Tap + to add cupcakes to your order.",
+    emoji: "🧁",
+    products: [
+      { id: "classic", name: "Classic Vanilla", desc: "Fluffy vanilla sponge with buttercream swirl.", emoji: "🧁", bg: "#FDE8E6", price: 4.00 },
+      { id: "choc", name: "Double Chocolate", desc: "Rich cocoa sponge, chocolate frosting on top.", emoji: "🍫", bg: "#F3E8FB", price: 4.50 },
+      { id: "berry", name: "Strawberry Surprise", desc: "Strawberry sponge with a jam centre.", emoji: "🍓", bg: "#FDEEDC", price: 4.50 },
+      { id: "rainbow", name: "Rainbow Party Box", desc: "Six mini cupcakes in six colours. Party-ready.", emoji: "🌈", bg: "#E6F4EC", price: 12.00 }
+    ]
+  },
+  jake: {
+    name: "Jake's Sticker Lab",
+    owner: "Jake", their: "his",
+    initials: "JS", avatarColor: "#1A1A1A", brandColor: "#E63946", heroDark: false,
+    tagline: "Stickers for everything you own.",
+    typePill: "🎨 Stickers",
+    menuSub: "Tap + to add stickers to your order.",
+    emoji: "🎨",
+    products: [
+      { id: "holo", name: "Holographic Pack", desc: "Ten shiny holographic stickers that catch the light.", emoji: "✨", bg: "#F3E8FB", price: 3.00 },
+      { id: "name", name: "Custom Name Sticker", desc: "Your name in Jake's signature bubble style.", emoji: "✏️", bg: "#FDE8E6", price: 2.50 },
+      { id: "laptop", name: "Laptop Mega Pack", desc: "Twenty-five stickers to cover a whole laptop lid.", emoji: "💻", bg: "#E6F4EC", price: 6.00 },
+      { id: "mystery", name: "Mystery Sticker Bag", desc: "Eight surprise stickers. No two bags the same.", emoji: "🎁", bg: "#FDEEDC", price: 4.00 }
+    ]
+  },
+  maya: {
+    name: "Maya's Jewels",
+    owner: "Maya", their: "her",
+    initials: "MJ", avatarColor: "#1A1A1A", brandColor: "#7B2FBE", heroDark: false,
+    tagline: "Handmade jewellery, made to sparkle.",
+    typePill: "💎 Jewelry",
+    menuSub: "Tap + to add pieces to your order.",
+    emoji: "💎",
+    products: [
+      { id: "bracelet", name: "Beaded Bracelet", desc: "Hand-strung glass beads. Pick any colour combo.", emoji: "📿", bg: "#F3E8FB", price: 5.00 },
+      { id: "necklace", name: "Friendship Necklace Set", desc: "Two matching halves — one for you, one for them.", emoji: "💞", bg: "#FDE8E6", price: 8.00 },
+      { id: "anklet", name: "Charm Anklet", desc: "Delicate chain with three hand-picked charms.", emoji: "🐚", bg: "#E6F4EC", price: 6.50 },
+      { id: "ring", name: "Custom Initial Ring", desc: "Wire-wrapped ring with the letter of your choice.", emoji: "💍", bg: "#FDEEDC", price: 7.00 }
+    ]
+  },
+  theo: {
+    name: "Theo's Snack Co",
+    owner: "Theo", their: "his",
+    initials: "TS", avatarColor: "#1A1A1A", brandColor: "#F4A261", heroDark: true,
+    tagline: "Snacks so good they sell themselves.",
+    typePill: "🍿 Snacks",
+    menuSub: "Tap + to add snacks to your order.",
+    emoji: "🍿",
+    products: [
+      { id: "trailmix", name: "Trail Mix Bag", desc: "Nuts, raisins and chocolate chips. The classic.", emoji: "🥜", bg: "#FDEEDC", price: 3.50 },
+      { id: "popcorn", name: "Sweet & Spicy Popcorn", desc: "Theo's secret seasoning. Mildly famous locally.", emoji: "🍿", bg: "#FDE8E6", price: 4.00 },
+      { id: "cookies", name: "Choc-Chip Cookie 3-Pack", desc: "Baked fresh, slightly gooey in the middle.", emoji: "🍪", bg: "#F3E8FB", price: 5.00 },
+      { id: "bundle", name: "Snack Box Bundle", desc: "One of everything in a box. Movie night sorted.", emoji: "📦", bg: "#E6F4EC", price: 10.00 }
+    ]
+  },
+  sofia: {
+    name: "Sofia's Skincare",
+    owner: "Sofia", their: "her",
+    initials: "SS", avatarColor: "#1A1A1A", brandColor: "#2D9F6E", heroDark: false,
+    tagline: "Gentle skincare, made by hand.",
+    typePill: "✨ Skincare",
+    menuSub: "Tap + to add products to your order.",
+    emoji: "✨",
+    products: [
+      { id: "balm", name: "Honey Lip Balm", desc: "Beeswax and honey. Small batch, big shine.", emoji: "🍯", bg: "#FDEEDC", price: 4.00 },
+      { id: "scrub", name: "Sugar Scrub Jar", desc: "Brown sugar and coconut oil hand scrub.", emoji: "🥥", bg: "#E6F4EC", price: 7.00 },
+      { id: "bath", name: "Lavender Bath Salts", desc: "Relaxing lavender salts in a glass jar.", emoji: "💜", bg: "#F3E8FB", price: 6.00 },
+      { id: "giftset", name: "Self-Care Gift Set", desc: "All three products in a ribboned gift box.", emoji: "🎀", bg: "#FDE8E6", price: 15.00 }
+    ]
+  }
+};
 
-var cart = {}; // id -> qty
+var bizId = new URLSearchParams(window.location.search).get("biz") || "alice";
+if (!BUSINESSES[bizId]) bizId = "alice";
+var BIZ = BUSINESSES[bizId];
+
+var cart = {}; // product id -> qty
 
 function money(n){ return "$" + n.toFixed(2); }
+
+function renderStore(){
+  document.title = BIZ.name + " — Powered by STAND";
+
+  var hero = document.getElementById("hero");
+  hero.style.background = BIZ.brandColor;
+  hero.classList.toggle("dark", BIZ.heroDark);
+
+  var avatar = document.getElementById("hero-avatar");
+  avatar.textContent = BIZ.initials;
+  avatar.style.background = BIZ.avatarColor;
+
+  document.getElementById("hero-name").textContent = BIZ.name;
+  document.getElementById("hero-tag").textContent = BIZ.tagline;
+  document.getElementById("hero-pills").innerHTML =
+    '<span class="hero-pill">' + BIZ.typePill + '</span>'
+    + '<span class="hero-pill">⭐ Kid-run business</span>'
+    + '<span class="hero-pill">📍 Local pickup</span>';
+
+  document.getElementById("menu-sub").textContent = BIZ.menuSub;
+  document.getElementById("o-name").placeholder = "Who should " + BIZ.owner + " make these for?";
+  document.getElementById("note-label").textContent = "Anything " + BIZ.owner + " should know?";
+  document.getElementById("o-note").placeholder = "Allergies, a special request, pickup time...";
+  document.getElementById("confirm-emoji").textContent = BIZ.emoji;
+  document.getElementById("confirm-caveat").textContent = BIZ.owner + " just made " + BIZ.their + " next sale.";
+  document.getElementById("receipt-biz").textContent = BIZ.name;
+
+  renderOtherStores();
+  renderProducts();
+}
+
+function renderOtherStores(){
+  var html = "";
+  Object.keys(BUSINESSES).forEach(function(id){
+    if (id === bizId) return;
+    var b = BUSINESSES[id];
+    html += '<a class="os-card" href="./store.html?biz=' + id + '">'
+      + '<span class="os-emoji">' + b.emoji + '</span>'
+      + '<span class="os-name">' + b.name + '</span>'
+      + '</a>';
+  });
+  document.getElementById("os-row").innerHTML = html;
+}
 
 function cartCount(){
   var t = 0;
@@ -265,13 +402,13 @@ function cartCount(){
 }
 function cartTotal(){
   var t = 0;
-  PRODUCTS.forEach(function(p){ if (cart[p.id]) t += cart[p.id] * p.price; });
+  BIZ.products.forEach(function(p){ if (cart[p.id]) t += cart[p.id] * p.price; });
   return t;
 }
 
 function renderProducts(){
   var html = "";
-  PRODUCTS.forEach(function(p){
+  BIZ.products.forEach(function(p){
     var qty = cart[p.id] || 0;
     html += '<div class="product' + (qty > 0 ? ' in-cart' : '') + '" id="prod-' + p.id + '">'
       + '<div class="p-emoji" style="background:' + p.bg + '">' + p.emoji + '</div>'
@@ -322,7 +459,7 @@ function updateCartBar(){
 
 function openSheet(){
   var html = "";
-  PRODUCTS.forEach(function(p){
+  BIZ.products.forEach(function(p){
     if (!cart[p.id]) return;
     html += '<div class="order-line">'
       + '<span><span class="ol-qty">' + cart[p.id] + '×</span>' + p.name + '</span>'
@@ -354,13 +491,14 @@ function placeOrder(){
   var note = document.getElementById("o-note").value.trim();
 
   var html = "";
-  PRODUCTS.forEach(function(p){
+  BIZ.products.forEach(function(p){
     if (!cart[p.id]) return;
     html += '<div class="receipt-row"><span>' + cart[p.id] + '× ' + p.name + '</span><span>' + money(cart[p.id] * p.price) + '</span></div>';
   });
   html += '<div class="receipt-row r-total"><span>Total</span><span>' + money(cartTotal()) + '</span></div>';
   document.getElementById("receipt-body").innerHTML = html;
-  document.getElementById("receipt-foot").textContent = "Thanks, " + name + "! Alice will be in touch" + (note ? " — she got your note." : ".");
+  document.getElementById("receipt-foot").textContent =
+    "Thanks, " + name + "! " + BIZ.owner + " will be in touch" + (note ? " — " + (BIZ.their === "her" ? "she" : "he") + " got your note." : ".");
 
   closeSheet();
   document.getElementById("confirm").classList.add("show");
@@ -377,7 +515,7 @@ function resetStore(){
 }
 window.resetStore = resetStore;
 
-renderProducts();
+renderStore();
 
 })();
 </script>

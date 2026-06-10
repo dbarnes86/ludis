@@ -183,6 +183,14 @@ html,body{font-family:'Manrope',sans-serif;background:#FFF8E7;color:#1A1A1A;over
 .bcard{
   width:150px;flex:none;background:#fff;border-radius:18px;padding:16px 14px;
   border:2px solid rgba(26,26,26,.07);text-align:center;
+  display:block;text-decoration:none;color:#1A1A1A;cursor:pointer;
+  transition:border-color .15s,transform .12s;
+}
+.bcard:hover{border-color:#1A1A1A}
+.bcard:active{transform:scale(.97)}
+.bcard-visit{
+  display:block;margin-top:10px;font-size:10px;font-weight:800;
+  letter-spacing:.08em;text-transform:uppercase;color:#E5341A;
 }
 .bcard-emoji{
   width:48px;height:48px;border-radius:50%;margin:0 auto 10px;font-size:24px;
@@ -558,10 +566,10 @@ const LESSONS = [
 ];
 
 const OTHER_BUSINESSES = [
-  { name: "Jake's Sticker Lab", type: "Stickers", emoji: "🎨", color: "#E63946", sales: 7 },
-  { name: "Maya's Jewels", type: "Jewelry", emoji: "💎", color: "#7B2FBE", sales: 3 },
-  { name: "Theo's Snack Co", type: "Snacks", emoji: "🍿", color: "#F4A261", sales: 12 },
-  { name: "Sofia's Skincare", type: "Skincare", emoji: "✨", color: "#2D9F6E", sales: 5 }
+  { id: "jake", name: "Jake's Sticker Lab", type: "Stickers", emoji: "🎨", color: "#E63946", sales: 7 },
+  { id: "maya", name: "Maya's Jewels", type: "Jewelry", emoji: "💎", color: "#7B2FBE", sales: 3 },
+  { id: "theo", name: "Theo's Snack Co", type: "Snacks", emoji: "🍿", color: "#F4A261", sales: 12 },
+  { id: "sofia", name: "Sofia's Skincare", type: "Skincare", emoji: "✨", color: "#2D9F6E", sales: 5 }
 ];
 
 const TASKS = [
@@ -763,12 +771,13 @@ function renderProgressBars(animate){
 
 function renderOtherBusinesses(){
   $("biz-row").innerHTML = OTHER_BUSINESSES.map(b => `
-    <div class="bcard">
+    <a class="bcard" href="./store.html?biz=${b.id}">
       <div class="bcard-emoji" style="background:${b.color}22">${b.emoji}</div>
       <div class="bcard-name">${escHTML(b.name)}</div>
       <div class="bcard-type">${escHTML(b.type)}</div>
       <span class="bcard-sales">${b.sales} sales</span>
-    </div>`).join("");
+      <span class="bcard-visit">Visit store →</span>
+    </a>`).join("");
 }
 
 /* ════════════════════════ ROUTER / VIEW TRANSITIONS ════════════════════════ */
