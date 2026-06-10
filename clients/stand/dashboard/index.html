@@ -85,6 +85,16 @@ html,body{font-family:'Manrope',sans-serif;background:#FFF8E7;color:#1A1A1A;over
   letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:999px;
   white-space:nowrap;
 }
+.badge-tier{
+  font-size:8px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;
+  margin-top:6px;
+}
+.tier-bronze{color:#A0653A}
+.tier-silver{color:#8a8f98}
+.tier-gold{color:#c9a800}
+.tier-legend{color:#7B2FBE}
+.badge-tile.just-earned{animation:badgePop .6s cubic-bezier(.34,1.56,.64,1)}
+@keyframes badgePop{0%{transform:scale(.6)}55%{transform:scale(1.12)}100%{transform:scale(1)}}
 
 /* ── XP BAR ── */
 .xp-wrap{margin-bottom:24px}
@@ -598,28 +608,35 @@ const USER = {
   totalSales: 0,
   storeViews: 12,
   daysActive: 14,
-  equippedBadge: "streak-5"
+  equippedBadge: "on-fire"
 };
 
-/* Earned flags derive from USER state so the data stays consistent:
-   1 lesson done, level 3, 5-day streak, 14 days active, 0 sales. */
+/* Badge set follows the STAND Gamification Framework (Badge System sheet).
+   Earned flags derive from USER state: business built, brand done, store live,
+   Perfect Your Pitch complete, level 3, 5-day streak, 0 sales. */
 const BADGES = [
-  { id: "first-lesson", name: "Pitch Perfect", emoji: "🎤", req: "Complete your first lesson", earned: true },
-  { id: "level-3", name: "CEO Level 3", emoji: "👑", req: "Reach Level 3", earned: true },
-  { id: "streak-5", name: "On Fire", emoji: "🔥", req: "5-day streak", earned: true },
-  { id: "two-weeks", name: "Open for Business", emoji: "🌱", req: "Two weeks on Stand", earned: true },
-  { id: "first-sale", name: "First Sale", emoji: "🛍", req: "Make your first sale", earned: false },
-  { id: "streak-10", name: "Unstoppable", emoji: "⚡", req: "10-day streak", earned: false },
-  { id: "level-5", name: "CEO Level 5", emoji: "🚀", req: "Reach Level 5", earned: false },
-  { id: "graduate", name: "Graduate", emoji: "🎓", req: "Finish all 10 lessons", earned: false }
+  { id: "idea-starter", name: "Idea Starter", emoji: "💡", req: "Choose your business idea", tier: "bronze", earned: true },
+  { id: "brand-builder", name: "Brand Builder", emoji: "🎨", req: "Build your brand", tier: "silver", earned: true },
+  { id: "store-opener", name: "Store Opener", emoji: "🛍", req: "Put your store live", tier: "gold", earned: true },
+  { id: "pitch-pro", name: "Pitch Pro", emoji: "🎤", req: "Complete Perfect Your Pitch", tier: "silver", earned: true },
+  { id: "on-fire", name: "On Fire", emoji: "🔥", req: "3-day streak", tier: "bronze", earned: true },
+  { id: "parent-pitcher", name: "Parent Pitcher", emoji: "🗣", req: "Pitch your parents", tier: "bronze", earned: false },
+  { id: "price-master", name: "Price Master", emoji: "💰", req: "Complete Price It Right", tier: "silver", earned: false },
+  { id: "marketing-mind", name: "Marketing Mind", emoji: "📣", req: "Complete Tell the World", tier: "silver", earned: false },
+  { id: "week-warrior", name: "Week Warrior", emoji: "⚡", req: "7-day streak", tier: "silver", earned: false },
+  { id: "first-sale", name: "First Sale!", emoji: "💸", req: "Make your first real sale", tier: "gold", earned: false },
+  { id: "money-mind", name: "Money Mind", emoji: "📊", req: "Complete Track Your Money", tier: "silver", earned: false },
+  { id: "stand-legend", name: "STAND Legend", emoji: "🏆", req: "Reach Level 10", tier: "legend", earned: false }
 ];
+
+/* Lessons that award a skill badge on completion (framework: module badge fires when lesson finishes) */
+const LESSON_BADGES = { "price-it-right": "price-master", "launch-plan": "marketing-mind", "track-your-money": "money-mind" };
 
 const LESSONS = [
   { id: "perfect-your-pitch", title: "Perfect Your Pitch", description: "Learn what makes a great pitch and practice yours out loud.", icon: "🎤", color: "#E63946", status: "COMPLETED", xp: 200 },
   { id: "price-it-right", title: "Price It Right", description: "Figure out what to charge so you make money and customers feel good paying.", icon: "💰", color: "#2D9F6E", status: "AVAILABLE", xp: 200 },
   { id: "how-much-to-make", title: "How Much Do You Want to Make?", description: "Set a real sales goal and work out what it takes to hit it.", icon: "🎯", color: "#2D9F6E", status: "FOR_REVIEW", xp: 150, format: "📝 Quick form", external: "../prototypes/goal-setting/index.html" },
-  { id: "find-your-customer", title: "Who's Going to Buy From You?", description: "Work out exactly who your customers are and how to reach them.", icon: "🔍", color: "#F4A261", status: "LOCKED", xp: 200 },
-  { id: "launch-plan", title: "Tell the World", description: "Build a real marketing plan for your launch.", icon: "📣", color: "#7B2FBE", status: "FOR_REVIEW", xp: 250, format: "✍️ Form + free text", external: "../prototypes/marketing/v3-marketing-module.html" },
+  { id: "launch-plan", title: "Tell the World", description: "Work out who your customer is, where to find them, and build your launch kit.", icon: "📣", color: "#7B2FBE", status: "FOR_REVIEW", xp: 250, format: "✍️ Form + free text", external: "../prototypes/marketing/v3-marketing-module.html" },
   { id: "customer-feedback", title: "What Do Your Customers Think?", description: "Find out what people really think about your business.", icon: "💬", color: "#E63946", status: "FOR_REVIEW", xp: 200, format: "🎥 Video lesson", external: "../prototypes/customer-feedback/index.html" },
   { id: "land-first-customer", title: "Land Your First Customer", description: "Get your first real sale — strategies from friends and family to strangers.", icon: "🤝", color: "#F4A261", status: "LOCKED", xp: 300 },
   { id: "track-your-money", title: "Track Your Money", description: "Learn the basics of tracking what you earn and spend.", icon: "📊", color: "#7B2FBE", status: "LOCKED", xp: 200 },
@@ -765,11 +782,12 @@ function renderBadges(){
     if (!b.earned) cls.push("locked");
     if (equipped) cls.push("equipped");
     return `
-    <div class="${cls.join(" ")}" ${b.earned ? `onclick="equipBadge('${b.id}')"` : ""}>
+    <div class="${cls.join(" ")}" id="badge-${b.id}" ${b.earned ? `onclick="equipBadge('${b.id}')"` : ""}>
       ${equipped ? `<span class="badge-on">Showing</span>` : ""}
       <div class="badge-emoji">${b.emoji}</div>
       <div class="badge-name">${escHTML(b.name)}</div>
       <div class="badge-req">${b.earned ? escHTML(b.req) : "🔒 " + escHTML(b.req)}</div>
+      <div class="badge-tier tier-${b.tier}">${b.tier}</div>
     </div>`;
   }).join("");
 }
@@ -781,6 +799,21 @@ function equipBadge(id){
   renderBadges();
   renderHeader();
   xpToast(`${badge.emoji} ${badge.name} is now on your profile`);
+}
+
+/* Milestone callout: badge earned mid-session (framework: "badge pop" reward moment) */
+function awardBadge(id){
+  const badge = BADGES.find(b => b.id === id);
+  if (!badge || badge.earned) return;
+  badge.earned = true;
+  renderBadges();
+  fireConfetti();
+  xpToast(`${badge.emoji} Badge earned: ${badge.name}!`);
+  const tile = $("badge-" + id);
+  if (tile){
+    tile.classList.add("just-earned");
+    setTimeout(() => tile.classList.remove("just-earned"), 1200);
+  }
 }
 
 function scrollToBadges(){
@@ -822,8 +855,10 @@ function completeTask(id){
   t.done = true;
   const card = $("task-" + id);
   card.classList.add("done");
-  xpToast("+50 XP");
-  addXP(50);
+  xpToast("+40 XP");
+  addXP(40);
+  /* Milestone badge: "Pitch your parents" task awards Parent Pitcher (framework badge #14) */
+  if (id === "t3") setTimeout(() => awardBadge("parent-pitcher"), 700);
   if (TASKS.every(x => x.done)){
     setTimeout(fireConfetti, 350);
   }
@@ -1487,6 +1522,7 @@ function overlayDone(){
     setTimeout(() => {
       xpToast(`+${lesson.xp} XP`);
       addXP(lesson.xp);
+      if (LESSON_BADGES[lesson.id]) setTimeout(() => awardBadge(LESSON_BADGES[lesson.id]), 800);
     }, 380);
   } else {
     goDashboard();
