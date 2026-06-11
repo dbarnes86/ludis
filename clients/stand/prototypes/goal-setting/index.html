@@ -100,6 +100,7 @@ html,body{height:100%;font-family:'Manrope',sans-serif;background:#1A1A1A;overfl
 .field-in::-webkit-outer-spin-button,
 .field-in::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
 .field-in::placeholder{color:rgba(26,26,26,.2)}
+.field-hint{font-size:11px;font-weight:600;color:#1a7a35;margin-top:8px}
 
 /* result block */
 .result-block{
@@ -201,8 +202,9 @@ html,body{height:100%;font-family:'Manrope',sans-serif;background:#1A1A1A;overfl
         <div class="field-qlabel">My product sells for...</div>
         <div class="field-input-row">
           <span class="field-sym">$</span>
-          <input class="field-in" id="f-price" type="number" min="0.01" max="9999" step="0.01" placeholder="5" oninput="recalc()">
+          <input class="field-in" id="f-price" type="number" min="0.01" max="9999" step="0.01" placeholder="5" value="4" oninput="recalc()">
         </div>
+        <div class="field-hint">✓ Filled in from your pricing lesson — change it if you like</div>
       </div>
 
       <div class="result-block">
@@ -314,6 +316,7 @@ function recalc(){
   }
 }
 window.recalc = recalc;
+recalc();
 
 function populateCard(){
   var g = state.goal || parseFloat(document.getElementById('f-goal').value) || 0;

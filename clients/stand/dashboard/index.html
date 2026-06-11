@@ -129,8 +129,13 @@ html,body{font-family:'Manrope',sans-serif;background:#FFF8E7;color:#1A1A1A;over
 .snap-product:hover{border-color:#1A1A1A}
 .snap-product:active{transform:scale(.98)}
 .prod-thumb{
-  width:46px;height:46px;border-radius:12px;background:#FDE8E6;font-size:24px;flex:none;
+  width:54px;height:54px;border-radius:14px;background:#FDE8E6;font-size:28px;flex:none;
   display:flex;align-items:center;justify-content:center;border:2px solid rgba(26,26,26,.08);
+}
+.prod-info{flex:1;min-width:0}
+.prod-made{
+  font-family:'Caveat',cursive;font-weight:700;font-size:19px;color:#E5341A;
+  flex:none;transform:rotate(-3deg);
 }
 .prod-label{font-size:9px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:rgba(26,26,26,.4)}
 .prod-name{font-family:'Bagel Fat One',system-ui,sans-serif;font-size:14px;margin-top:1px}
@@ -855,10 +860,11 @@ function renderSnapshot(){
   $("snap-product").innerHTML = `
     <div class="prod-thumb">${p.emoji}</div>
     <div class="prod-info">
-      <div class="prod-label">Your product</div>
+      <div class="prod-label">Your first product</div>
       <div class="prod-name">${escHTML(p.name)}</div>
       <div class="prod-meta">$${p.price.toFixed(2)} · made in ${escHTML(p.madeIn)}</div>
-    </div>`;
+    </div>
+    <div class="prod-made caveat">You made this! →</div>`;
 }
 
 function renderTasks(){

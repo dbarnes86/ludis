@@ -35,6 +35,20 @@ html,body{min-height:100%;font-family:'Manrope',sans-serif;background:#1A1A1A}
   background:rgba(0,0,0,.18);color:#FFF8E7;font-size:11px;font-weight:700;
   padding:6px 12px;border-radius:14px;
 }
+.hero-owner-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  background:#FFF8E7;color:#1A1A1A;font-size:11px;font-weight:800;
+  padding:5px 12px;border-radius:999px;margin-bottom:12px;
+  box-shadow:0 3px 0 rgba(0,0,0,.18);
+}
+.hero-owner-badge .tier{
+  font-size:8px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  padding:2px 6px;border-radius:999px;background:rgba(26,26,26,.08);
+}
+.hero-owner-badge .tier-bronze{color:#A0653A}
+.hero-owner-badge .tier-silver{color:#6b7077}
+.hero-owner-badge .tier-gold{color:#9c8200}
+.hero-owner-badge .tier-legend{color:#7B2FBE}
 /* dark-text variant for light brand colours (e.g. amber) */
 .hero.dark .hero-name{color:#1A1A1A}
 .hero.dark .hero-tag{color:rgba(26,26,26,.7)}
@@ -197,6 +211,7 @@ html,body{min-height:100%;font-family:'Manrope',sans-serif;background:#1A1A1A}
 
   <div class="hero" id="hero">
     <div class="hero-avatar" id="hero-avatar"></div>
+    <div class="hero-owner-badge" id="hero-owner-badge"></div>
     <h1 class="bagel hero-name" id="hero-name"></h1>
     <p class="caveat hero-tag" id="hero-tag"></p>
     <div class="hero-pills" id="hero-pills"></div>
@@ -272,6 +287,7 @@ var BUSINESSES = {
     owner: "Alice", their: "her",
     initials: "AS", avatarColor: "#7B2FBE", brandColor: "#E5341A", heroDark: false,
     tagline: "Homemade cupcakes, baked with love.",
+    badge: { emoji: "🔥", name: "On Fire", tier: "bronze" },
     typePill: "🧁 Baked Goods",
     menuSub: "Tap + to add cupcakes to your order.",
     emoji: "🧁",
@@ -287,6 +303,7 @@ var BUSINESSES = {
     owner: "Jake", their: "his",
     initials: "JS", avatarColor: "#1A1A1A", brandColor: "#E63946", heroDark: false,
     tagline: "Stickers for everything you own.",
+    badge: { emoji: "🟣", name: "Iridescent CEO", tier: "legend" },
     typePill: "🎨 Stickers",
     menuSub: "Tap + to add stickers to your order.",
     emoji: "🎨",
@@ -302,6 +319,7 @@ var BUSINESSES = {
     owner: "Maya", their: "her",
     initials: "MJ", avatarColor: "#1A1A1A", brandColor: "#7B2FBE", heroDark: false,
     tagline: "Handmade jewellery, made to sparkle.",
+    badge: { emoji: "💎", name: "Gem Crafter", tier: "silver" },
     typePill: "💎 Jewelry",
     menuSub: "Tap + to add pieces to your order.",
     emoji: "💎",
@@ -317,6 +335,7 @@ var BUSINESSES = {
     owner: "Theo", their: "his",
     initials: "TS", avatarColor: "#1A1A1A", brandColor: "#F4A261", heroDark: true,
     tagline: "Snacks so good they sell themselves.",
+    badge: { emoji: "⚡", name: "Week Warrior", tier: "gold" },
     typePill: "🍿 Snacks",
     menuSub: "Tap + to add snacks to your order.",
     emoji: "🍿",
@@ -332,6 +351,7 @@ var BUSINESSES = {
     owner: "Sofia", their: "her",
     initials: "SS", avatarColor: "#1A1A1A", brandColor: "#2D9F6E", heroDark: false,
     tagline: "Gentle skincare, made by hand.",
+    badge: { emoji: "🌿", name: "Eco Maker", tier: "silver" },
     typePill: "✨ Skincare",
     menuSub: "Tap + to add products to your order.",
     emoji: "✨",
@@ -365,6 +385,9 @@ function renderStore(){
 
   document.getElementById("hero-name").textContent = BIZ.name;
   document.getElementById("hero-tag").textContent = BIZ.tagline;
+  document.getElementById("hero-owner-badge").innerHTML =
+    '<span>' + BIZ.badge.emoji + '</span><span>' + BIZ.owner + ' · ' + BIZ.badge.name + '</span>'
+    + '<span class="tier tier-' + BIZ.badge.tier + '">' + BIZ.badge.tier + '</span>';
   document.getElementById("hero-pills").innerHTML =
     '<span class="hero-pill">' + BIZ.typePill + '</span>'
     + '<span class="hero-pill">⭐ Kid-run business</span>'
