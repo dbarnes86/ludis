@@ -183,6 +183,54 @@ html,body{font-family:'Manrope',sans-serif;background:#FFF8E7;color:#1A1A1A;over
 .task-desc{font-size:13px;font-weight:500;color:rgba(26,26,26,.55);line-height:1.45}
 .task-arrow{flex:none;font-size:16px;color:rgba(26,26,26,.3);font-weight:800}
 
+/* ── TASK ACTION SHEET ── */
+.tsheet-veil{
+  position:fixed;inset:0;background:rgba(26,26,26,.55);opacity:0;pointer-events:none;
+  transition:opacity .25s;z-index:940;
+}
+.tsheet-veil.show{opacity:1;pointer-events:all}
+.tsheet{
+  position:fixed;bottom:0;left:50%;transform:translate(-50%,105%);
+  width:100%;max-width:480px;max-height:88vh;overflow-y:auto;
+  background:#FFF8E7;border-radius:24px 24px 0 0;padding:24px 22px 32px;z-index:945;
+  transition:transform .32s cubic-bezier(.34,1.2,.64,1);
+}
+.tsheet.show{transform:translate(-50%,0)}
+.tsheet-grab{width:44px;height:5px;border-radius:3px;background:rgba(26,26,26,.15);margin:0 auto 18px}
+.tsheet-title{font-family:'Bagel Fat One',system-ui,sans-serif;font-size:22px;margin-bottom:6px}
+.tsheet-sub{font-size:13px;font-weight:500;color:rgba(26,26,26,.55);line-height:1.5;margin-bottom:18px}
+.tsheet-field{margin-bottom:14px}
+.tsheet-label{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(26,26,26,.45);margin-bottom:8px}
+.tsheet-input{
+  width:100%;border:2px solid rgba(26,26,26,.1);border-radius:14px;background:#FFF;
+  font-family:'Manrope',sans-serif;font-size:16px;font-weight:600;color:#1A1A1A;
+  padding:14px 16px;outline:none;transition:border-color .15s;
+}
+.tsheet-input:focus{border-color:#1A1A1A}
+.tsheet-input::placeholder{color:rgba(26,26,26,.25);font-style:italic}
+.pitch-card{
+  background:#FFF;border:2px solid rgba(26,26,26,.08);border-radius:16px;
+  padding:16px 18px;margin-bottom:16px;
+}
+.pitch-card-tag{font-size:10px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:rgba(26,26,26,.4);margin-bottom:8px}
+.pitch-card-text{font-size:15px;font-weight:600;line-height:1.6;color:#1A1A1A}
+.pitch-card-from{font-family:'Caveat',cursive;font-weight:700;font-size:19px;color:rgba(26,26,26,.55);margin-top:10px}
+.share-link{
+  display:flex;align-items:center;gap:10px;background:#FFF6D6;border:2px dashed rgba(26,26,26,.2);
+  border-radius:14px;padding:12px 16px;margin-bottom:16px;
+  font-size:13px;font-weight:700;color:#1A1A1A;word-break:break-all;
+}
+.tsheet .btn{margin-top:6px}
+.tsheet .btn + .btn{margin-top:10px}
+.or-row{display:flex;align-items:center;gap:12px;margin:14px 0;color:rgba(26,26,26,.35);font-size:11px;font-weight:800;letter-spacing:.12em}
+.or-row::before,.or-row::after{content:'';flex:1;height:1px;background:rgba(26,26,26,.12)}
+.goal-preview{
+  background:#1A1A1A;border-radius:14px;padding:14px 18px;margin-bottom:16px;
+  display:flex;justify-content:space-between;align-items:baseline;
+}
+.goal-preview-label{font-size:11px;font-weight:700;color:rgba(255,248,231,.5)}
+.goal-preview-val{font-family:'Bagel Fat One',system-ui,sans-serif;font-size:22px;color:#FFD93D}
+
 /* ── LESSON CAROUSEL ── */
 .carousel{
   display:flex;gap:16px;overflow-x:auto;padding:4px 4px 16px;
@@ -601,6 +649,13 @@ html,body{font-family:'Manrope',sans-serif;background:#FFF8E7;color:#1A1A1A;over
 </div>
 
 <!-- XP toasts -->
+<!-- task action sheet -->
+<div class="tsheet-veil" id="tsheet-veil" onclick="closeTaskSheet()"></div>
+<div class="tsheet" id="tsheet">
+  <div class="tsheet-grab"></div>
+  <div id="tsheet-body"></div>
+</div>
+
 <div id="toast-zone"></div>
 
 <!-- Lesson complete overlay -->
@@ -623,6 +678,8 @@ const USER = {
   logoEmoji: "🧁",
   logoColor: "#7B2FBE",
   product: { name: "Classic Vanilla Cupcake", emoji: "🧁", price: 4.00, madeIn: "Product Lab" },
+  pitch: "Hi! I'm Alice, and I just started my own business — Alice's Sweet Sensations. I bake homemade cupcakes that taste better than the shop ones, and they're only $4. Come find me at lunch tomorrow and try one. I think you'll want two.",
+  storeUrl: "https://lud.is/clients/stand/dashboard/store.html",
   level: 3,
   xp: 840,
   xpToNextLevel: 1200,
@@ -869,7 +926,7 @@ function renderSnapshot(){
 
 function renderTasks(){
   $("task-list").innerHTML = TASKS.map(t => `
-    <div class="task ${t.done ? "done" : ""}" id="task-${t.id}" onclick="completeTask('${t.id}')">
+    <div class="task ${t.done ? "done" : ""}" id="task-${t.id}" onclick="openTask('${t.id}')">
       <div class="task-check">
         <svg width="13" height="10" viewBox="0 0 14 11" fill="none">
           <path d="M1.5 5.5L5.5 9.5L12.5 1.5" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -881,6 +938,113 @@ function renderTasks(){
       </div>
       <div class="task-arrow">→</div>
     </div>`).join("");
+}
+
+/* ── TASK ACTION SHEETS — tasks complete by DOING the action, not by ticking ── */
+
+function openTask(id){
+  const t = TASKS.find(x => x.id === id);
+  if (!t || t.done) return;
+  const body = $("tsheet-body");
+  if (id === "t1") body.innerHTML = shareSheetHTML();
+  if (id === "t2") body.innerHTML = goalSheetHTML();
+  if (id === "t3") body.innerHTML = pitchSheetHTML();
+  $("tsheet-veil").classList.add("show");
+  $("tsheet").classList.add("show");
+  if (id === "t2") updateGoalPreview();
+}
+
+function closeTaskSheet(){
+  $("tsheet-veil").classList.remove("show");
+  $("tsheet").classList.remove("show");
+}
+
+function shareSheetHTML(){
+  const canShare = !!navigator.share;
+  return `
+    <div class="tsheet-title">Share your store 🛍</div>
+    <div class="tsheet-sub">Send ${escHTML(USER.businessName)} to a friend, family member, or neighbour. The task completes when it's sent — not before.</div>
+    <div class="share-link">🔗 <span>${escHTML(USER.storeUrl)}</span></div>
+    ${canShare ? `<button class="btn btn-red" onclick="shareNative()">Share…</button><div class="or-row">OR</div>` : ""}
+    <div class="tsheet-field">
+      <div class="tsheet-label">Send it by email</div>
+      <input class="tsheet-input" id="share-email" type="email" placeholder="their email address…" oninput="checkEmail('share-email','share-send')">
+    </div>
+    <button class="btn ${canShare ? "btn-black" : "btn-red"}" id="share-send" onclick="fakeSend('share-send','t1','Store shared! They just got the link.')" disabled>Send my store →</button>`;
+}
+
+function goalSheetHTML(){
+  return `
+    <div class="tsheet-title">Set your first sales goal 🎯</div>
+    <div class="tsheet-sub">How many cupcakes do you want to sell this week? Pick a number that feels exciting but possible.</div>
+    <div class="tsheet-field">
+      <div class="tsheet-label">Cupcakes this week</div>
+      <input class="tsheet-input" id="goal-count" type="number" min="1" max="999" placeholder="10" oninput="updateGoalPreview()">
+    </div>
+    <div class="goal-preview">
+      <span class="goal-preview-label">That would make you</span>
+      <span class="goal-preview-val" id="goal-money">—</span>
+    </div>
+    <button class="btn btn-red" id="goal-lock" onclick="lockGoal()" disabled>Lock in my goal</button>`;
+}
+
+function pitchSheetHTML(){
+  return `
+    <div class="tsheet-title">Pitch your parents 🗣</div>
+    <div class="tsheet-sub">This is the pitch you wrote in Perfect Your Pitch. Send it to a parent — the task completes when it lands in their inbox.</div>
+    <div class="pitch-card">
+      <div class="pitch-card-tag">Your pitch · from Perfect Your Pitch</div>
+      <div class="pitch-card-text">${escHTML(USER.pitch)}</div>
+      <div class="pitch-card-from">— ${escHTML(USER.name)}, CEO</div>
+    </div>
+    <div class="tsheet-field">
+      <div class="tsheet-label">Parent's email</div>
+      <input class="tsheet-input" id="pitch-email" type="email" placeholder="mum@, dad@…" oninput="checkEmail('pitch-email','pitch-send')">
+    </div>
+    <button class="btn btn-red" id="pitch-send" onclick="fakeSend('pitch-send','t3','Pitch sent! Fingers crossed 🤞')" disabled>Send my pitch →</button>`;
+}
+
+function checkEmail(inputId, btnId){
+  const v = $(inputId).value.trim();
+  $(btnId).disabled = !(v.length > 3 && v.includes("@"));
+}
+
+function shareNative(){
+  navigator.share({ title: USER.businessName, text: `Check out my business — ${USER.businessName}!`, url: USER.storeUrl })
+    .then(() => { closeTaskSheet(); setTimeout(() => completeTask("t1"), 350); })
+    .catch(() => {}); /* user cancelled the share sheet — task stays open */
+}
+
+function updateGoalPreview(){
+  const el = $("goal-count");
+  if (!el) return;
+  const n = parseInt(el.value, 10);
+  $("goal-money").textContent = (n > 0) ? "$" + (n * USER.product.price).toFixed(2) : "—";
+  $("goal-lock").disabled = !(n > 0);
+}
+
+function lockGoal(){
+  const n = parseInt($("goal-count").value, 10);
+  if (!(n > 0)) return;
+  const btn = $("goal-lock");
+  btn.disabled = true;
+  btn.textContent = "Goal locked ✓";
+  setTimeout(() => { closeTaskSheet(); completeTask("t2"); xpToast(`🎯 ${n} cupcakes this week. Let's go!`); }, 600);
+}
+
+/* Fake send: button shows a sending state, then the task completes. No real email goes anywhere. */
+function fakeSend(btnId, taskId, toastText){
+  const btn = $(btnId);
+  btn.disabled = true;
+  btn.textContent = "Sending…";
+  setTimeout(() => {
+    btn.textContent = "Sent ✓";
+    setTimeout(() => {
+      closeTaskSheet();
+      completeTask(taskId);
+      xpToast(toastText);
+    }, 500);
+  }, 800);
 }
 
 function completeTask(id){
