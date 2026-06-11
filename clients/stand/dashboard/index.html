@@ -44,7 +44,7 @@ html,body{font-family:'Manrope',sans-serif;background:#FFF8E7;color:#1A1A1A;over
 .hdr-avatar{
   width:30px;height:30px;border-radius:50%;flex:none;
   display:flex;align-items:center;justify-content:center;
-  font-family:'Bagel Fat One',system-ui,sans-serif;font-size:12px;color:#fff;
+  font-family:'Bagel Fat One',system-ui,sans-serif;font-size:15px;color:#fff;
 }
 .hdr-bizname{font-size:13px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .hdr-right{display:flex;align-items:center;gap:8px;flex:none}
@@ -119,11 +119,26 @@ html,body{font-family:'Manrope',sans-serif;background:#FFF8E7;color:#1A1A1A;over
 
 /* ── BUSINESS SNAPSHOT ── */
 .snap{display:flex;flex-direction:column;gap:14px}
+.snap-greet{font-family:'Caveat',cursive;font-weight:700;font-size:24px;color:rgba(26,26,26,.65);margin-bottom:-4px}
 .snap-top{display:flex;align-items:center;gap:14px}
+.snap-product{
+  display:flex;align-items:center;gap:12px;text-decoration:none;color:#1A1A1A;
+  background:#FFF6D6;border:2px solid rgba(26,26,26,.07);border-radius:14px;padding:10px 14px;
+  transition:border-color .15s,transform .12s;
+}
+.snap-product:hover{border-color:#1A1A1A}
+.snap-product:active{transform:scale(.98)}
+.prod-thumb{
+  width:46px;height:46px;border-radius:12px;background:#FDE8E6;font-size:24px;flex:none;
+  display:flex;align-items:center;justify-content:center;border:2px solid rgba(26,26,26,.08);
+}
+.prod-label{font-size:9px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:rgba(26,26,26,.4)}
+.prod-name{font-family:'Bagel Fat One',system-ui,sans-serif;font-size:14px;margin-top:1px}
+.prod-meta{font-size:11px;font-weight:600;color:rgba(26,26,26,.5);margin-top:1px}
 .snap-avatar{
   width:54px;height:54px;border-radius:50%;flex:none;
   display:flex;align-items:center;justify-content:center;
-  font-family:'Bagel Fat One',system-ui,sans-serif;font-size:20px;color:#fff;
+  font-family:'Bagel Fat One',system-ui,sans-serif;font-size:26px;color:#fff;
 }
 .snap-name{font-family:'Bagel Fat One',system-ui,sans-serif;font-size:20px;line-height:1.15}
 .snap-type{font-size:12px;font-weight:700;color:rgba(26,26,26,.5);margin-top:3px;text-transform:uppercase;letter-spacing:.08em}
@@ -510,13 +525,15 @@ html,body{font-family:'Manrope',sans-serif;background:#FFF8E7;color:#1A1A1A;over
 
       <!-- 3. Business snapshot -->
       <div class="card snap dsec d3">
+        <div class="snap-greet" id="snap-greet"></div>
         <div class="snap-top">
-          <div class="snap-avatar" id="snap-avatar">AS</div>
+          <div class="snap-avatar" id="snap-avatar">🧁</div>
           <div>
             <div class="snap-name" id="snap-name"></div>
             <div class="snap-type" id="snap-type"></div>
           </div>
         </div>
+        <a class="snap-product" id="snap-product" href="./store.html"></a>
         <div class="snap-pills" id="snap-pills"></div>
         <a class="snap-cta" href="./store.html">View your store →</a>
       </div>
@@ -598,7 +615,9 @@ const USER = {
   businessName: "Alice's Sweet Sensations",
   businessType: "Baked Goods",
   logoInitials: "AS",
+  logoEmoji: "🧁",
   logoColor: "#7B2FBE",
+  product: { name: "Classic Vanilla Cupcake", emoji: "🧁", price: 4.00, madeIn: "Product Lab" },
   level: 3,
   xp: 840,
   xpToNextLevel: 1200,
@@ -762,7 +781,7 @@ function fireConfetti(){
 
 function renderHeader(){
   $("hdr-avatar").style.background = USER.logoColor;
-  $("hdr-avatar").textContent = USER.logoInitials;
+  $("hdr-avatar").textContent = USER.logoEmoji || USER.logoInitials;
   $("hdr-bizname").textContent = USER.businessName;
   const badge = BADGES.find(b => b.id === USER.equippedBadge);
   const bub = $("hdr-badge-bub");
@@ -822,15 +841,24 @@ function scrollToBadges(){
 }
 
 function renderSnapshot(){
+  $("snap-greet").textContent = `Hey ${USER.name} 👋`;
   $("snap-avatar").style.background = USER.logoColor;
-  $("snap-avatar").textContent = USER.logoInitials;
+  $("snap-avatar").textContent = USER.logoEmoji || USER.logoInitials;
   $("snap-name").textContent = USER.businessName;
-  $("snap-type").textContent = USER.businessType;
+  $("snap-type").textContent = `${USER.businessType} · founded by ${USER.name}`;
   $("snap-pills").innerHTML = [
     `🛍 ${USER.totalSales} sales`,
     `👀 ${USER.storeViews} store views`,
     `📅 ${USER.daysActive} days active`
   ].map(t => `<span class="stat-pill">${t}</span>`).join("");
+  const p = USER.product;
+  $("snap-product").innerHTML = `
+    <div class="prod-thumb">${p.emoji}</div>
+    <div class="prod-info">
+      <div class="prod-label">Your product</div>
+      <div class="prod-name">${escHTML(p.name)}</div>
+      <div class="prod-meta">$${p.price.toFixed(2)} · made in ${escHTML(p.madeIn)}</div>
+    </div>`;
 }
 
 function renderTasks(){
@@ -1532,6 +1560,20 @@ function overlayDone(){
 /* ════════════════════════ INIT ════════════════════════ */
 
 function init(){
+  /* Returning from an external lesson prototype with ?completed=<lesson-id>:
+     mark it complete and pay out XP + badge so the loop is fully testable. */
+  let completedReturn = null;
+  const completedId = new URLSearchParams(location.search).get("completed");
+  if (completedId){
+    const lesson = LESSONS.find(l => l.id === completedId);
+    if (lesson && lesson.status !== "COMPLETED"){
+      lesson.status = "COMPLETED";
+      if (!USER.completedModules.includes(lesson.id)) USER.completedModules.push(lesson.id);
+      completedReturn = lesson;
+    }
+    history.replaceState(null, "", location.pathname + location.hash);
+  }
+
   renderHeader();
   renderSnapshot();
   renderTasks();
@@ -1542,6 +1584,15 @@ function init(){
   renderProgressBars(true);
   if (!location.hash) location.hash = "#dashboard";
   route();
+
+  if (completedReturn){
+    setTimeout(() => {
+      xpToast(`Lesson complete! +${completedReturn.xp} XP`);
+      addXP(completedReturn.xp);
+      renderProgressBars(false);
+      if (LESSON_BADGES[completedReturn.id]) setTimeout(() => awardBadge(LESSON_BADGES[completedReturn.id]), 900);
+    }, 700);
+  }
 }
 
 document.addEventListener("DOMContentLoaded", init);

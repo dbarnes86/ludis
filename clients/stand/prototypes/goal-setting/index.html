@@ -150,9 +150,19 @@ html,body{height:100%;font-family:'Manrope',sans-serif;background:#1A1A1A;overfl
 .goal-card-footer{padding:14px 22px;border-top:1px solid rgba(26,26,26,.07)}
 .goal-caveat-line{font-family:'Caveat',cursive;font-weight:700;font-size:20px;color:rgba(26,26,26,.5);margin-bottom:4px}
 .goal-complete{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(26,26,26,.3)}
+
+/* ── DASHBOARD LINKS ── */
+.dash-back{
+  position:fixed;top:14px;right:16px;z-index:100;
+  background:rgba(26,26,26,.55);color:#FFF8E7;font-size:11px;font-weight:700;
+  padding:6px 12px;border-radius:999px;text-decoration:none;letter-spacing:.04em;
+}
+.dash-back:hover{background:rgba(26,26,26,.8)}
+.btn-link{display:block;text-decoration:none;width:100%;margin-top:20px}
 </style>
 </head>
 <body>
+<a class="dash-back" href="../../dashboard/index.html">← dashboard</a>
 <div class="shell">
 
   <!-- SCREEN 1: INTRO -->
@@ -245,6 +255,7 @@ html,body{height:100%;font-family:'Manrope',sans-serif;background:#1A1A1A;overfl
         </div>
       </div>
     </div>
+    <a class="btn btn-black btn-link" href="../../dashboard/index.html?completed=how-much-to-make">Collect my XP →</a>
   </div>
 
 </div><!-- /.shell -->
